@@ -1,0 +1,31 @@
+{
+  "name": "pharmat",
+  "version": "1.0.0",
+  "description": "Hệ thống quản lý tiệm thuốc - Frontend Only",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 8080 -o",
+    "dev": "npx live-server --port=3000 --open=/index.html",
+    "build": "echo 'Frontend-only project - no build needed'",
+    "deploy": "echo 'Ready for deployment to any static hosting'"
+  },
+  "keywords": [
+    "pharmacy",
+    "management",
+    "frontend",
+    "html",
+    "css",
+    "javascript"
+  ],
+  "author": "PharmaT Team",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/pharmat.git"
+  },
+  "homepage": "https://your-username.github.io/pharmat"
+}

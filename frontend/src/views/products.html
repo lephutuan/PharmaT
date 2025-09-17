@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Tiệm Thuốc Tự Động - Sản Phẩm</title>
+    <link rel="stylesheet" href="../assets/css/products.css" />
+    <link rel="stylesheet" href="../assets/css/api-styles.css" />
+    <link rel="stylesheet" href="../assets/css/common-responsive.css" />
+    <!-- Awesomplete CSS & JS CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/awesomplete/1.1.5/awesomplete.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="menu-toggle" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+      <div class="logo">
+        <a href="#">💊 PharmaT</a>
+      </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li>
+          <a href="home.html" onclick="setActive(this)">🏠 Trang chủ</a>
+        </li>
+        <li>
+          <a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a>
+        </li>
+        <li>
+          <a href="products.html" onclick="setActive(this)">📝 Đơn thuốc</a>
+        </li>
+        <li>
+          <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
+        </li>
+        <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
+        <li>
+          <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
+        </li>
+        <li>
+          <a href="warning.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+    <h1>📝 Đơn thuốc</h1>
+
+    <!-- 1. Thông tin khách hàng và nhân viên -->
+    <section class="form-section">
+      <h2>Thông tin khách hàng và nhân viên</h2>
+      <div class="customer-form">
+        <div style="margin-bottom: 15px;">
+          <label for="customerSelect" style="display: block; margin-bottom: 5px; font-weight: bold;">Khách hàng:</label>
+          <select id="customerSelect">
+            <option value="">-- Chọn khách hàng --</option>
+            <!-- Các option sẽ được render từ JS -->
+          </select>
+          <button class="btn btn-secondary" id="btnAddCustomer">+ Thêm khách hàng mới</button>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+          <label for="employeeSelect" style="display: block; margin-bottom: 5px; font-weight: bold;">Nhân viên thực hiện:</label>
+          <select id="employeeSelect">
+            <option value="">-- Chọn nhân viên --</option>
+            <!-- Các option sẽ được render từ JS -->
+          </select>
+        </div>
+        
+        <!-- Form thêm khách hàng mới, ẩn mặc định -->
+        <div id="addCustomerForm" style="display:none; gap: 8px; align-items: center; margin-top: 8px;">
+          <input type="text" id="newCustomerName" placeholder="Tên khách hàng" style="width: 180px;" />
+          <input type="text" id="newCustomerPhone" placeholder="SĐT" style="width: 120px;" />
+          <input type="text" id="newCustomerAllergy" placeholder="Dị ứng (nếu có)" style="width: 180px;" />
+          <button class="btn btn-primary" id="btnSaveCustomer"><i class="fa fa-save"></i> Lưu</button>
+          <button class="btn btn-danger" id="btnCancelAddCustomer"><i class="fa fa-times"></i> Hủy</button>
+        </div>
+        
+        <div class="customer-info" id="customerInfo">
+          <!-- Tên, sđt, dị ứng sẽ hiển thị tại đây -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Thêm thuốc vào đơn -->
+    <section class="form-section">
+      <h2>Thêm thuốc vào đơn</h2>
+      <div class="medicine-form">
+        <input id="medicineSearch" class="awesomplete" type="text" placeholder="Tìm thuốc..." autocomplete="off" />
+        <input type="text" placeholder="Liều lượng" id="dose" />
+        <input type="number" placeholder="Số ngày" id="days" />
+        <input type="number" placeholder="Số lượng" id="quantity" />
+        <button class="btn btn-primary" onclick="addMedicine()">+ Thêm thuốc</button>
+      </div>
+    </section>
+
+    <!-- 3. Danh sách thuốc trong đơn -->
+    <section class="form-section">
+      <h2>Danh sách thuốc</h2>
+      <table class="medicine-table">
+        <thead>
+          <tr>
+            <th>STT</th>
+            <th>Tên thuốc</th>
+            <th>Liều dùng</th>
+            <th>Số ngày</th>
+            <th>Số lượng</th>
+            <th>Xóa</th>
+          </tr>
+        </thead>
+        <tbody id="medicineList">
+          <!-- JS render thuốc tại đây -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 4. Hành động -->
+    <section class="form-section">
+      <button class="btn btn-success" onclick="submitPrescription()">💾 Lưu đơn thuốc</button>
+      <button class="btn btn-danger" onclick="cancelPrescription()">❌ Hủy</button>
+    </section>
+  </main>
+
+  </body>
+  <script src="../assets/js/navbar.js"></script>
+  <script src="../assets/js/sidebar.js"></script>
+  <!-- Backend scripts removed for frontend-only version -->
+  <script>
+    // Dữ liệu mẫu cho demo
+    let selectedMedicines = [];
+    let selectedCustomer = null;
+    let selectedEmployee = null;
+
+    // Dữ liệu mẫu
+    const sampleCustomers = [
+      { id: 1, name: 'Nguyễn Văn A', phone: '0123456789', allergy: 'Không có' },
+      { id: 2, name: 'Trần Thị B', phone: '0987654321', allergy: 'Penicillin' },
+      { id: 3, name: 'Lê Văn C', phone: '0369852147', allergy: 'Aspirin' }
+    ];
+
+    const sampleEmployees = [
+      { id: 1, name: 'Dược sĩ Minh', position: 'Dược sĩ' },
+      { id: 2, name: 'Nhân viên Lan', position: 'Nhân viên bán hàng' },
+      { id: 3, name: 'Dược sĩ Hùng', position: 'Dược sĩ trưởng' }
+    ];
+
+    const sampleMedicines = [
+      'Paracetamol 500mg',
+      'Amoxicillin 500mg', 
+      'Vitamin C 1000mg',
+      'Efferalgan 500mg',
+      'Omeprazole 20mg',
+      'Ibuprofen 400mg',
+      'Aspirin 100mg',
+      'Cetirizine 10mg'
+    ];
+
+    // Khởi tạo khi trang load
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeAwesomplete();
+      populateSelects();
+      setupEventListeners();
+    });
+
+    // Khởi tạo Awesomplete
+    function initializeAwesomplete() {
+      const input = document.getElementById("medicineSearch");
+      const awesomplete = new Awesomplete(input, {
+        minChars: 1,
+        maxItems: 10,
+        autoFirst: true,
+        filter: function(text, input) {
+          return Awesomplete.FILTER_STARTSWITH(text, input);
+        }
+      });
+      
+      awesomplete.list = sampleMedicines;
+
+      input.addEventListener('awesomplete-selectcomplete', function(evt) {
+        const selectedName = input.value.trim().toLowerCase();
+        const medicineData = {
+          'paracetamol 500mg': { id: 1, price: 3000 },
+          'amoxicillin 500mg': { id: 2, price: 4000 },
+          'vitamin c 1000mg': { id: 3, price: 2500 },
+          'efferalgan 500mg': { id: 4, price: 3500 },
+          'omeprazole 20mg': { id: 5, price: 5000 },
+          'ibuprofen 400mg': { id: 6, price: 4500 },
+          'aspirin 100mg': { id: 7, price: 2000 },
+          'cetirizine 10mg': { id: 8, price: 3000 }
+        };
+        
+        const medicine = medicineData[selectedName];
+        if (medicine) {
+          input.dataset.selectedId = medicine.id;
+          input.dataset.selectedPrice = medicine.price;
+        } else {
+          delete input.dataset.selectedId;
+          delete input.dataset.selectedPrice;
+        }
+      });
+    }
+
+    // Populate selects với dữ liệu mẫu
+    function populateSelects() {
+      // Populate customer select
+      const customerSelect = document.getElementById('customerSelect');
+      customerSelect.innerHTML = '<option value="">-- Chọn khách hàng --</option>';
+      sampleCustomers.forEach(customer => {
+        const option = document.createElement('option');
+        option.value = customer.id;
+        option.textContent = `${customer.name} - ${customer.phone}`;
+        customerSelect.appendChild(option);
+      });
+
+      // Populate employee select
+      const employeeSelect = document.getElementById('employeeSelect');
+      employeeSelect.innerHTML = '<option value="">-- Chọn nhân viên --</option>';
+      sampleEmployees.forEach(employee => {
+        const option = document.createElement('option');
+        option.value = employee.id;
+        option.textContent = `${employee.name} - ${employee.position}`;
+        employeeSelect.appendChild(option);
+      });
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+      // Customer select change
+      document.getElementById('customerSelect').addEventListener('change', function() {
+        const customerId = this.value;
+        if (customerId) {
+          selectedCustomer = sampleCustomers.find(c => c.id == customerId);
+          displayCustomerInfo(selectedCustomer);
+        } else {
+          selectedCustomer = null;
+          document.getElementById('customerInfo').innerHTML = '';
+        }
+      });
+
+      // Employee select change
+      document.getElementById('employeeSelect').addEventListener('change', function() {
+        const employeeId = this.value;
+        if (employeeId) {
+          selectedEmployee = sampleEmployees.find(e => e.id == employeeId);
+        } else {
+          selectedEmployee = null;
+        }
+      });
+
+      // Add customer button
+      document.getElementById('btnAddCustomer').addEventListener('click', function() {
+        this.style.display = 'none';
+        document.getElementById('addCustomerForm').style.display = 'flex';
+      });
+
+      // Cancel add customer
+      document.getElementById('btnCancelAddCustomer').addEventListener('click', function() {
+        document.getElementById('addCustomerForm').style.display = 'none';
+        document.getElementById('btnAddCustomer').style.display = 'inline-block';
+        clearAddCustomerForm();
+      });
+
+      // Save customer
+      document.getElementById('btnSaveCustomer').addEventListener('click', function() {
+        const name = document.getElementById('newCustomerName').value.trim();
+        const phone = document.getElementById('newCustomerPhone').value.trim();
+        const allergy = document.getElementById('newCustomerAllergy').value.trim();
+        
+        if (!name || !phone) {
+          alert('Vui lòng nhập tên và số điện thoại khách hàng!');
+          return;
+        }
+
+        // Simulate adding customer
+        const newCustomer = {
+          id: sampleCustomers.length + 1,
+          name: name,
+          phone: phone,
+          allergy: allergy || 'Không có'
+        };
+        
+        sampleCustomers.push(newCustomer);
+        populateSelects();
+        document.getElementById('customerSelect').value = newCustomer.id;
+        selectedCustomer = newCustomer;
+        displayCustomerInfo(selectedCustomer);
+        
+        document.getElementById('addCustomerForm').style.display = 'none';
+        document.getElementById('btnAddCustomer').style.display = 'inline-block';
+        clearAddCustomerForm();
+        
+        alert('Đã thêm khách hàng mới!');
+      });
+    }
+
+    // Clear add customer form
+    function clearAddCustomerForm() {
+      document.getElementById('newCustomerName').value = '';
+      document.getElementById('newCustomerPhone').value = '';
+      document.getElementById('newCustomerAllergy').value = '';
+    }
+
+    // Display customer info
+    function displayCustomerInfo(customer) {
+      const infoDiv = document.getElementById('customerInfo');
+      infoDiv.innerHTML = `
+        <div class="customer-details">
+          <p><strong>Tên:</strong> ${customer.name}</p>
+          <p><strong>SĐT:</strong> ${customer.phone}</p>
+          <p><strong>Dị ứng:</strong> ${customer.allergy}</p>
+        </div>
+      `;
+    }
+
+    // Add medicine to prescription
+    function addMedicine() {
+      const searchInput = document.getElementById('medicineSearch');
+      const doseInput = document.getElementById('dose');
+      const daysInput = document.getElementById('days');
+      const quantityInput = document.getElementById('quantity');
+
+      const medicineId = searchInput.dataset.selectedId;
+      const medicineName = searchInput.value;
+      const dose = doseInput.value;
+      const days = parseInt(daysInput.value);
+      const quantity = parseInt(quantityInput.value);
+
+      if (!medicineId || !dose || !days || !quantity) {
+        alert('Vui lòng điền đầy đủ thông tin thuốc');
+        return;
+      }
+
+      const medicine = {
+        id: medicineId,
+        name: medicineName,
+        dose: dose,
+        days: days,
+        quantity: quantity
+      };
+
+      selectedMedicines.push(medicine);
+      displayMedicineList();
+      clearMedicineForm();
+    }
+
+    // Display medicine list
+    function displayMedicineList() {
+      const tbody = document.getElementById('medicineList');
+      tbody.innerHTML = '';
+
+      selectedMedicines.forEach((medicine, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${medicine.name}</td>
+          <td>${medicine.dose}</td>
+          <td>${medicine.days}</td>
+          <td>${medicine.quantity}</td>
+          <td><button onclick="removeMedicine(${index})" class="btn btn-danger btn-sm">Xóa</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Remove medicine
+    function removeMedicine(index) {
+      selectedMedicines.splice(index, 1);
+      displayMedicineList();
+    }
+
+    // Clear medicine form
+    function clearMedicineForm() {
+      document.getElementById('medicineSearch').value = '';
+      document.getElementById('dose').value = '';
+      document.getElementById('days').value = '';
+      document.getElementById('quantity').value = '';
+      delete document.getElementById('medicineSearch').dataset.selectedId;
+      delete document.getElementById('medicineSearch').dataset.selectedPrice;
+    }
+
+    // Submit prescription
+    function submitPrescription() {
+      if (!selectedCustomer) {
+        alert('Vui lòng chọn khách hàng');
+        return;
+      }
+
+      if (!selectedEmployee) {
+        alert('Vui lòng chọn nhân viên thực hiện');
+        return;
+      }
+
+      if (selectedMedicines.length === 0) {
+        alert('Vui lòng thêm thuốc vào đơn');
+        return;
+      }
+
+      // Simulate saving prescription
+      setTimeout(() => {
+        alert('Đơn thuốc đã được lưu thành công!');
+        resetForm();
+      }, 500);
+    }
+
+    // Cancel prescription
+    function cancelPrescription() {
+      if (confirm('Bạn có chắc chắn muốn hủy đơn thuốc này?')) {
+        resetForm();
+      }
+    }
+
+    // Reset form
+    function resetForm() {
+      document.getElementById('customerSelect').value = '';
+      document.getElementById('employeeSelect').value = '';
+      document.getElementById('medicineList').innerHTML = '';
+      selectedMedicines = [];
+      selectedCustomer = null;
+      selectedEmployee = null;
+      document.getElementById('customerInfo').innerHTML = '';
+      document.getElementById('addCustomerForm').style.display = 'none';
+      document.getElementById('btnAddCustomer').style.display = 'inline-block';
+      clearMedicineForm();
+    }
+  </script>
+</html>
+

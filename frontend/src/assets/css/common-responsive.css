@@ -1,0 +1,184 @@
+/* Common Responsive Styles for All Pages */
+
+/* Mobile First Responsive Design */
+@media (max-width: 768px) {
+  /* Navbar responsive */
+  .navbar {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    order: -1; /* Đặt menu-toggle ở bên trái */
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #1e40af;
+    padding: 0.5rem;
+  }
+
+  .logo {
+    flex: 1;
+    text-align: center;
+    order: 0; /* Đặt logo ở giữa */
+  }
+
+  .logo a {
+    color: #1e40af;
+    text-decoration: none;
+    font-size: 1.8rem;
+    font-weight: 700;
+  }
+
+  /* Sidebar responsive */
+  .sidebar {
+    transform: translateX(-100%);
+    width: 250px;
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar.active {
+    transform: translateX(0);
+  }
+
+  /* Main content responsive */
+  main {
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+    padding: 1rem;
+  }
+
+  /* Typography responsive */
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  /* Tables responsive - handled by individual CSS files */
+
+  /* Forms responsive */
+  .customer-form,
+  .medicine-form,
+  .employee-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .customer-form select,
+  .medicine-form input,
+  .employee-form input,
+  .employee-form select {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Buttons responsive */
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  /* Form sections responsive */
+  .form-section {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Payment options responsive */
+  .payment-options {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  /* Chat responsive */
+  .chat-input-container {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .chat-input {
+    width: 100%;
+  }
+
+  .btn-send {
+    align-self: flex-end;
+  }
+
+  /* Stats grid responsive */
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Alerts section responsive */
+  .alerts-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extra small devices */
+  .navbar {
+    padding: 0.75rem;
+  }
+
+  .logo a {
+    font-size: 1.4rem;
+  }
+
+  .menu-toggle {
+    font-size: 1.2rem;
+  }
+
+  main {
+    padding: 0.75rem;
+  }
+
+  .form-section {
+    padding: 0.75rem;
+  }
+
+  /* Tables responsive - handled by individual CSS files */
+
+  h1 {
+    font-size: 1.3rem;
+  }
+
+  .chat-messages {
+    height: 250px;
+  }
+
+  .total-amount {
+    font-size: 1.1rem;
+  }
+}
+
+/* Tablet responsive */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sidebar {
+    width: 250px;
+  }
+
+  main {
+    margin-left: 250px;
+  }
+
+  /* Tables responsive - handled by individual CSS files */
+}
+
+/* Large desktop responsive */
+@media (min-width: 1200px) {
+  .sidebar {
+    width: 300px;
+  }
+
+  main {
+    margin-left: 300px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

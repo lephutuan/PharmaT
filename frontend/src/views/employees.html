@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Tiệm Thuốc Tự Động - Nhân Viên</title>
+    <link rel="stylesheet" href="../assets/css/employees.css" />
+    <link rel="stylesheet" href="../assets/css/api-styles.css" />
+    <link rel="stylesheet" href="../assets/css/common-responsive.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="menu-toggle" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+      <div class="logo">
+        <a href="#">PharmaT</a>
+      </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li>
+          <a href="home.html" onclick="setActive(this)">🏠 Trang chủ</a>
+        </li>
+        <li>
+          <a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a>
+        </li>
+        <li>
+          <a href="products.html" onclick="setActive(this)">📝 Đơn thuốc</a>
+        </li>
+        <li>
+          <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
+        </li>
+        <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
+        <li>
+          <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
+        </li>
+        <li>
+          <a href="warning.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+      <h1>Quản lý nhân viên</h1>
+
+    <!-- Form thêm/sửa -->
+      <section class="form-section">
+        <h2>Thêm nhân viên</h2>
+        <div class="employee-form">
+          <input type="text" id="ten_nv" placeholder="Họ tên nhân viên" />
+          <select id="chuc_vu">
+            <option value="">-- Chức vụ --</option>
+            <option value="Quản lý">Quản lý</option>
+            <option value="Bán hàng">Bán hàng</option>
+          </select>
+          <input type="text" id="sdt" placeholder="Số điện thoại" />
+          <input type="text" id="dia_chi" placeholder="Địa chỉ" />
+          <select id="trang_thai">
+            <option value="">-- Trạng thái --</option>
+            <option value="Đang làm việc">Đang làm việc</option>
+            <option value="Đã nghỉ việc">Đã nghỉ việc</option>
+          </select>
+          <button class="btn btn-primary" onclick="saveEmployee()">💾 Lưu</button>
+          <button class="btn btn-secondary" onclick="clearForm()">↩️ Xóa trắng</button>
+          <button class="btn btn-cancel" onclick="cancelEdit()" id="cancelBtn" style="display: none;">❌ Hủy chỉnh sửa</button>
+        </div>
+      </section>
+
+      <!-- Danh sách -->
+      <section class="form-section">
+        <h2>Danh sách nhân viên</h2>
+        <table id="nhanvien-table" class="employee-table">
+          <thead>
+            <tr>
+              <th>STT</th>
+              <th>Họ tên</th>
+              <th>Chức vụ</th>
+              <th>SĐT</th>
+              <th>Địa chỉ</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Dữ liệu sẽ được load từ API -->
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </body>
+  <script src="../assets/js/navbar.js"></script>
+  <script src="../assets/js/sidebar.js"></script>
+  <!-- Backend scripts removed for frontend-only version -->
+  <script>
+    let employees = [];
+    let editingEmployeeId = null;
+
+    // Load dữ liệu khi trang load
+    document.addEventListener('DOMContentLoaded', async function() {
+      await loadEmployees();
+    });
+
+    // Load danh sách nhân viên
+    async function loadEmployees() {
+      try {
+        UI.showLoading();
+        const data = await API.getNhanVien();
+        employees = data.records;
+        displayEmployees();
+      } catch (error) {
+        UI.showMessage('Lỗi khi tải danh sách nhân viên: ' + error.message, 'error');
+      } finally {
+        UI.hideLoading();
+      }
+    }
+
+    // Hiển thị danh sách nhân viên
+    function displayEmployees() {
+      const tbody = document.querySelector('#nhanvien-table tbody');
+      tbody.innerHTML = '';
+
+      employees.forEach((employee, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${employee.ten_nv}</td>
+          <td>${employee.chuc_vu}</td>
+          <td>${employee.sdt}</td>
+          <td>${employee.dia_chi}</td>
+          <td>${employee.trang_thai}</td>
+          <td>
+            <button class="btn btn-small btn-edit" onclick="editEmployee(${employee.ma_nv})">✏️</button>
+            <button class="btn btn-small btn-delete" onclick="deleteEmployee(${employee.ma_nv})">🗑️</button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    // Lưu nhân viên
+    async function saveEmployee() {
+      const ten_nv = document.getElementById('ten_nv').value;
+      const chuc_vu = document.getElementById('chuc_vu').value;
+      const sdt = document.getElementById('sdt').value;
+      const dia_chi = document.getElementById('dia_chi').value;
+      const trang_thai = document.getElementById('trang_thai').value;
+
+      if (!ten_nv || !chuc_vu || !sdt || !dia_chi || !trang_thai) {
+        UI.showMessage('Vui lòng điền đầy đủ thông tin', 'error');
+        return;
+      }
+
+      const employeeData = {
+        ten_nv: ten_nv,
+        chuc_vu: chuc_vu,
+        sdt: sdt,
+        dia_chi: dia_chi,
+        trang_thai: trang_thai
+      };
+
+      try {
+        UI.showLoading();
+        
+        if (editingEmployeeId) {
+          // Cập nhật nhân viên
+          employeeData.ma_nv = editingEmployeeId;
+          await API.updateNhanVien(editingEmployeeId, employeeData);
+          UI.showMessage('Cập nhật nhân viên thành công!', 'success');
+        } else {
+          // Thêm nhân viên mới
+          await API.createNhanVien(employeeData);
+          UI.showMessage('Thêm nhân viên thành công!', 'success');
+        }
+
+        await loadEmployees();
+        clearForm();
+        
+      } catch (error) {
+        UI.showMessage('Lỗi: ' + error.message, 'error');
+      } finally {
+        UI.hideLoading();
+      }
+    }
+
+    // Sửa nhân viên
+    function editEmployee(ma_nv) {
+      const employee = employees.find(emp => emp.ma_nv == ma_nv);
+      if (employee) {
+        editingEmployeeId = ma_nv;
+        document.getElementById('ten_nv').value = employee.ten_nv;
+        document.getElementById('chuc_vu').value = employee.chuc_vu;
+        document.getElementById('sdt').value = employee.sdt;
+        document.getElementById('dia_chi').value = employee.dia_chi;
+        document.getElementById('trang_thai').value = employee.trang_thai;
+        
+        // Đổi text button và hiển thị nút hủy
+        document.querySelector('.btn-primary').textContent = '💾 Cập nhật';
+        document.getElementById('cancelBtn').style.display = 'inline-block';
+      }
+    }
+
+    // Xóa nhân viên
+    async function deleteEmployee(ma_nv) {
+      if (!UI.confirmDelete('Bạn có chắc chắn muốn xóa nhân viên này?')) {
+        return;
+      }
+
+      try {
+        UI.showLoading();
+        await API.deleteNhanVien(ma_nv);
+        UI.showMessage('Xóa nhân viên thành công!', 'success');
+        await loadEmployees();
+      } catch (error) {
+        UI.showMessage('Lỗi khi xóa nhân viên: ' + error.message, 'error');
+      } finally {
+        UI.hideLoading();
+      }
+    }
+
+    // Hủy chỉnh sửa
+    function cancelEdit() {
+      clearForm();
+    }
+
+    // Xóa trắng form
+    function clearForm() {
+      editingEmployeeId = null;
+      document.getElementById('ten_nv').value = '';
+      document.getElementById('chuc_vu').value = '';
+      document.getElementById('sdt').value = '';
+      document.getElementById('dia_chi').value = '';
+      document.getElementById('trang_thai').value = '';
+      document.querySelector('.btn-primary').textContent = '💾 Lưu';
+      document.getElementById('cancelBtn').style.display = 'none';
+    }
+  </script>
+</html>
