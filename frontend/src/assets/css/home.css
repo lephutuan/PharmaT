@@ -119,7 +119,7 @@ body {
 main {
   margin-left: 280px;
   margin-top: 80px;
-  padding: 2rem;
+  /* padding: 2rem; */
   min-height: calc(100vh - 80px);
   background: #f4f7fa;
 }
@@ -277,7 +277,7 @@ main {
 /* Main Content Styles */
 .main-content {
   margin-left: 280px;
-  padding: 2rem;
+  /* padding: 2rem; */
   min-height: 100vh;
   background: #f4f7fa;
 }
@@ -285,6 +285,7 @@ main {
 .dashboard {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 32px;
 }
 
 /* Quick Actions Styles */
@@ -396,13 +397,13 @@ main {
   color: #6b7280;
   font-size: 0.9rem;
   margin: 0;
-}
+} 
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .main-content {
     margin-left: 0;
-    padding: 1rem;
+    /* padding: 1rem; */
   }
   
   .stats-grid {
