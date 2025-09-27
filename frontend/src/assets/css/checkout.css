@@ -16,7 +16,6 @@ body {
   border-bottom: 1px solid #e2e8f0;
   padding: 1rem 1.5rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   position: fixed;
   top: 0;
@@ -25,11 +24,56 @@ body {
   z-index: 1000;
 }
 
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.logo-img {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 50%;
+  padding: 8px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.8));
+  filter: drop-shadow(0 4px 8px rgba(30, 64, 175, 0.3));
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.logo-img:hover {
+  filter: drop-shadow(0 6px 12px rgba(30, 64, 175, 0.5));
+  transform: rotate(5deg);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(240, 248, 255, 0.9));
+}
+
+@keyframes logoGlow {
+  0% {
+    filter: drop-shadow(0 4px 8px rgba(30, 64, 175, 0.3));
+  }
+  100% {
+    filter: drop-shadow(0 4px 8px rgba(30, 64, 175, 0.6));
+  }
+}
+
 .logo a {
   color: #1e40af;
   text-decoration: none;
   font-size: 1.8rem;
   font-weight: 700;
+  text-shadow: 0 2px 4px rgba(30, 64, 175, 0.2);
+  transition: all 0.3s ease;
+}
+
+.logo a:hover {
+  color: #2563eb;
+  text-shadow: 0 2px 4px rgba(30, 64, 175, 0.4);
 }
 
 .menu-toggle {
@@ -38,6 +82,23 @@ body {
   color: #1e40af;
   padding: 0.5rem;
   display: none;
+}
+
+.page-title {
+  margin-left: 1.25rem;
+  text-align: left;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.page-title h1 {
+  font-size: 1.75rem;
+  color: #1e40af;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(30, 64, 175, 0.1);
+  letter-spacing: -0.025em;
 }
 
 .item-info {
@@ -85,10 +146,13 @@ body {
   z-index: 999;
   transition: transform 0.3s ease;
   transform: translateX(0);
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar ul {
   list-style: none;
+  flex: 1;
 }
 
 .sidebar li {
@@ -116,12 +180,42 @@ body {
   color: #ffffff;
 }
 
+/* Sidebar Footer */
+.sidebar-footer {
+  margin-top: auto;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logout-btn {
+  color: #fca5a5 !important;
+  text-decoration: none;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+  font-weight: 500;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-left-color: #fca5a5;
+  color: #ffffff !important;
+  transform: translateX(5px);
+}
+
+.logout-btn i {
+  font-size: 1.1rem;
+}
+
 /* Main Content */
 main {
   margin-left: 280px;
-  margin-top: 80px;
+  margin-top: 112px;
   padding: 2rem;
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 112px);
   background: #f4f7fa;
 }
 
@@ -136,13 +230,50 @@ main {
 }
 
 .table-container {
-  overflow-x: auto;
   background: #ffffff;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   padding: 1.5rem;
   margin-bottom: 2rem;
   border: 1px solid #e5e7eb;
+  width: 100%;
+}
+
+/* Desktop lớn - không có scroll bar */
+@media (min-width: 1024px) {
+  .table-container {
+    overflow-x: hidden;
+  }
+  
+  .invoice-table {
+    width: 100%;
+    min-width: auto;
+    table-layout: fixed;
+  }
+  
+  .invoice-table th,
+  .invoice-table td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  /* Phân bổ chiều rộng các cột */
+  .invoice-table th:nth-child(1),
+  .invoice-table td:nth-child(1) { width: 40%; } /* Tên thuốc */
+  .invoice-table th:nth-child(2),
+  .invoice-table td:nth-child(2) { width: 20%; } /* Số lượng */
+  .invoice-table th:nth-child(3),
+  .invoice-table td:nth-child(3) { width: 20%; } /* Đơn giá */
+  .invoice-table th:nth-child(4),
+  .invoice-table td:nth-child(4) { width: 20%; } /* Thành tiền */
+}
+
+/* Màn hình nhỏ - có scroll bar */
+@media (max-width: 1023px) {
+  .table-container {
+    overflow-x: auto;
+  }
 }
 
 .table-container::-webkit-scrollbar {
@@ -223,7 +354,6 @@ h1{
   border-spacing: 0;
   text-align: left;
   margin: 1.5rem 0;
-  min-width: 1100px;
 }
 
 .invoice-table thead {
@@ -290,6 +420,7 @@ h1{
   gap: 1rem;
   margin-bottom: 1.5rem;
   flex-wrap: wrap;
+  flex-direction: row;
   padding: 1rem;
   background: #f8fafc;
   border-radius: 8px;
@@ -371,6 +502,15 @@ h1{
     padding: 1rem;
   }
 
+  .page-title {
+    margin-left: 0.25rem;
+    padding: 0;
+  }
+
+  .page-title h1 {
+    font-size: 1.5rem;
+  }
+
   .menu-toggle {
     display: flex;
     align-items: center;
@@ -388,6 +528,31 @@ h1{
     order: 3;
   }
 
+  /* Sidebar responsive - Mobile */
+  .sidebar {
+    transform: translateX(-100%) !important;
+  }
+
+  .sidebar.active {
+    transform: translateX(0) !important;
+  }
+
+  /* Overlay khi sidebar hiển thị */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    display: none;
+  }
+
+  .sidebar-overlay.active {
+    display: block;
+  }
+
   .cart-icon {
     padding: 0.6rem;
     font-size: 1.2rem;
@@ -399,20 +564,10 @@ h1{
     right: 10px;
   }
 
-  .sidebar {
-    transform: translateX(-100%);
-    width: 250px;
-    top: 60px;
-    height: calc(100vh - 60px);
-  }
-
-  .sidebar.active {
-    transform: translateX(0);
-  }
 
   main {
     margin-left: 0;
-    margin-top: 80px;
+    margin-top: 112px;
     padding: 1rem;
   }
 
@@ -435,7 +590,8 @@ h1{
   }
 
   .payment-options {
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-evenly;
     gap: 0.5rem;
   }
 
@@ -525,5 +681,135 @@ h1{
 
   .invoice-table {
     min-width: 1100px;
+  }
+}
+
+/* QR Code Modal */
+.qr-modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.3s ease;
+}
+
+.qr-modal-content {
+  background-color: white;
+  margin: 5% auto;
+  padding: 30px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease;
+}
+
+.qr-modal h3 {
+  color: #1e40af;
+  margin-bottom: 20px;
+  font-size: 1.3rem;
+}
+
+.qr-code-container {
+  margin: 20px 0;
+}
+
+.qr-code-container img {
+  width: 200px;
+  height: 200px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+}
+
+.qr-amount {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1e40af;
+  margin: 15px 0;
+  padding: 15px;
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+  border-radius: 10px;
+  border: 2px solid #0ea5e9;
+}
+
+.qr-instructions {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 15px 0;
+  line-height: 1.5;
+}
+
+.qr-modal-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 25px;
+}
+
+.qr-btn {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.qr-btn-primary {
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  color: white;
+}
+
+.qr-btn-primary:hover {
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  transform: translateY(-2px);
+}
+
+.qr-btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.qr-btn-secondary:hover {
+  background: #e5e7eb;
+  transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Desktop - Sidebar luôn hiển thị */
+@media (min-width: 769px) {
+  .sidebar {
+    transform: translateX(0) !important;
+  }
+  
+  .sidebar-overlay {
+    display: none !important;
+  }
+
+  /* Main content responsive */
+  main {
+    margin-left: 280px;
+    transition: margin-left 0.3s ease;
   }
 }

@@ -19,7 +19,10 @@
         <i class="fa-solid fa-bars"></i>
       </div>
       <div class="logo">
-        <a href="#">PharmaT</a>
+        <img src="../assets/images/logo.png" alt="PharmaT Logo" class="logo-img" onclick="window.location.href='home.html'">
+      </div>
+      <div class="page-title">
+        <h1>Quản lý nhân viên</h1>
       </div>
     </nav>
 
@@ -33,7 +36,7 @@
           <a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a>
         </li>
         <li>
-          <a href="products.html" onclick="setActive(this)">📝 Đơn thuốc</a>
+          <a href="prescriptions.html" onclick="setActive(this)">📝 Đơn thuốc</a>
         </li>
         <li>
           <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
@@ -43,14 +46,24 @@
           <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
         </li>
         <li>
-          <a href="warning.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
+          <a href="chatbox.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
         </li>
       </ul>
+      
+      <!-- Logout Button -->
+      <div class="sidebar-footer">
+        <a href="login.html" class="logout-btn" onclick="logout()">
+          <i class="fa-solid fa-sign-out-alt"></i>
+          Đăng xuất
+        </a>
+      </div>
     </aside>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <!-- Main Content -->
     <main>
-      <h1>Quản lý nhân viên</h1>
 
     <!-- Form thêm/sửa -->
       <section class="form-section">
@@ -64,6 +77,7 @@
           </select>
           <input type="text" id="sdt" placeholder="Số điện thoại" />
           <input type="text" id="dia_chi" placeholder="Địa chỉ" />
+          <input type="password" id="mat_khau" placeholder="Mật khẩu" />
           <select id="trang_thai">
             <option value="">-- Trạng thái --</option>
             <option value="Đang làm việc">Đang làm việc</option>
@@ -86,6 +100,7 @@
               <th>Chức vụ</th>
               <th>SĐT</th>
               <th>Địa chỉ</th>
+              <th>Mật khẩu</th>
               <th>Trạng thái</th>
               <th>Hành động</th>
             </tr>
@@ -97,8 +112,7 @@
       </section>
     </main>
   </body>
-  <script src="../assets/js/navbar.js"></script>
-  <script src="../assets/js/sidebar.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
   <!-- Backend scripts removed for frontend-only version -->
   <script>
     let employees = [];
@@ -136,6 +150,7 @@
           <td>${employee.chuc_vu}</td>
           <td>${employee.sdt}</td>
           <td>${employee.dia_chi}</td>
+          <td>${employee.mat_khau ? '••••••••' : 'Chưa có'}</td>
           <td>${employee.trang_thai}</td>
           <td>
             <button class="btn btn-small btn-edit" onclick="editEmployee(${employee.ma_nv})">✏️</button>
@@ -152,9 +167,10 @@
       const chuc_vu = document.getElementById('chuc_vu').value;
       const sdt = document.getElementById('sdt').value;
       const dia_chi = document.getElementById('dia_chi').value;
+      const mat_khau = document.getElementById('mat_khau').value;
       const trang_thai = document.getElementById('trang_thai').value;
 
-      if (!ten_nv || !chuc_vu || !sdt || !dia_chi || !trang_thai) {
+      if (!ten_nv || !chuc_vu || !sdt || !dia_chi || !mat_khau || !trang_thai) {
         UI.showMessage('Vui lòng điền đầy đủ thông tin', 'error');
         return;
       }
@@ -164,6 +180,7 @@
         chuc_vu: chuc_vu,
         sdt: sdt,
         dia_chi: dia_chi,
+        mat_khau: mat_khau,
         trang_thai: trang_thai
       };
 
@@ -200,6 +217,7 @@
         document.getElementById('chuc_vu').value = employee.chuc_vu;
         document.getElementById('sdt').value = employee.sdt;
         document.getElementById('dia_chi').value = employee.dia_chi;
+        document.getElementById('mat_khau').value = employee.mat_khau || '';
         document.getElementById('trang_thai').value = employee.trang_thai;
         
         // Đổi text button và hiển thị nút hủy
@@ -238,6 +256,7 @@
       document.getElementById('chuc_vu').value = '';
       document.getElementById('sdt').value = '';
       document.getElementById('dia_chi').value = '';
+      document.getElementById('mat_khau').value = '';
       document.getElementById('trang_thai').value = '';
       document.querySelector('.btn-primary').textContent = '💾 Lưu';
       document.getElementById('cancelBtn').style.display = 'none';

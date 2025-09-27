@@ -21,7 +21,6 @@ body {
   border-bottom: 1px solid #e2e8f0;
   padding: 1rem 1.5rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   position: fixed;
   top: 0;
@@ -30,11 +29,56 @@ body {
   z-index: 1000;
 }
 
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.logo-img {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 50%;
+  padding: 8px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.8));
+  filter: drop-shadow(0 4px 8px rgba(30, 64, 175, 0.3));
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.logo-img:hover {
+  filter: drop-shadow(0 6px 12px rgba(30, 64, 175, 0.5));
+  transform: rotate(5deg);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(240, 248, 255, 0.9));
+}
+
+@keyframes logoGlow {
+  0% {
+    filter: drop-shadow(0 4px 8px rgba(30, 64, 175, 0.3));
+  }
+  100% {
+    filter: drop-shadow(0 4px 8px rgba(30, 64, 175, 0.6));
+  }
+}
+
 .logo a {
   color: #1e40af;
   text-decoration: none;
   font-size: 1.8rem;
   font-weight: 700;
+  text-shadow: 0 2px 4px rgba(30, 64, 175, 0.2);
+  transition: all 0.3s ease;
+}
+
+.logo a:hover {
+  color: #2563eb;
+  text-shadow: 0 2px 4px rgba(30, 64, 175, 0.4);
 }
 
 .menu-toggle {
@@ -43,6 +87,23 @@ body {
   color: #1e40af;
   padding: 0.5rem;
   display: none;
+}
+
+.page-title {
+  margin-left: 1.25rem;
+  text-align: left;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.page-title h1 {
+  font-size: 1.75rem;
+  color: #1e40af;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(30, 64, 175, 0.1);
+  letter-spacing: -0.025em;
 }
 
 .item-info {
@@ -90,10 +151,13 @@ body {
   z-index: 999;
   transition: transform 0.3s ease;
   transform: translateX(0);
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar ul {
   list-style: none;
+  flex: 1;
 }
 
 .sidebar li {
@@ -121,12 +185,42 @@ body {
   color: #ffffff;
 }
 
+/* Sidebar Footer */
+.sidebar-footer {
+  margin-top: auto;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logout-btn {
+  color: #fca5a5 !important;
+  text-decoration: none;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+  font-weight: 500;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-left-color: #fca5a5;
+  color: #ffffff !important;
+  transform: translateX(5px);
+}
+
+.logout-btn i {
+  font-size: 1.1rem;
+}
+
 /* Main Content */
 main {
   margin-left: 280px;
-  margin-top: 80px;
+  margin-top: 112px;
   padding: 2rem;
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 112px);
   background: #f4f7fa;
 }
 .form-section {
@@ -162,21 +256,31 @@ main {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  align-items: end;
+  align-items: stretch; /* đảm bảo chiều cao bằng nhau */
 }
 
 .employee-form input,
 .employee-form select {
-  padding: 0.75rem 1rem;
+  flex: 1; /* các input sẽ giãn đều nhau */
+  min-width: 148px; /* chiều rộng tối thiểu */
+  height: 44px; /* chiều cao đồng nhất */
+  padding: 0.5rem 1rem;
   border: 1px solid #d1d5db;
   border-radius: 6px;
-  width: 200px;
   font-size: 0.9rem;
   background: #ffffff;
   transition: all 0.2s ease;
   font-family: "Inter", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #1f2937;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+}
+
+
+.employee-form button {
+  height: 44px;
+  flex-shrink: 0; /* button không bị co lại */
+  white-space: nowrap; /* text không bị xuống dòng */
 }
 
 .employee-form input:focus,
@@ -335,6 +439,15 @@ main {
     justify-content: space-between;
   }
 
+  .page-title {
+    margin-left: 0.25rem;
+    padding: 0;
+  }
+
+  .page-title h1 {
+    font-size: 1.5rem;
+  }
+
   .menu-toggle {
     display: flex;
     align-items: center;
@@ -348,17 +461,34 @@ main {
     order: 0; /* Đặt logo ở giữa */
   }
 
+  /* Sidebar responsive - Mobile */
   .sidebar {
-    transform: translateX(-100%);
-    width: 250px;
+    transform: translateX(-100%) !important;
   }
 
   .sidebar.active {
-    transform: translateX(0);
+    transform: translateX(0) !important;
+  }
+
+  /* Overlay khi sidebar hiển thị */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    display: none;
+  }
+
+  .sidebar-overlay.active {
+    display: block;
   }
 
   main {
     margin-left: 0;
+    margin-top: 112px;
     transition: margin-left 0.3s ease;
     padding: 1rem;
   }
@@ -377,11 +507,12 @@ main {
     flex-direction: column;
     align-items: stretch;
   }
-
+  
   .employee-form input,
   .employee-form select {
     width: 100%;
     margin-bottom: 0.5rem;
+    flex: none; /* reset flex trong mobile */
   }
 
   .form-section::-webkit-scrollbar {
@@ -457,6 +588,23 @@ main {
 
   h1 {
     font-size: 1.3rem;
+  }
+}
+
+/* Desktop - Sidebar luôn hiển thị */
+@media (min-width: 769px) {
+  .sidebar {
+    transform: translateX(0) !important;
+  }
+  
+  .sidebar-overlay {
+    display: none !important;
+  }
+
+  /* Main content responsive */
+  main {
+    margin-left: 280px;
+    transition: margin-left 0.3s ease;
   }
 }
 

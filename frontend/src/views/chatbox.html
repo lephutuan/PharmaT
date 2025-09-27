@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quản Lý Tiệm Thuốc Tự Động - Đối Tác</title>
-    <link rel="stylesheet" href="../assets/css/warning.css" />
+    <title>Quản Lý Tiệm Thuốc Tự Động - Chatbox</title>
+    <link rel="stylesheet" href="../assets/css/chatbox.css" />
     <link rel="stylesheet" href="../assets/css/common-responsive.css" />
     <link
       rel="stylesheet"
@@ -18,7 +18,10 @@
         <i class="fa-solid fa-bars"></i>
       </div>
       <div class="logo">
-        <a href="#">PharmaT</a>
+        <img src="../assets/images/logo.png" alt="PharmaT Logo" class="logo-img" onclick="window.location.href='home.html'">
+      </div>
+      <div class="page-title">
+        <h1>Chat box cảnh báo</h1>
       </div>
     </nav>
 
@@ -32,7 +35,7 @@
           <a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a>
         </li>
         <li>
-          <a href="products.html" onclick="setActive(this)">📝 Đơn thuốc</a>
+          <a href="prescriptions.html" onclick="setActive(this)">📝 Đơn thuốc</a>
         </li>
         <li>
           <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
@@ -42,14 +45,24 @@
           <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
         </li>
         <li>
-          <a href="warning.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
+          <a href="chatbox.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
         </li>
       </ul>
+      
+      <!-- Logout Button -->
+      <div class="sidebar-footer">
+        <a href="login.html" class="logout-btn" onclick="logout()">
+          <i class="fa-solid fa-sign-out-alt"></i>
+          Đăng xuất
+        </a>
+      </div>
     </aside>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <!-- Main Content -->
   <main>
-    <h1>Chat box cảnh báo</h1>
     <div class="chat-container">
       <!-- Tin nhắn cảnh báo -->
       <div class="chat-message bot">
@@ -83,14 +96,15 @@
 
       <!-- Ô nhập lệnh -->
       <div class="chat-input-container">
-        <input type="text" placeholder="Nhập nội dung..." />
-        <button class="btn-attach"><i class="fa-solid fa-paperclip"></i></button>
-        <button class="btn-send"><i class="fa-solid fa-paper-plane"></i></button>
+        <textarea placeholder="Nhập nội dung..." rows="3"></textarea>
+        <div class="chat-input-buttons">
+          <button class="btn-attach"><i class="fa-solid fa-paperclip"></i></button>
+          <button class="btn-send"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
       </div>
     </div>
   </main>
 
   </body>
-  <script src="../assets/js/navbar.js"></script>
-  <script src="../assets/js/sidebar.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
 </html>

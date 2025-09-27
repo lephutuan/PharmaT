@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quản Lý Tiệm Thuốc Tự Động - Sản Phẩm</title>
-    <link rel="stylesheet" href="../assets/css/products.css" />
+    <title>Quản Lý Tiệm Thuốc Tự Động - Đơn Thuốc</title>
+    <link rel="stylesheet" href="../assets/css/prescriptions.css" />
     <link rel="stylesheet" href="../assets/css/api-styles.css" />
     <link rel="stylesheet" href="../assets/css/common-responsive.css" />
     <!-- Awesomplete CSS & JS CDN -->
@@ -22,7 +22,10 @@
         <i class="fa-solid fa-bars"></i>
       </div>
       <div class="logo">
-        <a href="#">💊 PharmaT</a>
+        <img src="../assets/images/logo.png" alt="PharmaT Logo" class="logo-img" onclick="window.location.href='home.html'">
+      </div>
+      <div class="page-title">
+        <h1>Đơn thuốc</h1>
       </div>
     </nav>
 
@@ -36,7 +39,7 @@
           <a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a>
         </li>
         <li>
-          <a href="products.html" onclick="setActive(this)">📝 Đơn thuốc</a>
+          <a href="prescriptions.html" onclick="setActive(this)">📝 Đơn thuốc</a>
         </li>
         <li>
           <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
@@ -46,14 +49,24 @@
           <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
         </li>
         <li>
-          <a href="warning.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
+          <a href="chatbox.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
         </li>
       </ul>
+      
+      <!-- Logout Button -->
+      <div class="sidebar-footer">
+        <a href="login.html" class="logout-btn" onclick="logout()">
+          <i class="fa-solid fa-sign-out-alt"></i>
+          Đăng xuất
+        </a>
+      </div>
     </aside>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <!-- Main Content -->
     <main>
-    <h1>📝 Đơn thuốc</h1>
 
     <!-- 1. Thông tin khách hàng và nhân viên -->
     <section class="form-section">
@@ -67,16 +80,6 @@
           </select>
           <button class="btn btn-secondary" id="btnAddCustomer">+ Thêm khách hàng mới</button>
         </div>
-        
-        <div style="margin-bottom: 15px;">
-          <label for="employeeSelect" style="display: block; margin-bottom: 5px; font-weight: bold;">Nhân viên thực hiện:</label>
-          <select id="employeeSelect">
-            <option value="">-- Chọn nhân viên --</option>
-            <!-- Các option sẽ được render từ JS -->
-          </select>
-        </div>
-        
-        <!-- Form thêm khách hàng mới, ẩn mặc định -->
         <div id="addCustomerForm" style="display:none; gap: 8px; align-items: center; margin-top: 8px;">
           <input type="text" id="newCustomerName" placeholder="Tên khách hàng" style="width: 180px;" />
           <input type="text" id="newCustomerPhone" placeholder="SĐT" style="width: 120px;" />
@@ -88,6 +91,16 @@
         <div class="customer-info" id="customerInfo">
           <!-- Tên, sđt, dị ứng sẽ hiển thị tại đây -->
         </div>
+        <div style="margin-bottom: 15px;">
+          <label for="employeeSelect" style="display: block; margin-bottom: 5px; font-weight: bold;">Nhân viên thực hiện:</label>
+          <select id="employeeSelect">
+            <option value="">-- Chọn nhân viên --</option>
+            <!-- Các option sẽ được render từ JS -->
+          </select>
+        </div>
+        
+        <!-- Form thêm khách hàng mới, ẩn mặc định -->
+        
       </div>
     </section>
 
@@ -131,8 +144,7 @@
   </main>
 
   </body>
-  <script src="../assets/js/navbar.js"></script>
-  <script src="../assets/js/sidebar.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
   <!-- Backend scripts removed for frontend-only version -->
   <script>
     // Dữ liệu mẫu cho demo

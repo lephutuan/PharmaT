@@ -1,5 +1,64 @@
 /* Common Responsive Styles for All Pages */
 
+/* Sidebar Base Styles */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 80px;
+  width: 280px;
+  height: calc(100vh - 80px);
+  background: #1e40af;
+  padding: 2rem 0;
+  z-index: 999;
+  transition: transform 0.3s ease;
+  transform: translateX(0);
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar li {
+  margin-bottom: 0.5rem;
+}
+
+.sidebar a {
+  color: #e5e7eb;
+  text-decoration: none;
+  padding: 1rem 2rem;
+  display: block;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+}
+
+.sidebar a:hover {
+  background: #2563eb;
+  border-left-color: #93c5fd;
+  transform: translateX(5px);
+}
+
+.sidebar a.active {
+  background: #2563eb;
+  border-left-color: #93c5fd;
+  color: #ffffff;
+}
+
+/* Sidebar Overlay */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  display: none;
+}
+
+.sidebar-overlay.active {
+  display: block;
+}
+
 /* Mobile First Responsive Design */
 @media (max-width: 768px) {
   /* Navbar responsive */
@@ -25,6 +84,16 @@
     flex: 1;
     text-align: center;
     order: 0; /* Đặt logo ở giữa */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .logo-img {
+    height: 45px;
+    width: auto;
+    animation: none; /* Tắt animation trên mobile để tiết kiệm pin */
   }
 
   .logo a {
@@ -34,20 +103,36 @@
     font-weight: 700;
   }
 
-  /* Sidebar responsive */
+  /* Sidebar responsive - Mobile */
   .sidebar {
-    transform: translateX(-100%);
-    width: 250px;
-    transition: transform 0.3s ease;
+    transform: translateX(-100%) !important;
   }
 
   .sidebar.active {
-    transform: translateX(0);
+    transform: translateX(0) !important;
+  }
+
+  /* Main content mobile */
+  main {
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+    padding: 1rem;
+  }
+}
+
+/* Desktop - Sidebar luôn hiển thị */
+@media (min-width: 769px) {
+  .sidebar {
+    transform: translateX(0) !important;
+  }
+  
+  .sidebar-overlay {
+    display: none !important;
   }
 
   /* Main content responsive */
   main {
-    margin-left: 0;
+    margin-left: 280px;
     transition: margin-left 0.3s ease;
     padding: 1rem;
   }
@@ -122,6 +207,11 @@
   /* Extra small devices */
   .navbar {
     padding: 0.75rem;
+  }
+
+  .logo-img {
+    height: 40px;
+    width: auto;
   }
 
   .logo a {

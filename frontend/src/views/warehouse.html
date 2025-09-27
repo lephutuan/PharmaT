@@ -22,7 +22,10 @@
         <i class="fa-solid fa-bars"></i>
       </div>
       <div class="logo">
-        <a href="#">PharmaT</a>
+        <img src="../assets/images/logo.png" alt="PharmaT Logo" class="logo-img" onclick="window.location.href='home.html'">
+      </div>
+      <div class="page-title">
+        <h1>Kho thuốc</h1>
       </div>
     </nav>
 
@@ -36,7 +39,7 @@
           <a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a>
         </li>
         <li>
-          <a href="products.html" onclick="setActive(this)">📝 Đơn thuốc</a>
+          <a href="prescriptions.html" onclick="setActive(this)">📝 Đơn thuốc</a>
         </li>
         <li>
           <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
@@ -46,14 +49,24 @@
           <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
         </li>
         <li>
-          <a href="warning.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
+          <a href="chatbox.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
         </li>
       </ul>
+      
+      <!-- Logout Button -->
+      <div class="sidebar-footer">
+        <a href="login.html" class="logout-btn" onclick="logout()">
+          <i class="fa-solid fa-sign-out-alt"></i>
+          Đăng xuất
+        </a>
+      </div>
     </aside>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <!-- Main Content -->
   <main>
-    <h1>Kho thuốc</h1>
     <div class="warehouse-actions">
       <button class="add-button">+ Thêm mới</button>
       <div class="search-bar">
@@ -257,8 +270,7 @@
     </div>
 
   </body>
-  <script src="../assets/js/navbar.js"></script>
-  <script src="../assets/js/sidebar.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
   <!-- Backend scripts removed for frontend-only version -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {

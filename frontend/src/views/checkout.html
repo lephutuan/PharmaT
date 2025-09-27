@@ -19,7 +19,10 @@
         <i class="fa-solid fa-bars"></i>
       </div>
       <div class="logo">
-        <a href="#">PharmaT</a>
+        <img src="../assets/images/logo.png" alt="PharmaT Logo" class="logo-img" onclick="window.location.href='home.html'">
+      </div>
+      <div class="page-title">
+        <h1>Thanh toán hóa đơn</h1>
       </div>
     </nav>
 
@@ -33,7 +36,7 @@
           <a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a>
         </li>
         <li>
-          <a href="products.html" onclick="setActive(this)">📝 Đơn thuốc</a>
+          <a href="prescriptions.html" onclick="setActive(this)">📝 Đơn thuốc</a>
         </li>
         <li>
           <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
@@ -43,14 +46,24 @@
           <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
         </li>
         <li>
-          <a href="warning.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
+          <a href="chatbox.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
         </li>
       </ul>
+      
+      <!-- Logout Button -->
+      <div class="sidebar-footer">
+        <a href="login.html" class="logout-btn" onclick="logout()">
+          <i class="fa-solid fa-sign-out-alt"></i>
+          Đăng xuất
+        </a>
+      </div>
     </aside>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <!-- Main Content -->
     <main>
-      <h1>Thanh toán hóa đơn</h1>
       <div class="invoice-container">
         <div class="invoice-details">
           <p>Mã đơn: </p>
@@ -86,7 +99,6 @@
         <div class="payment-options">
           <label><input type="radio" name="payment" checked /> Tiền mặt</label>
           <label><input type="radio" name="payment" /> Chuyển khoản</label>
-          <label><input type="radio" name="payment" /> Ví điện tử</label>
         </div>
         <div class="total-amount">TỔNG CỘNG: </div>
         <a href="#" class="btn">Xác nhận và tạo hóa đơn</a>
@@ -95,9 +107,27 @@
         </div>
       </div>
     </main>
+
+    <!-- QR Code Modal -->
+    <div id="qrModal" class="qr-modal">
+      <div class="qr-modal-content">
+        <h3>💳 Thanh toán chuyển khoản</h3>
+        <div class="qr-code-container">
+          <img src="../assets/images/qr.jpg" alt="QR Code" id="qrCodeImage">
+        </div>
+        <div class="qr-amount" id="qrAmount">0đ</div>
+        <div class="qr-instructions">
+          Quét mã QR bằng ứng dụng ngân hàng để thanh toán<br>
+          Hoặc chuyển khoản đến số tài khoản: <strong>1234567890</strong>
+        </div>
+        <div class="qr-modal-buttons">
+          <button class="qr-btn qr-btn-primary" onclick="confirmQRPayment()">Đã thanh toán</button>
+          <button class="qr-btn qr-btn-secondary" onclick="closeQRModal()">Hủy</button>
+        </div>
+      </div>
+    </div>
   </body>
-  <script src="../assets/js/navbar.js"></script>
-  <script src="../assets/js/sidebar.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
   <!-- Backend scripts removed for frontend-only version -->
   <script>
     let donThuocList = [];
@@ -303,6 +333,56 @@
         totalAmount += chiTiet.so_luong * chiTiet.gia_ban;
       });
 
+      // Nếu là chuyển khoản, hiển thị QR modal
+      if (paymentMethod === 'Chuyển khoản') {
+        showQRModal(totalAmount);
+        return;
+      }
+
+      // Nếu là tiền mặt, xử lý thanh toán trực tiếp
+      await processPayment(totalAmount, paymentMethod);
+    }
+
+    // Hiển thị QR modal
+    function showQRModal(totalAmount) {
+      const modal = document.getElementById('qrModal');
+      const amountElement = document.getElementById('qrAmount');
+      
+      // Cập nhật số tiền
+      amountElement.textContent = formatCurrency(totalAmount);
+      
+      // Hiển thị modal
+      modal.style.display = 'block';
+    }
+
+    // Đóng QR modal
+    function closeQRModal() {
+      const modal = document.getElementById('qrModal');
+      modal.style.display = 'none';
+    }
+
+    // Xác nhận thanh toán QR
+    async function confirmQRPayment() {
+      const selectedValue = document.getElementById('donThuocSelect').value;
+      
+      if (!selectedValue || selectedValue === "") {
+        UI.showMessage('Vui lòng chọn đơn thuốc cần thanh toán', 'error');
+        return;
+      }
+
+      // Tính tổng tiền
+      let totalAmount = 0;
+      selectedDonThuoc.chi_tiet.forEach(chiTiet => {
+        totalAmount += chiTiet.so_luong * chiTiet.gia_ban;
+      });
+
+      // Đóng modal và xử lý thanh toán
+      closeQRModal();
+      await processPayment(totalAmount, 'Chuyển khoản');
+    }
+
+    // Xử lý thanh toán
+    async function processPayment(totalAmount, paymentMethod) {
       try {
         UI.showLoading();
         
@@ -335,11 +415,29 @@
       }
     }
 
+    // Format currency helper
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+      }).format(amount);
+    }
+
     // Thêm event listener cho button xác nhận
     document.addEventListener('DOMContentLoaded', function() {
       const confirmBtn = document.querySelector('.btn');
       if (confirmBtn) {
         confirmBtn.onclick = confirmPayment;
+      }
+
+      // Đóng QR modal khi click bên ngoài
+      const qrModal = document.getElementById('qrModal');
+      if (qrModal) {
+        qrModal.addEventListener('click', function(event) {
+          if (event.target === qrModal) {
+            closeQRModal();
+          }
+        });
       }
     });
   </script>

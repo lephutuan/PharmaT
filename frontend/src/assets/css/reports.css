@@ -16,7 +16,6 @@ body {
   border-bottom: 1px solid #e2e8f0;
   padding: 1rem 1.5rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
   position: fixed;
   top: 0;
@@ -25,11 +24,56 @@ body {
   z-index: 1000;
 }
 
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.logo-img {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 50%;
+  padding: 8px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.8));
+  filter: drop-shadow(0 4px 8px rgba(30, 64, 175, 0.3));
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.logo-img:hover {
+  filter: drop-shadow(0 6px 12px rgba(30, 64, 175, 0.5));
+  transform: rotate(5deg);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(240, 248, 255, 0.9));
+}
+
+@keyframes logoGlow {
+  0% {
+    filter: drop-shadow(0 4px 8px rgba(30, 64, 175, 0.3));
+  }
+  100% {
+    filter: drop-shadow(0 4px 8px rgba(30, 64, 175, 0.6));
+  }
+}
+
 .logo a {
   color: #1e40af;
   text-decoration: none;
   font-size: 1.8rem;
   font-weight: 700;
+  text-shadow: 0 2px 4px rgba(30, 64, 175, 0.2);
+  transition: all 0.3s ease;
+}
+
+.logo a:hover {
+  color: #2563eb;
+  text-shadow: 0 2px 4px rgba(30, 64, 175, 0.4);
 }
 
 .menu-toggle {
@@ -38,6 +82,23 @@ body {
   color: #1e40af;
   padding: 0.5rem;
   display: none;
+}
+
+.page-title {
+  margin-left: 1.25rem;
+  text-align: left;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.page-title h1 {
+  font-size: 1.75rem;
+  color: #1e40af;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(30, 64, 175, 0.1);
+  letter-spacing: -0.025em;
 }
 
 /* Sidebar Styles */
@@ -52,10 +113,13 @@ body {
   z-index: 999;
   transition: transform 0.3s ease;
   transform: translateX(0);
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar ul {
   list-style: none;
+  flex: 1;
 }
 
 .sidebar li {
@@ -83,12 +147,42 @@ body {
   color: #ffffff;
 }
 
+/* Sidebar Footer */
+.sidebar-footer {
+  margin-top: auto;
+  padding: 1rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logout-btn {
+  color: #fca5a5 !important;
+  text-decoration: none;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+  font-weight: 500;
+}
+
+.logout-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-left-color: #fca5a5;
+  color: #ffffff !important;
+  transform: translateX(5px);
+}
+
+.logout-btn i {
+  font-size: 1.1rem;
+}
+
 /* Main Content */
 main {
   margin-left: 280px;
-  margin-top: 80px;
+  margin-top: 112px;
   padding: 2rem;
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 112px);
   background: #f4f7fa;
 }
 
@@ -270,14 +364,30 @@ main {
   padding: 1.5rem;
   border: 1px solid #e5e7eb;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  height: 400px;
+  height: 400px; /* Tăng chiều cao */
   position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Ngăn nội dung tràn ra ngoài */
+}
+
+/* Đặc biệt cho chart-container có legend */
+.chart-container:has(.chart-legend) {
+  height: 500px; /* Chiều cao lớn hơn cho chart có legend */
+  padding-bottom: 2rem; /* Thêm padding-bottom */
 }
 
 .chart-container canvas {
   width: 100% !important;
   height: 280px !important;
   max-height: 280px !important;
+  flex-shrink: 0; /* Không bị co lại */
+}
+
+/* Canvas trong chart có legend */
+.chart-container:has(.chart-legend) canvas {
+  height: 300px !important; /* Tăng chiều cao cho chart có legend */
+  max-height: 300px !important;
 }
 
 .chart-header {
@@ -285,6 +395,7 @@ main {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
+  flex-shrink: 0; /* Không bị co lại */
 }
 
 .chart-header h3 {
@@ -317,8 +428,28 @@ main {
 
 /* Top Medicines List */
 .top-medicines-list {
-  max-height: 400px;
+  max-height: 280px; /* Giảm chiều cao để phù hợp với chart */
   overflow-y: auto;
+  padding-right: 0.5rem; /* Tạo không gian cho scroll bar */
+}
+
+/* Custom scrollbar cho top-medicines-list */
+.top-medicines-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.top-medicines-list::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.top-medicines-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.top-medicines-list::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 .medicine-item {
@@ -369,10 +500,34 @@ main {
 
 /* Chart Legend */
 .chart-legend {
-  margin-top: 1rem;
+  margin-top: 1.5rem; /* Tăng margin-top */
+  margin-bottom: 1rem; /* Thêm margin-bottom */
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  max-height: 150px; /* Tăng chiều cao tối đa */
+  overflow-y: auto;
+  padding-right: 0.5rem; /* Tạo không gian cho scroll bar */
+  flex: 1; /* Cho phép legend chiếm không gian còn lại */
+}
+
+/* Custom scrollbar cho chart-legend */
+.chart-legend::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chart-legend::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.chart-legend::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.chart-legend::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 .legend-item {
@@ -651,6 +806,15 @@ tr:hover {
     justify-content: space-between;
   }
 
+  .page-title {
+    margin-left: 0.25rem;
+    padding: 0;
+  }
+
+  .page-title h1 {
+    font-size: 1.5rem;
+  }
+
   .menu-toggle {
     display: flex;
     align-items: center;
@@ -666,17 +830,34 @@ tr:hover {
     /* Đặt logo ở giữa */
   }
 
+  /* Sidebar responsive - Mobile */
   .sidebar {
-    transform: translateX(-100%);
-    width: 250px;
+    transform: translateX(-100%) !important;
   }
 
   .sidebar.active {
-    transform: translateX(0);
+    transform: translateX(0) !important;
+  }
+
+  /* Overlay khi sidebar hiển thị */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    display: none;
+  }
+
+  .sidebar-overlay.active {
+    display: block;
   }
 
   main {
     margin-left: 0;
+    margin-top: 112px;
     padding: 1rem;
   }
 
@@ -692,6 +873,23 @@ tr:hover {
   .table-controls {
     flex-wrap: wrap;
     align-items: stretch;
+  }
+}
+
+/* Desktop - Sidebar luôn hiển thị */
+@media (min-width: 769px) {
+  .sidebar {
+    transform: translateX(0) !important;
+  }
+  
+  .sidebar-overlay {
+    display: none !important;
+  }
+
+  /* Main content responsive */
+  main {
+    margin-left: 280px;
+    transition: margin-left 0.3s ease;
   }
 }
 
