@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thanh Toán</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../assets/css/checkout.css" />
+    <link rel="stylesheet" href="../assets/css/api-styles.css" />
+    <link rel="stylesheet" href="../assets/css/common-responsive.css" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="menu-toggle" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+      <div class="logo">
+        <img src="../assets/images/logo.png" alt="PharmaT Logo" class="logo-img" onclick="window.location.href='home.html'">
+      </div>
+      <div class="page-title">
+        <h1>Thanh toán hóa đơn</h1>
+      </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li>
+          <a href="home.html" onclick="setActive(this)">🏠 Trang chủ</a>
+        </li>
+        <li>
+          <a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a>
+        </li>
+        <li>
+          <a href="prescriptions.html" onclick="setActive(this)">📝 Đơn thuốc</a>
+        </li>
+        <li>
+          <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
+        </li>
+        <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
+        <li>
+          <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
+        </li>
+        <li>
+          <a href="chatbox.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
+        </li>
+      </ul>
+      
+      <!-- Logout Button -->
+      <div class="sidebar-footer">
+        <a href="login.html" class="logout-btn" onclick="logout()">
+          <i class="fa-solid fa-sign-out-alt"></i>
+          Đăng xuất
+        </a>
+      </div>
+    </aside>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- Main Content -->
+    <main>
+      <div class="invoice-container">
+        <div class="invoice-details">
+          <p>Mã đơn: </p>
+          <p>Khách hàng: </p>
+          <p>Nhân viên: </p>
+        </div>
+        <div class="table-container">
+          <table class="invoice-table">
+            <thead>
+              <tr>
+                <th>Tên thuốc</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>Thành tiền</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="payment-options">
+          <label><input type="radio" name="payment" checked /> Tiền mặt</label>
+          <label><input type="radio" name="payment" /> Chuyển khoản</label>
+        </div>
+        <div class="total-amount">TỔNG CỘNG: </div>
+        <a href="#" class="btn">Xác nhận và tạo hóa đơn</a>
+        <div class="footer-note">
+          * Hóa đơn sẽ được lưu và gửi đến ngay sau khi xác nhận
+        </div>
+      </div>
+    </main>
+
+    <!-- QR Code Modal -->
+    <div id="qrModal" class="qr-modal">
+      <div class="qr-modal-content">
+        <h3>💳 Thanh toán chuyển khoản</h3>
+        <div class="qr-code-container">
+          <img src="../assets/images/qr.jpg" alt="QR Code" id="qrCodeImage">
+        </div>
+        <div class="qr-amount" id="qrAmount">0đ</div>
+        <div class="qr-instructions">
+          Quét mã QR bằng ứng dụng ngân hàng để thanh toán<br>
+          Hoặc chuyển khoản đến số tài khoản: <strong>1234567890</strong>
+        </div>
+        <div class="qr-modal-buttons">
+          <button class="qr-btn qr-btn-primary" onclick="confirmQRPayment()">Đã thanh toán</button>
+          <button class="qr-btn qr-btn-secondary" onclick="closeQRModal()">Hủy</button>
+        </div>
+      </div>
+    </div>
+  </body>
+    <script src="../assets/js/sidebar.js"></script>
+  <!-- Backend scripts removed for frontend-only version -->
+  <script>
+    let donThuocList = [];
+    let selectedDonThuoc = null;
+
+    // Load dữ liệu khi trang load
+    document.addEventListener('DOMContentLoaded', async function() {
+      // Hiển thị dropdown ngay từ đầu
+      displayDonThuocSelect();
+      // Sau đó load dữ liệu
+      await loadDonThuoc();
+    });
+
+    // Load danh sách đơn thuốc chưa thanh toán
+    async function loadDonThuoc() {
+      try {
+        UI.showLoading();
+        const data = await API.getDonThuoc();
+        donThuocList = data.records.filter(don => don.da_thanh_toan === 'Chưa thanh toán');
+        updateDonThuocSelect();
+      } catch (error) {
+        UI.showMessage('Lỗi khi tải danh sách đơn thuốc: ' + error.message, 'error');
+        // Vẫn cập nhật dropdown ngay cả khi có lỗi
+        updateDonThuocSelect();
+      } finally {
+        UI.hideLoading();
+      }
+    }
+
+    // Hiển thị select đơn thuốc (luôn xuất hiện)
+    function displayDonThuocSelect() {
+      const container = document.querySelector('.invoice-details');
+      const selectHtml = `
+        <div class="don-thuoc-select">
+          <label for="donThuocSelect">Chọn đơn thuốc:</label>
+          <select id="donThuocSelect" onchange="loadDonThuocDetails()">
+            <option value="">-- Chọn đơn thuốc --</option>
+          </select>
+        </div>
+      `;
+      
+      container.innerHTML = selectHtml + container.innerHTML;
+    }
+
+    // Cập nhật nội dung select đơn thuốc
+    function updateDonThuocSelect() {
+      const select = document.getElementById('donThuocSelect');
+      if (!select) return;
+
+      // Giữ lại option đầu tiên
+      select.innerHTML = '<option value="">-- Chọn đơn thuốc --</option>';
+      
+      // Thêm các đơn thuốc nếu có
+      if (donThuocList.length > 0) {
+        donThuocList.forEach(don => {
+          const option = document.createElement('option');
+          option.value = don.ma_don;
+          option.textContent = `Đơn #${don.ma_don} - ${don.ten_kh}`;
+          select.appendChild(option);
+        });
+      } else {
+        // Thêm thông báo khi không có đơn thuốc
+        const option = document.createElement('option');
+        option.value = "";
+        option.textContent = "-- Không có đơn thuốc chưa thanh toán --";
+        option.disabled = true;
+        select.appendChild(option);
+      }
+    }
+
+    // Load chi tiết đơn thuốc
+    async function loadDonThuocDetails() {
+      const maDon = document.getElementById('donThuocSelect').value;
+      if (!maDon) {
+        clearInvoiceDetails();
+        return;
+      }
+
+      selectedDonThuoc = donThuocList.find(don => don.ma_don == maDon);
+      if (selectedDonThuoc) {
+        try {
+          UI.showLoading();
+          // Lấy chi tiết thuốc từ database
+          const chiTietData = await API.getChiTietDonThuoc(maDon);
+          selectedDonThuoc.chi_tiet = chiTietData.records;
+          updateInvoiceDetails();
+        } catch (error) {
+          UI.showMessage('Lỗi khi tải chi tiết đơn thuốc: ' + error.message, 'error');
+        } finally {
+          UI.hideLoading();
+        }
+      }
+    }
+
+    // Cập nhật thông tin hóa đơn
+    function updateInvoiceDetails() {
+      const detailsDiv = document.querySelector('.invoice-details');
+      
+      // Giữ lại dropdown, chỉ cập nhật thông tin chi tiết
+      const dropdownHtml = detailsDiv.querySelector('.don-thuoc-select').outerHTML;
+      detailsDiv.innerHTML = dropdownHtml + `
+        <p>Mã đơn: #${selectedDonThuoc.ma_don}</p>
+        <p>Khách hàng: ${selectedDonThuoc.ten_kh}</p>
+        <p>Nhân viên: ${selectedDonThuoc.ten_nv}</p>
+        <p>Ngày tạo: ${UI.formatDate(selectedDonThuoc.ngay_tao)}</p>
+      `;
+
+      // Cần gán lại event listener cho dropdown sau khi cập nhật HTML
+      const newSelect = document.getElementById('donThuocSelect');
+      if (newSelect) {
+        newSelect.value = selectedDonThuoc.ma_don;
+        newSelect.onchange = loadDonThuocDetails;
+      }
+
+      // Hiển thị danh sách thuốc
+      displayInvoiceItems();
+    }
+
+    // Hiển thị danh sách thuốc trong hóa đơn
+    function displayInvoiceItems() {
+      const tbody = document.querySelector('.invoice-table tbody');
+      
+      if (!selectedDonThuoc.chi_tiet || selectedDonThuoc.chi_tiet.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Không có thuốc nào</td></tr>';
+        document.querySelector('.total-amount').textContent = 'TỔNG CỘNG: 0đ';
+        return;
+      }
+
+      let totalAmount = 0;
+      tbody.innerHTML = '';
+
+      selectedDonThuoc.chi_tiet.forEach(chiTiet => {
+        const thanhTien = chiTiet.so_luong * chiTiet.gia_ban;
+        totalAmount += thanhTien;
+        
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${chiTiet.ten_thuoc}</td>
+          <td>${chiTiet.so_luong} ${chiTiet.don_vi}</td>
+          <td>${UI.formatCurrency(chiTiet.gia_ban)}</td>
+          <td>${UI.formatCurrency(thanhTien)}</td>
+        `;
+        tbody.appendChild(row);
+      });
+
+      // Cập nhật tổng tiền
+      document.querySelector('.total-amount').textContent = `TỔNG CỘNG: ${UI.formatCurrency(totalAmount)}`;
+    }
+
+    // Xóa thông tin hóa đơn
+    function clearInvoiceDetails() {
+      const detailsDiv = document.querySelector('.invoice-details');
+      
+      // Giữ lại dropdown, chỉ xóa thông tin chi tiết
+      const dropdownHtml = detailsDiv.querySelector('.don-thuoc-select').outerHTML;
+      detailsDiv.innerHTML = dropdownHtml + `
+        <p>Mã đơn: --</p>
+        <p>Khách hàng: --</p>
+        <p>Nhân viên: --</p>
+      `;
+
+      const tbody = document.querySelector('.invoice-table tbody');
+      tbody.innerHTML = '';
+
+      document.querySelector('.total-amount').textContent = 'TỔNG CỘNG: 0đ';
+    }
+
+    // Xác nhận thanh toán
+    async function confirmPayment() {
+      const selectedValue = document.getElementById('donThuocSelect').value;
+      
+      console.log('Debug - selectedValue:', selectedValue);
+      console.log('Debug - selectedDonThuoc:', selectedDonThuoc);
+      
+      if (!selectedValue || selectedValue === "") {
+        UI.showMessage('Vui lòng chọn đơn thuốc cần thanh toán', 'error');
+        return;
+      }
+
+      if (!selectedDonThuoc) {
+        UI.showMessage('Không tìm thấy thông tin đơn thuốc', 'error');
+        return;
+      }
+
+      if (!selectedDonThuoc.chi_tiet || selectedDonThuoc.chi_tiet.length === 0) {
+        UI.showMessage('Đơn thuốc không có chi tiết thuốc. Vui lòng thử chọn lại đơn thuốc.', 'error');
+        return;
+      }
+
+      // Lấy phương thức thanh toán
+      const paymentMethodElement = document.querySelector('input[name="payment"]:checked');
+      let paymentMethod = 'Tiền mặt';
+      if (paymentMethodElement) {
+        const label = paymentMethodElement.closest('label');
+        if (label) {
+          paymentMethod = label.textContent.trim();
+        }
+      }
+
+      // Tính tổng tiền
+      let totalAmount = 0;
+      selectedDonThuoc.chi_tiet.forEach(chiTiet => {
+        totalAmount += chiTiet.so_luong * chiTiet.gia_ban;
+      });
+
+      // Nếu là chuyển khoản, hiển thị QR modal
+      if (paymentMethod === 'Chuyển khoản') {
+        showQRModal(totalAmount);
+        return;
+      }
+
+      // Nếu là tiền mặt, xử lý thanh toán trực tiếp
+      await processPayment(totalAmount, paymentMethod);
+    }
+
+    // Hiển thị QR modal
+    function showQRModal(totalAmount) {
+      const modal = document.getElementById('qrModal');
+      const amountElement = document.getElementById('qrAmount');
+      
+      // Cập nhật số tiền
+      amountElement.textContent = formatCurrency(totalAmount);
+      
+      // Hiển thị modal
+      modal.style.display = 'block';
+    }
+
+    // Đóng QR modal
+    function closeQRModal() {
+      const modal = document.getElementById('qrModal');
+      modal.style.display = 'none';
+    }
+
+    // Xác nhận thanh toán QR
+    async function confirmQRPayment() {
+      const selectedValue = document.getElementById('donThuocSelect').value;
+      
+      if (!selectedValue || selectedValue === "") {
+        UI.showMessage('Vui lòng chọn đơn thuốc cần thanh toán', 'error');
+        return;
+      }
+
+      // Tính tổng tiền
+      let totalAmount = 0;
+      selectedDonThuoc.chi_tiet.forEach(chiTiet => {
+        totalAmount += chiTiet.so_luong * chiTiet.gia_ban;
+      });
+
+      // Đóng modal và xử lý thanh toán
+      closeQRModal();
+      await processPayment(totalAmount, 'Chuyển khoản');
+    }
+
+    // Xử lý thanh toán
+    async function processPayment(totalAmount, paymentMethod) {
+      try {
+        UI.showLoading();
+        
+        // Tạo hóa đơn
+        const hoaDonData = {
+          don_thuoc_id: selectedDonThuoc.ma_don,
+          ma_nv: selectedDonThuoc.ma_nv,
+          tong_tien: totalAmount,
+          phuong_thuc: paymentMethod
+        };
+
+        await API.createHoaDon(hoaDonData);
+
+        UI.showMessage('Thanh toán thành công!', 'success');
+        
+        // Reload danh sách đơn thuốc
+        await loadDonThuoc();
+        clearInvoiceDetails();
+        
+        // Reset dropdown về trạng thái ban đầu
+        const select = document.getElementById('donThuocSelect');
+        if (select) {
+          select.value = '';
+        }
+        
+      } catch (error) {
+        UI.showMessage('Lỗi khi thanh toán: ' + error.message, 'error');
+      } finally {
+        UI.hideLoading();
+      }
+    }
+
+    // Format currency helper
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+      }).format(amount);
+    }
+
+    // Thêm event listener cho button xác nhận
+    document.addEventListener('DOMContentLoaded', function() {
+      const confirmBtn = document.querySelector('.btn');
+      if (confirmBtn) {
+        confirmBtn.onclick = confirmPayment;
+      }
+
+      // Đóng QR modal khi click bên ngoài
+      const qrModal = document.getElementById('qrModal');
+      if (qrModal) {
+        qrModal.addEventListener('click', function(event) {
+          if (event.target === qrModal) {
+            closeQRModal();
+          }
+        });
+      }
+    });
+  </script>
+</html>

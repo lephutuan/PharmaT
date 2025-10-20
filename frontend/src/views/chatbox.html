@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Tiệm Thuốc Tự Động - Chatbox</title>
+    <link rel="stylesheet" href="../assets/css/chatbox.css" />
+    <link rel="stylesheet" href="../assets/css/common-responsive.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="menu-toggle" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+      <div class="logo">
+        <img src="../assets/images/logo.png" alt="PharmaT Logo" class="logo-img" onclick="window.location.href='home.html'">
+      </div>
+      <div class="page-title">
+        <h1>Chat box cảnh báo</h1>
+      </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li>
+          <a href="home.html" onclick="setActive(this)">🏠 Trang chủ</a>
+        </li>
+        <li>
+          <a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a>
+        </li>
+        <li>
+          <a href="prescriptions.html" onclick="setActive(this)">📝 Đơn thuốc</a>
+        </li>
+        <li>
+          <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
+        </li>
+        <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
+        <li>
+          <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
+        </li>
+        <li>
+          <a href="chatbox.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
+        </li>
+      </ul>
+      
+      <!-- Logout Button -->
+      <div class="sidebar-footer">
+        <a href="login.html" class="logout-btn" onclick="logout()">
+          <i class="fa-solid fa-sign-out-alt"></i>
+          Đăng xuất
+        </a>
+      </div>
+    </aside>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- Main Content -->
+  <main>
+    <div class="chat-container">
+      <!-- Tin nhắn cảnh báo -->
+      <div class="chat-message bot">
+        <img src="https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-3d/512/Robot-3d-icon.png" alt="Bot" class="chat-avatar" />
+        <div class="chat-content">
+          <p class="alert-title">[CẢNH BÁO - HÀNG SẮP HẾT]</p>
+          <p>
+            Tên thuốc: Paracetamol 500mg <br />
+            Mã thuốc: T001 <br />
+            Số lượng còn: 5 hộp <br />
+            Ngưỡng tồn kho: 10 hộp <br />
+            Thời gian cảnh báo: 04/07/2025 08:15 <br />
+            👉 Vui lòng kiểm tra và nhập hàng bổ sung.
+          </p>
+        </div>
+      </div>
+
+      <div class="chat-message bot">
+        <img src="https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-3d/512/Robot-3d-icon.png" alt="Bot" class="chat-avatar" />
+        <div class="chat-content">
+          <p class="alert-title">[CẢNH BÁO - THUỐC SẮP HẾT HẠN]</p>
+          <p>
+            Tên thuốc: Thuốc B <br />
+            Mã thuốc: T002 <br />
+            Hạn sử dụng: 27/08/2025 <br />
+            Thời gian cảnh báo: 04/07/2025 08:10 <br />
+            👉 Vui lòng kiểm tra và tiêu thụ trước khi hết hạn.
+          </p>
+        </div>
+      </div>
+
+      <!-- Ô nhập lệnh -->
+      <div class="chat-input-container">
+        <textarea placeholder="Nhập nội dung..." rows="3"></textarea>
+        <div class="chat-input-buttons">
+          <button class="btn-attach"><i class="fa-solid fa-paperclip"></i></button>
+          <button class="btn-send"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  </body>
+    <script src="../assets/js/sidebar.js"></script>
+</html>

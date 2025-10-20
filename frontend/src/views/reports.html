@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản Lý Tiệm Thuốc Tự Động - Báo Cáo</title>
+    <link rel="stylesheet" href="../assets/css/reports.css" />
+    <link rel="stylesheet" href="../assets/css/common-responsive.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="menu-toggle" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+      <div class="logo">
+        <img src="../assets/images/logo.png" alt="PharmaT Logo" class="logo-img" onclick="window.location.href='home.html'">
+      </div>
+      <div class="page-title">
+        <h1>Báo cáo & Thống kê</h1>
+      </div>
+    </nav>
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li>
+          <a href="home.html" onclick="setActive(this)">🏠 Trang chủ</a>
+        </li>
+        <li>
+          <a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a>
+        </li>
+        <li>
+          <a href="prescriptions.html" onclick="setActive(this)">📝 Đơn thuốc</a>
+        </li>
+        <li>
+          <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
+        </li>
+        <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
+        <li>
+          <a href="reports.html" onclick="setActive(this)" class="active">📈 Báo cáo & Thống kê</a>
+        </li>
+        <li>
+          <a href="chatbox.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
+        </li>
+      </ul>
+      
+      <!-- Logout Button -->
+      <div class="sidebar-footer">
+        <a href="login.html" class="logout-btn" onclick="logout()">
+          <i class="fa-solid fa-sign-out-alt"></i>
+          Đăng xuất
+        </a>
+      </div>
+    </aside>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- Main Content -->
+    <main>
+      <!-- Header: Filters -->
+      <div class="report-header">
+        <div class="filters">
+          <div class="filter-group">
+            <label for="timeFilter">Bộ lọc thời gian:</label>
+            <select id="timeFilter" onchange="updateReports()">
+              <option value="today">Hôm nay</option>
+              <option value="week">Tuần này</option>
+              <option value="month" selected>Tháng này</option>
+              <option value="quarter">Quý này</option>
+              <option value="year">Năm này</option>
+              <option value="custom">Tùy chỉnh</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="reportType">Loại báo cáo:</label>
+            <select id="reportType" onchange="updateReports()">
+              <option value="overview" selected>Tổng quan</option>
+              <option value="sales">Bán hàng</option>
+              <option value="inventory">Tồn kho</option>
+              <option value="financial">Tài chính</option>
+            </select>
+          </div>
+          <div class="filter-group custom-date" id="customDateRange" style="display: none;">
+            <input type="date" id="startDate" />
+            <span>đến</span>
+            <input type="date" id="endDate" />
+            <button onclick="applyCustomDate()">Áp dụng</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card revenue">
+          <div class="stat-icon">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="totalRevenue">12.5M</h3>
+            <p>Doanh thu tháng</p>
+            <span class="stat-change positive">+15.3%</span>
+          </div>
+        </div>
+        <div class="stat-card orders">
+          <div class="stat-icon">
+            <i class="fas fa-receipt"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="totalOrders">567</h3>
+            <p>Số hóa đơn</p>
+            <span class="stat-change positive">+8.2%</span>
+          </div>
+        </div>
+        <div class="stat-card inventory">
+          <div class="stat-icon">
+            <i class="fas fa-boxes"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="totalInventory">1,234</h3>
+            <p>Tồn kho hiện tại</p>
+            <span class="stat-change negative">-2.1%</span>
+          </div>
+        </div>
+        <div class="stat-card expiring">
+          <div class="stat-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="stat-content">
+            <h3 id="expiringMeds">23</h3>
+            <p>Thuốc sắp hết hạn</p>
+            <span class="stat-change warning">Cần chú ý</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row 1 -->
+      <div class="charts-row">
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3>📊 Doanh thu theo thời gian</h3>
+            <div class="chart-controls">
+              <button class="chart-btn active" onclick="switchRevenueChart('daily')">Ngày</button>
+              <button class="chart-btn" onclick="switchRevenueChart('weekly')">Tuần</button>
+              <button class="chart-btn" onclick="switchRevenueChart('monthly')">Tháng</button>
+            </div>
+          </div>
+          <canvas id="revenueChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3>🏆 Top thuốc bán chạy</h3>
+            <div class="chart-controls">
+              <button class="chart-btn active" onclick="switchTopMeds('quantity')">Số lượng</button>
+              <button class="chart-btn" onclick="switchTopMeds('revenue')">Doanh thu</button>
+            </div>
+          </div>
+          <div class="top-medicines-list">
+            <div class="medicine-item">
+              <div class="medicine-info">
+                <img src="../assets/images/paracetamol.png" alt="Paracetamol" />
+                <div>
+                  <h4>Paracetamol 500mg</h4>
+                  <p>234 hộp bán</p>
+                </div>
+              </div>
+              <div class="medicine-revenue">2.8M VNĐ</div>
+            </div>
+            <div class="medicine-item">
+              <div class="medicine-info">
+                <img src="../assets/images/amoxicillin.jpg" alt="Amoxicillin" />
+                <div>
+                  <h4>Amoxicillin 250mg</h4>
+                  <p>189 hộp bán</p>
+                </div>
+              </div>
+              <div class="medicine-revenue">1.9M VNĐ</div>
+            </div>
+            <div class="medicine-item">
+              <div class="medicine-info">
+                <img src="../assets/images/omeprazole.jpg" alt="Omeprazole" />
+                <div>
+                  <h4>Omeprazole 20mg</h4>
+                  <p>156 hộp bán</p>
+                </div>
+              </div>
+              <div class="medicine-revenue">1.6M VNĐ</div>
+            </div>
+            <div class="medicine-item">
+              <div class="medicine-info">
+                <img src="../assets/images/vitamin_c.jpg" alt="Vitamin C" />
+                <div>
+                  <h4>Vitamin C 1000mg</h4>
+                  <p>143 hộp bán</p>
+                </div>
+              </div>
+              <div class="medicine-revenue">1.2M VNĐ</div>
+            </div>
+            <div class="medicine-item">
+              <div class="medicine-info">
+                <img src="../assets/images/efferalgan.jpg" alt="Efferalgan" />
+                <div>
+                  <h4>Efferalgan 500mg</h4>
+                  <p>128 hộp bán</p>
+                </div>
+              </div>
+              <div class="medicine-revenue">1.1M VNĐ</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row 2 -->
+      <div class="charts-row">
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3>🥧 Tỉ lệ nhóm thuốc</h3>
+          </div>
+          <canvas id="medicineGroupChart"></canvas>
+          <div class="chart-legend">
+            <div class="legend-item">
+              <span class="legend-color" style="background: #3b82f6;"></span>
+              <span>Thuốc kê đơn (45%)</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color" style="background: #10b981;"></span>
+              <span>Thuốc không kê đơn (30%)</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color" style="background: #f59e0b;"></span>
+              <span>Thực phẩm chức năng (15%)</span>
+            </div>
+            <div class="legend-item">
+              <span class="legend-color" style="background: #ef4444;"></span>
+              <span>Dụng cụ y tế (10%)</span>
+            </div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <div class="chart-header">
+            <h3>📦 Nhập hàng theo thời gian</h3>
+          </div>
+          <canvas id="inventoryChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Detailed Data Table -->
+      <div class="data-table-container">
+        <div class="table-header">
+          <h3>📋 Bảng dữ liệu chi tiết</h3>
+          <div class="table-controls">
+            <input type="text" id="searchTable" placeholder="Tìm kiếm..." onkeyup="filterTable()" />
+            <select id="tableFilter" onchange="filterTable()">
+              <option value="all">Tất cả</option>
+              <option value="high">Doanh thu cao</option>
+              <option value="medium">Doanh thu trung bình</option>
+              <option value="low">Doanh thu thấp</option>
+            </select>
+            <button onclick="exportTable()">
+              <i class="fas fa-download"></i> Xuất Excel
+            </button>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table id="detailTable">
+            <thead>
+              <tr>
+                <th onclick="sortTable(0)">Ngày <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(1)">Doanh thu <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(2)">Số hóa đơn <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(3)">Nhân viên <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(4)">Ghi chú <i class="fas fa-sort"></i></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>21/08/2025</td>
+                <td>1,250,000 VNĐ</td>
+                <td>23</td>
+                <td>Nguyễn Văn A</td>
+                <td>Ca sáng</td>
+              </tr>
+              <tr>
+                <td>20/08/2025</td>
+                <td>980,000 VNĐ</td>
+                <td>18</td>
+                <td>Trần Thị B</td>
+                <td>Ca chiều</td>
+              </tr>
+              <tr>
+                <td>19/08/2025</td>
+                <td>1,450,000 VNĐ</td>
+                <td>28</td>
+                <td>Lê Văn C</td>
+                <td>Ca tối</td>
+              </tr>
+              <tr>
+                <td>18/08/2025</td>
+                <td>750,000 VNĐ</td>
+                <td>15</td>
+                <td>Phạm Thị D</td>
+                <td>Ca sáng</td>
+              </tr>
+              <tr>
+                <td>17/08/2025</td>
+                <td>1,120,000 VNĐ</td>
+                <td>21</td>
+                <td>Hoàng Văn E</td>
+                <td>Ca chiều</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="table-pagination">
+          <button onclick="previousPage()">« Trước</button>
+          <span id="pageInfo">Trang 1 / 5</span>
+          <button onclick="nextPage()">Sau »</button>
+        </div>
+      </div>
+
+      <!-- Alerts Section -->
+      <div class="alerts-section">
+        <div class="alert-container expiring-alert">
+          <div class="alert-header">
+            <h3>⚠️ Cảnh báo thuốc sắp hết hạn</h3>
+            <span class="alert-count">23 sản phẩm</span>
+          </div>
+          <div class="alert-list">
+            <div class="alert-item critical">
+              <img src="../assets/images/paracetamol.png" alt="Paracetamol" />
+              <div class="alert-info">
+                <h4>Paracetamol 500mg</h4>
+                <p>Hết hạn: 25/08/2025 (4 ngày)</p>
+                <span class="alert-quantity">Số lượng: 45 hộp</span>
+              </div>
+              <div class="alert-status critical">Khẩn cấp</div>
+            </div>
+            <div class="alert-item warning">
+              <img src="../assets/images/amoxicillin.jpg" alt="Amoxicillin" />
+              <div class="alert-info">
+                <h4>Amoxicillin 250mg</h4>
+                <p>Hết hạn: 02/09/2025 (12 ngày)</p>
+                <span class="alert-quantity">Số lượng: 28 hộp</span>
+              </div>
+              <div class="alert-status warning">Cảnh báo</div>
+            </div>
+            <div class="alert-item warning">
+              <img src="../assets/images/vitamin_c.jpg" alt="Vitamin C" />
+              <div class="alert-info">
+                <h4>Vitamin C 1000mg</h4>
+                <p>Hết hạn: 15/09/2025 (25 ngày)</p>
+                <span class="alert-quantity">Số lượng: 67 hộp</span>
+              </div>
+              <div class="alert-status warning">Cảnh báo</div>
+            </div>
+          </div>
+          <button class="view-all-btn" onclick="viewAllExpiring()">Xem tất cả</button>
+        </div>
+
+        <div class="alert-container stock-alert">
+          <div class="alert-header">
+            <h3>📦 Cảnh báo tồn kho thấp</h3>
+            <span class="alert-count">15 sản phẩm</span>
+          </div>
+          <div class="alert-list">
+            <div class="alert-item critical">
+              <img src="../assets/images/omeprazole.jpg" alt="Omeprazole" />
+              <div class="alert-info">
+                <h4>Omeprazole 20mg</h4>
+                <p>Tồn kho: 8 hộp</p>
+                <span class="alert-quantity">Mức tối thiểu: 50 hộp</span>
+              </div>
+              <div class="alert-status critical">Hết hàng</div>
+            </div>
+            <div class="alert-item warning">
+              <img src="../assets/images/efferalgan.jpg" alt="Efferalgan" />
+              <div class="alert-info">
+                <h4>Efferalgan 500mg</h4>
+                <p>Tồn kho: 23 hộp</p>
+                <span class="alert-quantity">Mức tối thiểu: 30 hộp</span>
+              </div>
+              <div class="alert-status warning">Sắp hết</div>
+            </div>
+            <div class="alert-item warning">
+              <img src="../assets/images/betadine.jpg" alt="Betadine" />
+              <div class="alert-info">
+                <h4>Betadine 30ml</h4>
+                <p>Tồn kho: 15 hộp</p>
+                <span class="alert-quantity">Mức tối thiểu: 25 hộp</span>
+              </div>
+              <div class="alert-status warning">Sắp hết</div>
+            </div>
+          </div>
+          <button class="view-all-btn" onclick="viewAllLowStock()">Xem tất cả</button>
+        </div>
+      </div>
+    </main>
+
+    <script src="../assets/js/sidebar.js"></script>
+    <script src="../assets/js/reports.js"></script>
+  </body>
+</html>
