@@ -3,6 +3,7 @@
 ## 📋 Tổng quan
 
 PharmaT là một ứng dụng quản lý tiệm thuốc **full-stack** được xây dựng với:
+
 - **Frontend**: HTML, CSS, JavaScript thuần túy
 - **Backend**: Supabase (PostgreSQL + RESTful API)
 - **Hosting**: Static hosting cho frontend, Supabase cloud cho backend
@@ -20,28 +21,32 @@ PharmaT là một ứng dụng quản lý tiệm thuốc **full-stack** được
 ## 🚀 Cách chạy
 
 ### Yêu cầu
+
 - Trình duyệt web hiện đại (Chrome, Firefox, Safari, Edge)
 - Kết nối internet (để kết nối Supabase)
 - HTTP server (không thể chạy qua file://)
 
 ### Phương pháp 1: Live Server (Khuyến nghị)
+
 1. Cài đặt extension "Live Server" trong VS Code
-2. Click chuột phải vào file `frontend/src/views/home.html`
+2. Click chuột phải vào file `index.html`
 3. Chọn "Open with Live Server"
 4. Trình duyệt sẽ tự động mở với địa chỉ local
 
 ### Phương pháp 2: HTTP Server
+
 ```bash
 cd PharmaT
 npx http-server . -p 8080 -o
 ```
 
 ### Phương pháp 3: Python
+
 ```bash
 cd PharmaT
 # Python 3
 python -m http.server 8000
-# Truy cập: http://localhost:8000/frontend/src/views/home.html
+# Truy cập: http://localhost:8000/index.html
 ```
 
 ## 📁 Cấu trúc thư mục
@@ -51,7 +56,7 @@ PharmaT/
 ├── frontend/            # Toàn bộ mã nguồn giao diện
 │   └── src/
 │       ├── views/       # Các trang HTML
-│       │   ├── home.html     # Trang chủ
+│       │   ├── index.html     # Trang chủ
 │       │   ├── warehouse.html # Quản lý kho
 │       │   ├── products.html  # Sản phẩm
 │       │   ├── employees.html # Nhân viên
@@ -108,6 +113,7 @@ PharmaT/
 ## 📊 Database & Backend
 
 ### Supabase Backend
+
 - **Project**: PharmaT (esoksuiwnedmfrxyizlg)
 - **Region**: Singapore (ap-southeast-1)
 - **Database**: PostgreSQL với 8 bảng
@@ -115,18 +121,22 @@ PharmaT/
 - **Security**: Row Level Security (RLS) enabled
 
 ### Dữ liệu mẫu
+
 Database đã được thiết lập với dữ liệu mẫu:
+
 - ✅ **14 loại thuốc** đa dạng
 - ✅ **3 nhân viên** với các vai trò khác nhau
 - ✅ **4 khách hàng** mẫu
 - ✅ Dữ liệu đầy đủ để test tất cả chức năng
 
 ### API Functions
+
 Xem chi tiết trong file `SUPABASE_GUIDE.md`
 
 ## 🔧 Tính năng kỹ thuật
 
 ### Frontend
+
 - **Pure JavaScript**: Không sử dụng framework
 - **Responsive Design**: Mobile-first approach
 - **Chart.js**: Biểu đồ tương tác
@@ -134,6 +144,7 @@ Xem chi tiết trong file `SUPABASE_GUIDE.md`
 - **Modern ES6+**: Async/await, arrow functions
 
 ### Backend (Supabase)
+
 - **PostgreSQL**: Database mạnh mẽ và tin cậy
 - **RESTful API**: Auto-generated từ database schema
 - **Real-time**: WebSocket subscriptions (ready to use)
@@ -164,17 +175,20 @@ Xem chi tiết trong file `SUPABASE_GUIDE.md`
 ## 🏗️ Cấu trúc dự án
 
 ### Frontend (Hiện tại)
+
 - **Vị trí**: `frontend/src/`
 - **Công nghệ**: HTML, CSS, JavaScript thuần
 - **Tính năng**: Giao diện người dùng hoàn chỉnh
 - **Dữ liệu**: Sử dụng dữ liệu mẫu tĩnh
 
 ### Backend (Sẽ phát triển)
+
 - **Vị trí**: `backend/`
 - **Cấu trúc chuẩn**: Controllers, Models, Routes, Middlewares, Services
 - **Lợi ích**: Tách biệt rõ ràng, dễ deploy, dễ test, dễ mở rộng
 
 ### 🎯 Lợi ích của cấu trúc mới
+
 - **Deploy độc lập**: Frontend → Vercel/Netlify, Backend → Render/Heroku
 - **Team collaboration**: Frontend và backend teams làm việc song song
 - **Testing riêng biệt**: Unit tests cho từng layer
@@ -202,6 +216,7 @@ Xem chi tiết trong file `SUPABASE_GUIDE.md`
 ## 📞 Hỗ trợ
 
 Nếu có vấn đề hoặc câu hỏi:
+
 - Kiểm tra console browser (F12) để xem lỗi
 - Đảm bảo mở qua HTTP server (không phải file://)
 - Kiểm tra tương thích trình duyệt
@@ -209,4 +224,3 @@ Nếu có vấn đề hoặc câu hỏi:
 ---
 
 **PharmaT Frontend Only** - Một ứng dụng quản lý tiệm thuốc đơn giản và hiệu quả! 🏥💊
-

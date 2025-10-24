@@ -37,7 +37,7 @@
 ✅ frontend/src/config/api.js            - API functions
 ✅ frontend/src/views/warehouse.html     - Updated with Supabase
 ✅ frontend/src/views/employees.html     - Updated with Supabase
-✅ frontend/src/views/home.html          - Updated with stats
+✅ index.html          - Updated with stats
 ✅ frontend/src/views/prescriptions.html - Updated with Supabase
 ✅ README.md                             - Updated documentation
 ✅ SUPABASE_GUIDE.md                     - Detailed guide
@@ -77,7 +77,7 @@ cd PharmaT
 
 ### Bước 2: Chạy HTTP Server
 **Option 1: Live Server (VS Code)**
-- Right-click `frontend/src/views/home.html`
+- Right-click `index.html`
 - Select "Open with Live Server"
 
 **Option 2: HTTP Server**
@@ -88,12 +88,12 @@ npx http-server . -p 8080 -o
 **Option 3: Python**
 ```bash
 python -m http.server 8000
-# Then open: http://localhost:8000/frontend/src/views/home.html
+# Then open: http://localhost:8000/index.html
 ```
 
 ### Bước 3: Test Các Chức Năng
 
-1. **Trang Chủ** (`home.html`)
+1. **Trang Chủ** (`index.html`)
    - Xem thống kê tự động
    - Dashboard updates real-time
 

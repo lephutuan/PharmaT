@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
   if (logo) {
     logo.addEventListener('click', function(e) {
       e.preventDefault();
-      window.location.href = 'home.html';
+      window.location.href = '../../index.html';
     });
   }
   
@@ -86,10 +86,10 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Highlight active sidebar link based on current page
-  const currentPath = window.location.pathname.split("/").pop() || "home.html";
+  const currentPath = window.location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll(".sidebar a").forEach((link) => {
     const linkPath = link.getAttribute("href").split("/").pop();
-    if (linkPath === currentPath || (currentPath === "home.html" && linkPath === "home.html")) {
+    if (linkPath === currentPath || (currentPath === "index.html" && linkPath === "index.html")) {
       link.classList.add("active");
     } else {
       link.classList.remove("active");

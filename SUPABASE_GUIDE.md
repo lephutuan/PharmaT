@@ -3,6 +3,7 @@
 ## 📋 Tổng Quan
 
 PharmaT đã được tích hợp hoàn chỉnh với Supabase backend, cung cấp:
+
 - ✅ Database PostgreSQL mạnh mẽ
 - ✅ RESTful API tự động
 - ✅ Real-time subscriptions
@@ -20,7 +21,9 @@ PharmaT đã được tích hợp hoàn chỉnh với Supabase backend, cung c�
 ## 🗄️ Database Schema
 
 ### Bảng `thuoc` (Medicines)
+
 Quản lý thông tin thuốc trong kho
+
 ```sql
 - ma_thuoc (PK): Mã thuốc tự động
 - ten_thuoc: Tên thuốc
@@ -37,7 +40,9 @@ Quản lý thông tin thuốc trong kho
 ```
 
 ### Bảng `nhan_vien` (Employees)
+
 Quản lý thông tin nhân viên
+
 ```sql
 - ma_nv (PK): Mã nhân viên tự động
 - ten_nv: Tên nhân viên
@@ -49,7 +54,9 @@ Quản lý thông tin nhân viên
 ```
 
 ### Bảng `khach_hang` (Customers)
+
 Quản lý thông tin khách hàng
+
 ```sql
 - ma_kh (PK): Mã khách hàng tự động
 - ten_kh: Tên khách hàng
@@ -59,7 +66,9 @@ Quản lý thông tin khách hàng
 ```
 
 ### Bảng `don_thuoc` (Prescriptions)
+
 Quản lý đơn thuốc
+
 ```sql
 - ma_don (PK): Mã đơn tự động
 - ma_kh (FK): Mã khách hàng
@@ -70,7 +79,9 @@ Quản lý đơn thuốc
 ```
 
 ### Bảng `chi_tiet_don_thuoc` (Prescription Details)
+
 Chi tiết thuốc trong đơn
+
 ```sql
 - id (PK): ID tự động
 - ma_don (FK): Mã đơn thuốc
@@ -81,7 +92,9 @@ Chi tiết thuốc trong đơn
 ```
 
 ### Bảng `hoa_don` (Invoices)
+
 Quản lý hóa đơn thanh toán
+
 ```sql
 - ma_hd (PK): Mã hóa đơn tự động
 - ma_kh (FK): Mã khách hàng
@@ -95,7 +108,9 @@ Quản lý hóa đơn thanh toán
 ```
 
 ### Bảng `chi_tiet_hoa_don` (Invoice Details)
+
 Chi tiết thuốc trong hóa đơn
+
 ```sql
 - id (PK): ID tự động
 - ma_hd (FK): Mã hóa đơn
@@ -106,7 +121,9 @@ Chi tiết thuốc trong hóa đơn
 ```
 
 ### Bảng `canh_bao` (Alerts)
+
 Quản lý cảnh báo hệ thống
+
 ```sql
 - ma_cb (PK): Mã cảnh báo tự động
 - loai_cb: Loại cảnh báo
@@ -120,6 +137,7 @@ Quản lý cảnh báo hệ thống
 ## 🔐 Row Level Security (RLS)
 
 Tất cả các bảng đều đã được bật RLS với policies cho phép:
+
 - ✅ SELECT (đọc dữ liệu)
 - ✅ INSERT (thêm dữ liệu)
 - ✅ UPDATE (cập nhật dữ liệu)
@@ -130,6 +148,7 @@ Tất cả các bảng đều đã được bật RLS với policies cho phép:
 ## 🚀 API Functions
 
 ### Thuốc (Medicines)
+
 ```javascript
 // Lấy tất cả thuốc
 await API.getThuoc();
@@ -148,6 +167,7 @@ await API.searchThuoc(keyword);
 ```
 
 ### Nhân Viên (Employees)
+
 ```javascript
 // Lấy tất cả nhân viên
 await API.getNhanVien();
@@ -163,6 +183,7 @@ await API.deleteNhanVien(maNV);
 ```
 
 ### Khách Hàng (Customers)
+
 ```javascript
 // Lấy tất cả khách hàng
 await API.getKhachHang();
@@ -178,6 +199,7 @@ await API.deleteKhachHang(maKH);
 ```
 
 ### Đơn Thuốc (Prescriptions)
+
 ```javascript
 // Lấy tất cả đơn thuốc
 await API.getDonThuoc();
@@ -190,6 +212,7 @@ await API.createDonThuoc(donThuocData, chiTietList);
 ```
 
 ### Hóa Đơn (Invoices)
+
 ```javascript
 // Lấy tất cả hóa đơn
 await API.getHoaDon();
@@ -202,6 +225,7 @@ await API.createHoaDon(hoaDonData, chiTietList);
 ```
 
 ### Cảnh Báo (Alerts)
+
 ```javascript
 // Lấy tất cả cảnh báo
 await API.getCanhBao();
@@ -217,18 +241,20 @@ await API.checkAndCreateAlerts();
 ```
 
 ### Thống Kê (Statistics)
+
 ```javascript
 // Lấy thống kê tổng quan
 await API.getStatistics();
 // Returns: {totalMedicines, todayOrders, monthRevenue, alerts}
 
 // Lấy dữ liệu biểu đồ doanh thu
-await API.getRevenueChart('month'); // 'week', 'month', 'year'
+await API.getRevenueChart("month"); // 'week', 'month', 'year'
 ```
 
 ## 📊 Dữ Liệu Mẫu
 
 Database đã được thêm sẵn dữ liệu mẫu:
+
 - ✅ 14 loại thuốc đa dạng
 - ✅ 3 nhân viên
 - ✅ 4 khách hàng
@@ -239,28 +265,31 @@ Database đã được thêm sẵn dữ liệu mẫu:
 ### 1. Chạy Ứng Dụng
 
 **Phương pháp 1: Live Server (Khuyến nghị)**
+
 ```bash
 # Cài extension Live Server trong VS Code
-# Click chuột phải vào file frontend/src/views/home.html
+# Click chuột phải vào file index.html
 # Chọn "Open with Live Server"
 ```
 
 **Phương pháp 2: HTTP Server**
+
 ```bash
 cd PharmaT
 npx http-server . -p 8080 -o
 ```
 
 **Phương pháp 3: Python**
+
 ```bash
 cd PharmaT
 python -m http.server 8000
-# Truy cập: http://localhost:8000/frontend/src/views/home.html
+# Truy cập: http://localhost:8000/index.html
 ```
 
 ### 2. Truy Cập Các Trang
 
-- **Trang chủ**: `home.html` - Dashboard với thống kê tự động
+- **Trang chủ**: `index.html` - Dashboard với thống kê tự động
 - **Kho thuốc**: `warehouse.html` - Quản lý CRUD thuốc đầy đủ
 - **Nhân viên**: `employees.html` - Quản lý nhân viên
 - **Đơn thuốc**: `prescriptions.html` - Tạo và quản lý đơn thuốc
@@ -271,6 +300,7 @@ python -m http.server 8000
 ### 3. Test Các Chức Năng
 
 #### Quản Lý Kho (warehouse.html)
+
 1. Xem danh sách thuốc từ database
 2. Thêm thuốc mới (click "Thêm mới")
 3. Sửa thuốc (click chuột phải vào thuốc → Sửa)
@@ -279,12 +309,14 @@ python -m http.server 8000
 6. Sắp xếp theo các cột
 
 #### Quản Lý Nhân Viên (employees.html)
+
 1. Xem danh sách nhân viên
 2. Thêm nhân viên mới
 3. Sửa thông tin nhân viên
 4. Xóa nhân viên
 
-#### Trang Chủ (home.html)
+#### Trang Chủ (index.html)
+
 1. Xem thống kê tự động cập nhật:
    - Tổng số thuốc
    - Đơn hàng hôm nay
@@ -295,14 +327,17 @@ python -m http.server 8000
 ## 🔧 Troubleshooting
 
 ### Lỗi CORS
+
 Nếu gặp lỗi CORS, hãy chắc chắn chạy qua HTTP server (không phải file://)
 
 ### Không tải được dữ liệu
+
 1. Kiểm tra console (F12) để xem lỗi
 2. Xác nhận internet connection
 3. Kiểm tra Supabase project có đang hoạt động
 
 ### Lỗi khi thêm/sửa/xóa dữ liệu
+
 1. Kiểm tra console để xem chi tiết lỗi
 2. Xác nhận dữ liệu nhập đúng định dạng
 3. Kiểm tra RLS policies trong Supabase Dashboard
@@ -321,7 +356,9 @@ Nếu gặp lỗi CORS, hãy chắc chắn chạy qua HTTP server (không phải
 ## 🔒 Bảo Mật
 
 ### Lưu Ý Quan Trọng
+
 ⚠️ **Anon Key** đang được lưu trong file `supabase.js`. Đây là OK cho development nhưng:
+
 - Key này chỉ có quyền public (do RLS policies)
 - Trong production, nên:
   - Sử dụng environment variables
@@ -329,18 +366,20 @@ Nếu gặp lỗi CORS, hãy chắc chắn chạy qua HTTP server (không phải
   - Giới hạn RLS policies theo user role
 
 ### Cấu Hình Authentication (Tùy Chọn)
+
 Để thêm authentication:
+
 ```javascript
 // Đăng ký
 await supabase.auth.signUp({
-  email: 'user@example.com',
-  password: 'password'
+  email: "user@example.com",
+  password: "password",
 });
 
 // Đăng nhập
 await supabase.auth.signIn({
-  email: 'user@example.com',
-  password: 'password'
+  email: "user@example.com",
+  password: "password",
 });
 
 // Đăng xuất
@@ -350,6 +389,7 @@ await supabase.auth.signOut();
 ## 📈 Monitoring & Analytics
 
 ### Kiểm Tra Performance
+
 1. Supabase Dashboard → Settings → Usage
 2. Xem:
    - Database size
@@ -357,6 +397,7 @@ await supabase.auth.signOut();
    - Bandwidth usage
 
 ### Giới Hạn Free Tier
+
 - Database: 500 MB
 - Storage: 1 GB
 - Bandwidth: 2 GB/month
@@ -365,6 +406,7 @@ await supabase.auth.signOut();
 ## 🚀 Nâng Cấp & Mở Rộng
 
 ### Các Tính Năng Có Thể Thêm
+
 1. **Authentication**: Đăng nhập/đăng ký
 2. **Real-time**: Cập nhật realtime khi có thay đổi
 3. **Storage**: Upload ảnh thuốc lên Supabase Storage
@@ -373,14 +415,16 @@ await supabase.auth.signOut();
 6. **Export**: Xuất dữ liệu Excel/CSV
 
 ### Ví Dụ Real-time Subscription
+
 ```javascript
 // Listen for changes in thuoc table
 const channel = supabase
-  .channel('thuoc-changes')
-  .on('postgres_changes', 
-    { event: '*', schema: 'public', table: 'thuoc' },
+  .channel("thuoc-changes")
+  .on(
+    "postgres_changes",
+    { event: "*", schema: "public", table: "thuoc" },
     (payload) => {
-      console.log('Change detected:', payload);
+      console.log("Change detected:", payload);
       loadMedicineData(); // Reload data
     }
   )
@@ -390,6 +434,7 @@ const channel = supabase
 ## 📞 Hỗ Trợ
 
 Nếu có vấn đề:
+
 1. Kiểm tra Supabase Dashboard → Logs
 2. Kiểm tra Browser Console (F12)
 3. Xem Supabase Documentation: https://supabase.com/docs
@@ -397,4 +442,3 @@ Nếu có vấn đề:
 ---
 
 **🎉 PharmaT với Supabase Backend - Sẵn sàng sử dụng!**
-

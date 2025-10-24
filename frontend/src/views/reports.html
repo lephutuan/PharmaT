@@ -19,38 +19,53 @@
         <i class="fa-solid fa-bars"></i>
       </div>
       <div class="logo">
-        <img src="../assets/images/logo.png" alt="PharmaT Logo" class="logo-img" onclick="window.location.href='home.html'">
+        <img
+          src="../assets/images/logo.png"
+          alt="PharmaT Logo"
+          class="logo-img"
+          onclick="window.location.href='../../index.html'"
+        />
       </div>
       <div class="page-title">
         <h1>Báo cáo & Thống kê</h1>
       </div>
     </nav>
-    
+
     <!-- Sidebar -->
     <aside class="sidebar">
       <ul>
         <li>
-          <a href="home.html" onclick="setActive(this)">🏠 Trang chủ</a>
+          <a href="../../../index.html" onclick="setActive(this)">🏠 Trang chủ</a>
         </li>
         <li>
           <a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a>
         </li>
         <li>
-          <a href="prescriptions.html" onclick="setActive(this)">📝 Đơn thuốc</a>
+          <a href="prescriptions.html" onclick="setActive(this)"
+            >📝 Đơn thuốc</a
+          >
         </li>
         <li>
           <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
         </li>
-        <li><a href="members.html" onclick="setActive(this)">💎 Hội viên</a></li>
-        <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
         <li>
-          <a href="reports.html" onclick="setActive(this)" class="active">📈 Báo cáo & Thống kê</a>
+          <a href="members.html" onclick="setActive(this)">💎 Hội viên</a>
         </li>
         <li>
-          <a href="chatbox.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
+          <a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a>
+        </li>
+        <li>
+          <a href="reports.html" onclick="setActive(this)" class="active"
+            >📈 Báo cáo & Thống kê</a
+          >
+        </li>
+        <li>
+          <a href="chatbox.html" onclick="setActive(this)"
+            >🤖 Chatbox cảnh báo</a
+          >
         </li>
       </ul>
-      
+
       <!-- Logout Button -->
       <div class="sidebar-footer">
         <a href="login.html" class="logout-btn" onclick="logout()">
@@ -88,7 +103,11 @@
               <option value="financial">Tài chính</option>
             </select>
           </div>
-          <div class="filter-group custom-date" id="customDateRange" style="display: none;">
+          <div
+            class="filter-group custom-date"
+            id="customDateRange"
+            style="display: none"
+          >
             <input type="date" id="startDate" />
             <span>đến</span>
             <input type="date" id="endDate" />
@@ -147,9 +166,18 @@
           <div class="chart-header">
             <h3>📊 Doanh thu theo thời gian</h3>
             <div class="chart-controls">
-              <button class="chart-btn active" onclick="switchRevenueChart('daily')">Ngày</button>
-              <button class="chart-btn" onclick="switchRevenueChart('weekly')">Tuần</button>
-              <button class="chart-btn" onclick="switchRevenueChart('monthly')">Tháng</button>
+              <button
+                class="chart-btn active"
+                onclick="switchRevenueChart('daily')"
+              >
+                Ngày
+              </button>
+              <button class="chart-btn" onclick="switchRevenueChart('weekly')">
+                Tuần
+              </button>
+              <button class="chart-btn" onclick="switchRevenueChart('monthly')">
+                Tháng
+              </button>
             </div>
           </div>
           <canvas id="revenueChart"></canvas>
@@ -158,8 +186,15 @@
           <div class="chart-header">
             <h3>🏆 Top thuốc bán chạy</h3>
             <div class="chart-controls">
-              <button class="chart-btn active" onclick="switchTopMeds('quantity')">Số lượng</button>
-              <button class="chart-btn" onclick="switchTopMeds('revenue')">Doanh thu</button>
+              <button
+                class="chart-btn active"
+                onclick="switchTopMeds('quantity')"
+              >
+                Số lượng
+              </button>
+              <button class="chart-btn" onclick="switchTopMeds('revenue')">
+                Doanh thu
+              </button>
             </div>
           </div>
           <div class="top-medicines-list">
@@ -226,19 +261,19 @@
           <canvas id="medicineGroupChart"></canvas>
           <div class="chart-legend">
             <div class="legend-item">
-              <span class="legend-color" style="background: #3b82f6;"></span>
+              <span class="legend-color" style="background: #3b82f6"></span>
               <span>Thuốc kê đơn (45%)</span>
             </div>
             <div class="legend-item">
-              <span class="legend-color" style="background: #10b981;"></span>
+              <span class="legend-color" style="background: #10b981"></span>
               <span>Thuốc không kê đơn (30%)</span>
             </div>
             <div class="legend-item">
-              <span class="legend-color" style="background: #f59e0b;"></span>
+              <span class="legend-color" style="background: #f59e0b"></span>
               <span>Thực phẩm chức năng (15%)</span>
             </div>
             <div class="legend-item">
-              <span class="legend-color" style="background: #ef4444;"></span>
+              <span class="legend-color" style="background: #ef4444"></span>
               <span>Dụng cụ y tế (10%)</span>
             </div>
           </div>
@@ -256,7 +291,12 @@
         <div class="table-header">
           <h3>📋 Bảng dữ liệu chi tiết</h3>
           <div class="table-controls">
-            <input type="text" id="searchTable" placeholder="Tìm kiếm..." onkeyup="filterTable()" />
+            <input
+              type="text"
+              id="searchTable"
+              placeholder="Tìm kiếm..."
+              onkeyup="filterTable()"
+            />
             <select id="tableFilter" onchange="filterTable()">
               <option value="all">Tất cả</option>
               <option value="high">Doanh thu cao</option>
@@ -273,10 +313,18 @@
             <thead>
               <tr>
                 <th onclick="sortTable(0)">Ngày <i class="fas fa-sort"></i></th>
-                <th onclick="sortTable(1)">Doanh thu <i class="fas fa-sort"></i></th>
-                <th onclick="sortTable(2)">Số hóa đơn <i class="fas fa-sort"></i></th>
-                <th onclick="sortTable(3)">Nhân viên <i class="fas fa-sort"></i></th>
-                <th onclick="sortTable(4)">Ghi chú <i class="fas fa-sort"></i></th>
+                <th onclick="sortTable(1)">
+                  Doanh thu <i class="fas fa-sort"></i>
+                </th>
+                <th onclick="sortTable(2)">
+                  Số hóa đơn <i class="fas fa-sort"></i>
+                </th>
+                <th onclick="sortTable(3)">
+                  Nhân viên <i class="fas fa-sort"></i>
+                </th>
+                <th onclick="sortTable(4)">
+                  Ghi chú <i class="fas fa-sort"></i>
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -361,7 +409,9 @@
               <div class="alert-status warning">Cảnh báo</div>
             </div>
           </div>
-          <button class="view-all-btn" onclick="viewAllExpiring()">Xem tất cả</button>
+          <button class="view-all-btn" onclick="viewAllExpiring()">
+            Xem tất cả
+          </button>
         </div>
 
         <div class="alert-container stock-alert">
@@ -398,7 +448,9 @@
               <div class="alert-status warning">Sắp hết</div>
             </div>
           </div>
-          <button class="view-all-btn" onclick="viewAllLowStock()">Xem tất cả</button>
+          <button class="view-all-btn" onclick="viewAllLowStock()">
+            Xem tất cả
+          </button>
         </div>
       </div>
     </main>

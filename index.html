@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PharmaT - Quản Lý Tiệm Thuốc Tự Động</title>
+    <link rel="stylesheet" href="frontend/src/assets/css/home.css" />
+    <link
+      rel="stylesheet"
+      href="frontend/src/assets/css/common-responsive.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="menu-toggle" onclick="toggleSidebar()">
+        <i class="fa-solid fa-bars"></i>
+      </div>
+      <div class="logo">
+        <img
+          src="frontend/src/assets/images/logo.png"
+          alt="PharmaT Logo"
+          class="logo-img"
+          onclick="window.location.href='index.html'"
+        />
+      </div>
+      <div class="page-title">
+        <h1>Dashboard Quản Lý Tiệm Thuốc</h1>
+      </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li>
+          <a href="index.html" onclick="setActive(this)">🏠 Trang chủ</a>
+        </li>
+        <li>
+          <a href="frontend/src/views/warehouse.html" onclick="setActive(this)"
+            >📦 Kho thuốc</a
+          >
+        </li>
+        <li>
+          <a
+            href="frontend/src/views/prescriptions.html"
+            onclick="setActive(this)"
+            >📝 Đơn thuốc</a
+          >
+        </li>
+        <li>
+          <a href="frontend/src/views/employees.html" onclick="setActive(this)"
+            >👥 Nhân viên</a
+          >
+        </li>
+        <li>
+          <a href="frontend/src/views/members.html" onclick="setActive(this)"
+            >💎 Hội viên</a
+          >
+        </li>
+        <li>
+          <a href="frontend/src/views/checkout.html" onclick="setActive(this)"
+            >💳 Thanh toán</a
+          >
+        </li>
+        <li>
+          <a href="frontend/src/views/reports.html" onclick="setActive(this)"
+            >📈 Báo cáo & Thống kê</a
+          >
+        </li>
+        <li>
+          <a href="frontend/src/views/chatbox.html" onclick="setActive(this)"
+            >🤖 Chatbox cảnh báo</a
+          >
+        </li>
+      </ul>
+
+      <!-- Logout Button -->
+      <div class="sidebar-footer">
+        <a
+          href="frontend/src/views/login.html"
+          class="logout-btn"
+          onclick="logout()"
+        >
+          <i class="fa-solid fa-sign-out-alt"></i>
+          Đăng xuất
+        </a>
+      </div>
+    </aside>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="dashboard">
+        <div class="dashboard-header">
+          <p>
+            Chào mừng bạn đến với hệ thống quản lý tiệm thuốc tự động tích hợp AI cảnh báo hàng tồn
+          </p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">💊</div>
+            <div class="stat-info">
+              <h3 id="total-medicines">1,234</h3>
+              <p>Tổng số thuốc</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📦</div>
+            <div class="stat-info">
+              <h3 id="today-orders">567</h3>
+              <p>Đơn hàng hôm nay</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-info">
+              <h3 id="month-revenue">12.5M</h3>
+              <p>Doanh thu tháng</p>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⚠️</div>
+            <div class="stat-info">
+              <h3 id="alerts">23</h3>
+              <p>Cảnh báo</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <h2>🚀 Thao tác nhanh</h2>
+          <div class="actions-grid">
+            <a href="frontend/src/views/warehouse.html" class="action-card">
+              <div class="action-icon">📦</div>
+              <h3>Quản lý Kho</h3>
+              <p>Thêm, sửa, xóa thuốc</p>
+            </a>
+            <a href="frontend/src/views/prescriptions.html" class="action-card">
+              <div class="action-icon">📝</div>
+              <h3>Tạo Đơn Thuốc</h3>
+              <p>Tạo đơn thuốc mới</p>
+            </a>
+            <a href="frontend/src/views/checkout.html" class="action-card">
+              <div class="action-icon">💳</div>
+              <h3>Thanh Toán</h3>
+              <p>Xử lý thanh toán</p>
+            </a>
+            <a href="frontend/src/views/reports.html" class="action-card">
+              <div class="action-icon">📊</div>
+              <h3>Báo Cáo</h3>
+              <p>Xem thống kê</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="recent-activity">
+          <h2>📋 Hoạt động gần đây</h2>
+          <div class="activity-list">
+            <div class="activity-item">
+              <div class="activity-icon">➕</div>
+              <div class="activity-content">
+                <h4>Thêm thuốc mới</h4>
+                <p>Paracetamol 500mg - 10:30 AM</p>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">💳</div>
+              <div class="activity-content">
+                <h4>Thanh toán đơn hàng</h4>
+                <p>Đơn #1234 - 150,000 VNĐ - 10:15 AM</p>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-icon">⚠️</div>
+              <div class="activity-content">
+                <h4>Cảnh báo tồn kho</h4>
+                <p>Amoxicillin sắp hết hàng - 09:45 AM</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="frontend/src/assets/js/sidebar.js"></script>
+    <script src="frontend/src/config/supabase.js"></script>
+    <script src="frontend/src/config/api.js"></script>
+    <script src="frontend/src/config/app.js"></script>
+    <script src="frontend/src/assets/js/home.js"></script>
+    <script>
+      // Initialize sidebar functionality
+      function toggleSidebar() {
+        const sidebar = document.querySelector(".sidebar");
+        const overlay = document.querySelector(".sidebar-overlay");
+        sidebar.classList.toggle("active");
+        overlay.classList.toggle("active");
+      }
+
+      function closeSidebar() {
+        const sidebar = document.querySelector(".sidebar");
+        const overlay = document.querySelector(".sidebar-overlay");
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+      }
+
+      function setActive(element) {
+        // Remove active class from all sidebar links
+        document.querySelectorAll(".sidebar a").forEach((link) => {
+          link.classList.remove("active");
+        });
+        // Add active class to clicked link
+        element.classList.add("active");
+      }
+
+      function logout() {
+        // Clear any stored data
+        localStorage.clear();
+        // Redirect to login page
+        window.location.href = "frontend/src/views/login.html";
+      }
+
+      // Load statistics when page loads
+      document.addEventListener("DOMContentLoaded", async function () {
+        try {
+          // Try to load real statistics if API is available
+          if (typeof API !== "undefined") {
+            const stats = await API.getStatistics();
+
+            // Update statistics
+            document.getElementById("total-medicines").textContent =
+              stats.totalMedicines.toLocaleString();
+            document.getElementById("today-orders").textContent =
+              stats.todayOrders.toLocaleString();
+            document.getElementById("month-revenue").textContent =
+              (stats.monthRevenue / 1000000).toFixed(1) + "M";
+            document.getElementById("alerts").textContent =
+              stats.alerts.toLocaleString();
+
+            // Check and create alerts
+            await API.checkAndCreateAlerts();
+          } else {
+            // Use sample data if API is not available
+            console.log("API not available, using sample data");
+          }
+        } catch (error) {
+          console.error("Error loading statistics:", error);
+          // Continue with default values
+        }
+
+        // Set current page as active
+        const currentPageLink = document.querySelector('a[href="index.html"]');
+        if (currentPageLink) {
+          setActive(currentPageLink);
+        }
+      });
+
+      // Auto-refresh statistics every 30 seconds
+      setInterval(async function () {
+        try {
+          if (typeof API !== "undefined") {
+            const stats = await API.getStatistics();
+            document.getElementById("total-medicines").textContent =
+              stats.totalMedicines.toLocaleString();
+            document.getElementById("today-orders").textContent =
+              stats.todayOrders.toLocaleString();
+            document.getElementById("month-revenue").textContent =
+              (stats.monthRevenue / 1000000).toFixed(1) + "M";
+            document.getElementById("alerts").textContent =
+              stats.alerts.toLocaleString();
+          }
+        } catch (error) {
+          console.error("Error refreshing statistics:", error);
+        }
+      }, 30000);
+    </script>
+  </body>
+</html>

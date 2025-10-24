@@ -18,7 +18,12 @@
         <i class="fa-solid fa-bars"></i>
       </div>
       <div class="logo">
-        <img src="../assets/images/logo.png" alt="PharmaT Logo" class="logo-img" onclick="window.location.href='home.html'">
+        <img
+          src="../assets/images/logo.png"
+          alt="PharmaT Logo"
+          class="logo-img"
+          onclick="window.location.href='../../index.html'"
+        />
       </div>
       <div class="page-title">
         <h1>Chat box cảnh báo</h1>
@@ -29,27 +34,39 @@
     <aside class="sidebar">
       <ul>
         <li>
-          <a href="home.html" onclick="setActive(this)">🏠 Trang chủ</a>
+          <a href="../../../index.html" onclick="setActive(this)"
+            >🏠 Trang chủ</a
+          >
         </li>
         <li>
           <a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a>
         </li>
         <li>
-          <a href="prescriptions.html" onclick="setActive(this)">📝 Đơn thuốc</a>
+          <a href="prescriptions.html" onclick="setActive(this)"
+            >📝 Đơn thuốc</a
+          >
         </li>
         <li>
           <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
         </li>
-        <li><a href="members.html" onclick="setActive(this)">💎 Hội viên</a></li>
-        <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
         <li>
-          <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
+          <a href="members.html" onclick="setActive(this)">💎 Hội viên</a>
         </li>
         <li>
-          <a href="chatbox.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
+          <a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a>
+        </li>
+        <li>
+          <a href="reports.html" onclick="setActive(this)"
+            >📈 Báo cáo & Thống kê</a
+          >
+        </li>
+        <li>
+          <a href="chatbox.html" onclick="setActive(this)"
+            >🤖 Chatbox cảnh báo</a
+          >
         </li>
       </ul>
-      
+
       <!-- Logout Button -->
       <div class="sidebar-footer">
         <a href="login.html" class="logout-btn" onclick="logout()">
@@ -63,27 +80,34 @@
     <div class="sidebar-overlay" onclick="closeSidebar()"></div>
 
     <!-- Main Content -->
-  <main>
-    <!-- Container chính cho chatbox -->
-    <div class="chat-container">
-      <!-- Khu vực hiển thị tin nhắn, sẽ được JS điền vào -->
-      <div id="chat-messages" class="chat-messages-container">
-        <!-- Các tin nhắn động sẽ được thêm vào đây -->
-      </div>
+    <main>
+      <!-- Container chính cho chatbox -->
+      <div class="chat-container">
+        <!-- Khu vực hiển thị tin nhắn, sẽ được JS điền vào -->
+        <div id="chat-messages" class="chat-messages-container">
+          <!-- Các tin nhắn động sẽ được thêm vào đây -->
+        </div>
 
-      <!-- Ô nhập lệnh -->
-      <div class="chat-input-container">
-        <textarea id="chat-input" placeholder="Nhập nội dung..." rows="3"></textarea>
-        <div class="chat-input-buttons">
-          <button class="btn-attach"><i class="fa-solid fa-paperclip"></i></button>
-          <button id="send-button" class="btn-send"><i class="fa-solid fa-paper-plane"></i></button>
+        <!-- Ô nhập lệnh -->
+        <div class="chat-input-container">
+          <textarea
+            id="chat-input"
+            placeholder="Nhập nội dung..."
+            rows="3"
+          ></textarea>
+          <div class="chat-input-buttons">
+            <button class="btn-attach">
+              <i class="fa-solid fa-paperclip"></i>
+            </button>
+            <button id="send-button" class="btn-send">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  </main>
-
+    </main>
   </body>
-    <script src="../assets/js/sidebar.js"></script>
-    <script src="../config/app.js"></script>
-    <script src="../assets/js/chatbox.js"></script>
+  <script src="../assets/js/sidebar.js"></script>
+  <script src="../config/app.js"></script>
+  <script src="../assets/js/chatbox.js"></script>
 </html>

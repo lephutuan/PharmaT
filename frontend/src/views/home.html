@@ -20,7 +20,12 @@
         <i class="fa-solid fa-bars"></i>
       </div>
       <div class="logo">
-        <img src="../assets/images/logo.png" alt="PharmaT Logo" class="logo-img" onclick="window.location.href='home.html'">
+        <img
+          src="../assets/images/logo.png"
+          alt="PharmaT Logo"
+          class="logo-img"
+          onclick="window.location.href='home.html'"
+        />
       </div>
       <div class="page-title">
         <h1>Dashboard Quản Lý Tiệm Thuốc</h1>
@@ -37,21 +42,31 @@
           <a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a>
         </li>
         <li>
-          <a href="prescriptions.html" onclick="setActive(this)">📝 Đơn thuốc</a>
+          <a href="prescriptions.html" onclick="setActive(this)"
+            >📝 Đơn thuốc</a
+          >
         </li>
         <li>
           <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
         </li>
-        <li><a href="members.html" onclick="setActive(this)">💎 Hội viên</a></li>
-        <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
         <li>
-          <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
+          <a href="members.html" onclick="setActive(this)">💎 Hội viên</a>
         </li>
         <li>
-          <a href="chatbox.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
+          <a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a>
+        </li>
+        <li>
+          <a href="reports.html" onclick="setActive(this)"
+            >📈 Báo cáo & Thống kê</a
+          >
+        </li>
+        <li>
+          <a href="chatbox.html" onclick="setActive(this)"
+            >🤖 Chatbox cảnh báo</a
+          >
         </li>
       </ul>
-      
+
       <!-- Logout Button -->
       <div class="sidebar-footer">
         <a href="login.html" class="logout-btn" onclick="logout()">
@@ -165,20 +180,24 @@
     <script src="../assets/js/home.js"></script>
     <script>
       // Tải thống kê khi trang load
-      document.addEventListener('DOMContentLoaded', async function() {
+      document.addEventListener("DOMContentLoaded", async function () {
         try {
           const stats = await API.getStatistics();
-          
+
           // Cập nhật các số liệu thống kê
-          document.querySelector('.stat-card:nth-child(1) h3').textContent = stats.totalMedicines.toLocaleString();
-          document.querySelector('.stat-card:nth-child(2) h3').textContent = stats.todayOrders.toLocaleString();
-          document.querySelector('.stat-card:nth-child(3) h3').textContent = (stats.monthRevenue / 1000000).toFixed(1) + 'M';
-          document.querySelector('.stat-card:nth-child(4) h3').textContent = stats.alerts.toLocaleString();
-          
+          document.querySelector(".stat-card:nth-child(1) h3").textContent =
+            stats.totalMedicines.toLocaleString();
+          document.querySelector(".stat-card:nth-child(2) h3").textContent =
+            stats.todayOrders.toLocaleString();
+          document.querySelector(".stat-card:nth-child(3) h3").textContent =
+            (stats.monthRevenue / 1000000).toFixed(1) + "M";
+          document.querySelector(".stat-card:nth-child(4) h3").textContent =
+            stats.alerts.toLocaleString();
+
           // Kiểm tra và tạo cảnh báo tự động
           await API.checkAndCreateAlerts();
         } catch (error) {
-          console.error('Lỗi khi tải thống kê:', error);
+          console.error("Lỗi khi tải thống kê:", error);
         }
       });
     </script>
