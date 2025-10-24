@@ -11,6 +11,8 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     />
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </head>
   <body>
     <!-- Navbar -->
@@ -41,6 +43,7 @@
         <li>
           <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
         </li>
+        <li><a href="members.html" onclick="setActive(this)">💎 Hội viên</a></li>
         <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
         <li>
           <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
@@ -113,7 +116,8 @@
     </main>
   </body>
     <script src="../assets/js/sidebar.js"></script>
-  <!-- Backend scripts removed for frontend-only version -->
+    <script src="../config/supabase.js"></script>
+    <script src="../config/api.js"></script>
   <script>
     let employees = [];
     let editingEmployeeId = null;

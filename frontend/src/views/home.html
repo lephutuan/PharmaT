@@ -10,6 +10,8 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     />
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </head>
   <body>
     <!-- Navbar -->
@@ -40,6 +42,7 @@
         <li>
           <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
         </li>
+        <li><a href="members.html" onclick="setActive(this)">💎 Hội viên</a></li>
         <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
         <li>
           <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
@@ -157,6 +160,27 @@
       </div>
     </main>
     <script src="../assets/js/sidebar.js"></script>
+    <script src="../config/supabase.js"></script>
+    <script src="../config/api.js"></script>
     <script src="../assets/js/home.js"></script>
+    <script>
+      // Tải thống kê khi trang load
+      document.addEventListener('DOMContentLoaded', async function() {
+        try {
+          const stats = await API.getStatistics();
+          
+          // Cập nhật các số liệu thống kê
+          document.querySelector('.stat-card:nth-child(1) h3').textContent = stats.totalMedicines.toLocaleString();
+          document.querySelector('.stat-card:nth-child(2) h3').textContent = stats.todayOrders.toLocaleString();
+          document.querySelector('.stat-card:nth-child(3) h3').textContent = (stats.monthRevenue / 1000000).toFixed(1) + 'M';
+          document.querySelector('.stat-card:nth-child(4) h3').textContent = stats.alerts.toLocaleString();
+          
+          // Kiểm tra và tạo cảnh báo tự động
+          await API.checkAndCreateAlerts();
+        } catch (error) {
+          console.error('Lỗi khi tải thống kê:', error);
+        }
+      });
+    </script>
   </body>
 </html>

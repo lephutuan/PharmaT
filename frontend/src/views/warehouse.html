@@ -14,6 +14,8 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     />
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </head>
   <body>
     <!-- Navbar -->
@@ -44,6 +46,7 @@
         <li>
           <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
         </li>
+        <li><a href="members.html" onclick="setActive(this)">💎 Hội viên</a></li>
         <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
         <li>
           <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
@@ -271,7 +274,8 @@
 
   </body>
     <script src="../assets/js/sidebar.js"></script>
-  <!-- Backend scripts removed for frontend-only version -->
+    <script src="../config/supabase.js"></script>
+    <script src="../config/api.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const searchInput = document.getElementById('warehouseSearchInput');
@@ -306,57 +310,26 @@
         document.getElementById('addMedicineModal').style.display = 'block';
       });
 
-      function loadMedicineData() {
-        // Hiển thị loading
-        tableBody.innerHTML = '<tr><td colspan="10" style="text-align: center; padding: 20px;">Đang tải dữ liệu...</td></tr>';
-        
-        // Sử dụng dữ liệu tĩnh thay vì gọi API
-        allMedicines = [
-          {
-            ma_thuoc: 1,
-            ten_thuoc: 'Paracetamol 500mg',
-            don_vi: 'Viên',
-            gia_nhap: 2000,
-            gia_ban: 3000,
-            so_luong: 1000,
-            ngay_them: '2024-01-01',
-            han_su_dung: '2025-12-31',
-            trang_thai: 'Còn hạn',
-            nhom_thuoc: 'Thuốc không kê đơn',
-            anh: 'paracetamol.png',
-            sl_toi_thieu: 50
-          },
-          {
-            ma_thuoc: 2,
-            ten_thuoc: 'Amoxicillin 500mg',
-            don_vi: 'Viên',
-            gia_nhap: 2500,
-            gia_ban: 4000,
-            so_luong: 500,
-            ngay_them: '2024-01-15',
-            han_su_dung: '2025-06-30',
-            trang_thai: 'Còn hạn',
-            nhom_thuoc: 'Thuốc kê đơn',
-            anh: 'amoxicillin.jpg',
-            sl_toi_thieu: 30
-          },
-          {
-            ma_thuoc: 3,
-            ten_thuoc: 'Vitamin C 1000mg',
-            don_vi: 'Viên',
-            gia_nhap: 1500,
-            gia_ban: 2500,
-            so_luong: 800,
-            ngay_them: '2024-02-01',
-            han_su_dung: '2026-01-31',
-            trang_thai: 'Còn hạn',
-            nhom_thuoc: 'Thực phẩm chức năng',
-            anh: 'vitamin_c.jpg',
-            sl_toi_thieu: 100
-          }
-        ];
-        displayMedicineData();
-        updatePagination();
+      async function loadMedicineData() {
+        try {
+          // Hiển thị loading
+          tableBody.innerHTML = '<tr><td colspan="11" style="text-align: center; padding: 20px;">Đang tải dữ liệu...</td></tr>';
+          
+          UI.showLoading();
+          
+          // Lấy dữ liệu từ Supabase
+          const response = await API.getThuoc();
+          allMedicines = response.records || [];
+          
+          displayMedicineData();
+          updatePagination();
+        } catch (error) {
+          console.error('Lỗi:', error);
+          UI.showMessage('Lỗi khi tải dữ liệu thuốc: ' + error.message, 'error');
+          tableBody.innerHTML = '<tr><td colspan="11" style="text-align: center; padding: 20px; color: red;">Lỗi khi tải dữ liệu</td></tr>';
+        } finally {
+          UI.hideLoading();
+        }
       }
 
       function displayMedicineData() {
@@ -450,14 +423,13 @@
         document.getElementById('addMedicineForm').reset();
       }
 
-      function saveMedicine() {
+      async function saveMedicine() {
         const medicineName = document.getElementById('medicineName').value;
         const medicineUnit = document.getElementById('medicineUnit').value;
         const importPrice = document.getElementById('importPrice').value;
         const salePrice = document.getElementById('salePrice').value;
         const quantity = document.getElementById('quantity').value;
         const minQuantity = document.getElementById('minQuantity').value;
-        const imageFile = document.getElementById('medicineImage').files[0];
         const medicineGroup = document.getElementById('medicineGroup').value;
         const expiryDate = document.getElementById('expiryDate').value;
         const addDate = document.getElementById('addDate').value;
@@ -468,25 +440,33 @@
           return;
         }
 
-        const formData = new FormData();
-        formData.append('ten_thuoc', medicineName);
-        formData.append('don_vi', medicineUnit);
-        formData.append('gia_nhap', importPrice);
-        formData.append('gia_ban', salePrice);
-        formData.append('so_luong', quantity || 0);
-        formData.append('sl_toi_thieu', minQuantity || 10);
-        if (imageFile) formData.append('anh', imageFile);
-        formData.append('nhom_thuoc', medicineGroup);
-        formData.append('han_su_dung', expiryDate);
-        formData.append('ngay_nhap', addDate);
-        formData.append('trang_thai', trangThai);
+        try {
+          UI.showLoading();
+          
+          const thuocData = {
+            ten_thuoc: medicineName,
+            don_vi: medicineUnit,
+            gia_nhap: parseFloat(importPrice),
+            gia_ban: parseFloat(salePrice),
+            so_luong: parseInt(quantity) || 0,
+            sl_toi_thieu: parseInt(minQuantity) || 10,
+            nhom_thuoc: medicineGroup,
+            han_su_dung: expiryDate || null,
+            ngay_them: addDate || new Date().toISOString().split('T')[0],
+            trang_thai: trangThai,
+            anh: 'placeholder.png'
+          };
 
-        // Simulate API call for frontend-only version
-        setTimeout(() => {
-          alert('Thuốc đã được thêm thành công (Demo mode)');
+          await API.createThuoc(thuocData);
+          UI.showMessage('Thuốc đã được thêm thành công!', 'success');
           closeModal();
-          loadMedicineData();
-        }, 500);
+          await loadMedicineData();
+        } catch (error) {
+          console.error('Lỗi:', error);
+          UI.showMessage('Lỗi khi thêm thuốc: ' + error.message, 'error');
+        } finally {
+          UI.hideLoading();
+        }
       }
 
       // Đóng modal khi click bên ngoài với xác nhận
@@ -699,14 +679,20 @@
         hideContextMenu();
       }
 
-      function deleteSelectedMedicine() {
+      async function deleteSelectedMedicine() {
         if (selectedMedicine) {
           if (confirm('Bạn có chắc chắn muốn xóa thuốc này?')) {
-            // Simulate API call for frontend-only version
-            setTimeout(() => {
-              alert('Thuốc đã được xóa thành công (Demo mode)');
-              loadMedicineData();
-            }, 500);
+            try {
+              UI.showLoading();
+              await API.deleteThuoc(selectedMedicine.ma_thuoc);
+              UI.showMessage('Thuốc đã được xóa thành công!', 'success');
+              await loadMedicineData();
+            } catch (error) {
+              console.error('Lỗi:', error);
+              UI.showMessage('Lỗi khi xóa thuốc: ' + error.message, 'error');
+            } finally {
+              UI.hideLoading();
+            }
           }
         }
         hideContextMenu();
@@ -765,9 +751,9 @@
         window.editingRow = null;
       }
 
-      function updateMedicine() {
-        if (!window.editingRow) return;
-        const medicineCode = document.getElementById('editMedicineCode').value;
+      async function updateMedicine() {
+        if (!selectedMedicine) return;
+        
         const medicineName = document.getElementById('editMedicineName').value;
         const medicineUnit = document.getElementById('editMedicineUnit').value;
         const importPrice = document.getElementById('editImportPrice').value;
@@ -776,29 +762,38 @@
         const addDate = document.getElementById('editAddDate').value;
         const minQuantity = document.getElementById('editMinQuantity').value;
         const expiryDate = document.getElementById('editExpiryDate').value;
-        const imageFile = document.getElementById('editMedicineImage').files[0];
-        if (!medicineCode || !medicineName || !medicineUnit || !importPrice || !salePrice) {
-          alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+        const medicineGroup = document.getElementById('editMedicineGroup').value;
+        
+        if (!medicineName || !medicineUnit || !importPrice || !salePrice) {
+          UI.showMessage('Vui lòng điền đầy đủ thông tin bắt buộc!', 'error');
           return;
         }
-        const formData = new FormData();
-        formData.append('ma_thuoc', medicineCode.replace('#', '').trim());
-        formData.append('ten_thuoc', medicineName);
-        formData.append('don_vi', medicineUnit);
-        formData.append('gia_nhap', importPrice);
-        formData.append('gia_ban', salePrice);
-        formData.append('so_luong', quantity || 0);
-        formData.append('ngay_them', addDate);
-        formData.append('sl_toi_thieu', minQuantity || 10);
-        if (imageFile) formData.append('anh', imageFile);
-        formData.append('han_su_dung', expiryDate);
-        formData.append('nhom_thuoc', document.getElementById('editMedicineGroup').value);
-        // Simulate API call for frontend-only version
-        setTimeout(() => {
-          alert('Thuốc đã được cập nhật thành công (Demo mode)');
+        
+        try {
+          UI.showLoading();
+          
+          const thuocData = {
+            ten_thuoc: medicineName,
+            don_vi: medicineUnit,
+            gia_nhap: parseFloat(importPrice),
+            gia_ban: parseFloat(salePrice),
+            so_luong: parseInt(quantity) || 0,
+            ngay_them: addDate,
+            sl_toi_thieu: parseInt(minQuantity) || 10,
+            han_su_dung: expiryDate || null,
+            nhom_thuoc: medicineGroup
+          };
+          
+          await API.updateThuoc(selectedMedicine.ma_thuoc, thuocData);
+          UI.showMessage('Thuốc đã được cập nhật thành công!', 'success');
           closeEditModal();
-          loadMedicineData();
-        }, 500);
+          await loadMedicineData();
+        } catch (error) {
+          console.error('Lỗi:', error);
+          UI.showMessage('Lỗi khi cập nhật thuốc: ' + error.message, 'error');
+        } finally {
+          UI.hideLoading();
+        }
       }
 
       function deleteMedicine(button) {

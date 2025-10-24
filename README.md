@@ -1,8 +1,11 @@
-# PharmaT - Frontend Version
+# PharmaT - Hệ Thống Quản Lý Tiệm Thuốc
 
 ## 📋 Tổng quan
 
-PharmaT là một ứng dụng quản lý tiệm thuốc được thiết kế hoàn toàn bằng **frontend thuần túy** (HTML, CSS, JavaScript). Ứng dụng này chưa có backend server và có thể chạy trực tiếp trên trình duyệt web.
+PharmaT là một ứng dụng quản lý tiệm thuốc **full-stack** được xây dựng với:
+- **Frontend**: HTML, CSS, JavaScript thuần túy
+- **Backend**: Supabase (PostgreSQL + RESTful API)
+- **Hosting**: Static hosting cho frontend, Supabase cloud cho backend
 
 ## 🎯 Tính năng chính
 
@@ -16,26 +19,30 @@ PharmaT là một ứng dụng quản lý tiệm thuốc được thiết kế h
 
 ## 🚀 Cách chạy
 
-### Phương pháp 1: Mở trực tiếp
-1. Tải toàn bộ thư mục `PharmaT`
-2. Mở file `frontend/src/views/home.html` bằng trình duyệt web
-3. Hoặc mở bất kỳ file HTML nào khác trong thư mục `frontend/src/views/`
+### Yêu cầu
+- Trình duyệt web hiện đại (Chrome, Firefox, Safari, Edge)
+- Kết nối internet (để kết nối Supabase)
+- HTTP server (không thể chạy qua file://)
 
-### Phương pháp 2: Sử dụng Live Server (Khuyến nghị)
+### Phương pháp 1: Live Server (Khuyến nghị)
 1. Cài đặt extension "Live Server" trong VS Code
 2. Click chuột phải vào file `frontend/src/views/home.html`
 3. Chọn "Open with Live Server"
 4. Trình duyệt sẽ tự động mở với địa chỉ local
 
-### Phương pháp 3: Sử dụng Python (nếu có)
+### Phương pháp 2: HTTP Server
 ```bash
+cd PharmaT
+npx http-server . -p 8080 -o
+```
+
+### Phương pháp 3: Python
+```bash
+cd PharmaT
 # Python 3
 python -m http.server 8000
-
-# Python 2
-python -m SimpleHTTPServer 8000
+# Truy cập: http://localhost:8000/frontend/src/views/home.html
 ```
-Sau đó truy cập: `http://localhost:8000`
 
 ## 📁 Cấu trúc thư mục
 
@@ -98,22 +105,41 @@ PharmaT/
 - **Auto-complete**: Tìm kiếm thông minh với Awesomplete
 - **Modal Dialogs**: Popup thân thiện cho các thao tác
 
-## 📊 Dữ liệu mẫu
+## 📊 Database & Backend
 
-Ứng dụng sử dụng dữ liệu tĩnh mẫu bao gồm:
-- **15 loại thuốc** với thông tin đầy đủ
-- **Nhân viên** và **khách hàng** mẫu
-- **Dữ liệu báo cáo** và **thống kê** giả lập
-- **Hình ảnh sản phẩm** có sẵn
+### Supabase Backend
+- **Project**: PharmaT (esoksuiwnedmfrxyizlg)
+- **Region**: Singapore (ap-southeast-1)
+- **Database**: PostgreSQL với 8 bảng
+- **API**: RESTful API tự động
+- **Security**: Row Level Security (RLS) enabled
+
+### Dữ liệu mẫu
+Database đã được thiết lập với dữ liệu mẫu:
+- ✅ **14 loại thuốc** đa dạng
+- ✅ **3 nhân viên** với các vai trò khác nhau
+- ✅ **4 khách hàng** mẫu
+- ✅ Dữ liệu đầy đủ để test tất cả chức năng
+
+### API Functions
+Xem chi tiết trong file `SUPABASE_GUIDE.md`
 
 ## 🔧 Tính năng kỹ thuật
 
-- **Pure Frontend**: Không cần server backend
-- **Local Storage**: Lưu trữ dữ liệu tạm thời
+### Frontend
+- **Pure JavaScript**: Không sử dụng framework
+- **Responsive Design**: Mobile-first approach
 - **Chart.js**: Biểu đồ tương tác
 - **Awesomplete**: Auto-complete cho tìm kiếm
-- **Responsive CSS**: Tương thích mobile
-- **Modern JavaScript**: ES6+ features
+- **Modern ES6+**: Async/await, arrow functions
+
+### Backend (Supabase)
+- **PostgreSQL**: Database mạnh mẽ và tin cậy
+- **RESTful API**: Auto-generated từ database schema
+- **Real-time**: WebSocket subscriptions (ready to use)
+- **Row Level Security**: Bảo mật cấp dòng dữ liệu
+- **Auto Backup**: Tự động backup định kỳ
+- **Scalable**: Tự động scale theo nhu cầu
 
 ## 📱 Tương thích
 
@@ -130,10 +156,10 @@ PharmaT/
 
 ## ⚠️ Lưu ý quan trọng
 
-- **Dữ liệu tĩnh**: Tất cả dữ liệu là mẫu, không lưu trữ thực tế
-- **Demo Mode**: Các thao tác chỉ là mô phỏng
-- **Không có Backend**: Không có API server thực tế
-- **Local Only**: Chạy hoàn toàn trên trình duyệt
+- ✅ **Backend hoạt động**: Tất cả thao tác CRUD được lưu vào database thực
+- ✅ **Dữ liệu persistent**: Dữ liệu được lưu trữ trên Supabase cloud
+- ⚠️ **Internet required**: Cần kết nối internet để truy cập database
+- ⚠️ **HTTP Server**: Phải chạy qua HTTP server (không thể dùng file://)
 
 ## 🏗️ Cấu trúc dự án
 
@@ -155,14 +181,23 @@ PharmaT/
 - **CI/CD workflow**: Pipeline riêng cho từng phần
 - **Scalability**: Dễ dàng mở rộng và bảo trì
 
-## 🚀 Phát triển tiếp
+## 🚀 Các tính năng đã hoàn thành
 
-Để chuyển đổi thành ứng dụng thực tế:
-1. **Backend Development**: Xây dựng API server trong thư mục `backend/`
-2. **Database Integration**: Kết nối database thực (MySQL, PostgreSQL, MongoDB)
-3. **API Endpoints**: Implement RESTful API cho các tính năng
-4. **Authentication**: Thêm hệ thống đăng nhập/đăng ký
-5. **Deployment**: Deploy frontend và backend riêng biệt
+- ✅ **Database Schema**: 8 bảng với relationships đầy đủ
+- ✅ **CRUD Operations**: Tạo, đọc, cập nhật, xóa cho tất cả entities
+- ✅ **Real-time Stats**: Thống kê tự động cập nhật
+- ✅ **Auto Alerts**: Hệ thống cảnh báo tự động
+- ✅ **Search & Filter**: Tìm kiếm và lọc dữ liệu
+- ✅ **Data Validation**: Kiểm tra dữ liệu đầu vào
+
+## 🔜 Tính năng tiếp theo
+
+1. **Authentication**: Hệ thống đăng nhập/đăng ký với Supabase Auth
+2. **Image Upload**: Upload ảnh thuốc lên Supabase Storage
+3. **Real-time Updates**: WebSocket cho cập nhật realtime
+4. **Export/Import**: Xuất nhập dữ liệu Excel/CSV
+5. **Print Invoice**: In hóa đơn PDF
+6. **Email Notifications**: Gửi email thông báo
 
 ## 📞 Hỗ trợ
 

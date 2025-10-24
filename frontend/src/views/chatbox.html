@@ -40,6 +40,7 @@
         <li>
           <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
         </li>
+        <li><a href="members.html" onclick="setActive(this)">💎 Hội viên</a></li>
         <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
         <li>
           <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
@@ -63,43 +64,19 @@
 
     <!-- Main Content -->
   <main>
+    <!-- Container chính cho chatbox -->
     <div class="chat-container">
-      <!-- Tin nhắn cảnh báo -->
-      <div class="chat-message bot">
-        <img src="https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-3d/512/Robot-3d-icon.png" alt="Bot" class="chat-avatar" />
-        <div class="chat-content">
-          <p class="alert-title">[CẢNH BÁO - HÀNG SẮP HẾT]</p>
-          <p>
-            Tên thuốc: Paracetamol 500mg <br />
-            Mã thuốc: T001 <br />
-            Số lượng còn: 5 hộp <br />
-            Ngưỡng tồn kho: 10 hộp <br />
-            Thời gian cảnh báo: 04/07/2025 08:15 <br />
-            👉 Vui lòng kiểm tra và nhập hàng bổ sung.
-          </p>
-        </div>
-      </div>
-
-      <div class="chat-message bot">
-        <img src="https://icons.iconarchive.com/icons/microsoft/fluentui-emoji-3d/512/Robot-3d-icon.png" alt="Bot" class="chat-avatar" />
-        <div class="chat-content">
-          <p class="alert-title">[CẢNH BÁO - THUỐC SẮP HẾT HẠN]</p>
-          <p>
-            Tên thuốc: Thuốc B <br />
-            Mã thuốc: T002 <br />
-            Hạn sử dụng: 27/08/2025 <br />
-            Thời gian cảnh báo: 04/07/2025 08:10 <br />
-            👉 Vui lòng kiểm tra và tiêu thụ trước khi hết hạn.
-          </p>
-        </div>
+      <!-- Khu vực hiển thị tin nhắn, sẽ được JS điền vào -->
+      <div id="chat-messages" class="chat-messages-container">
+        <!-- Các tin nhắn động sẽ được thêm vào đây -->
       </div>
 
       <!-- Ô nhập lệnh -->
       <div class="chat-input-container">
-        <textarea placeholder="Nhập nội dung..." rows="3"></textarea>
+        <textarea id="chat-input" placeholder="Nhập nội dung..." rows="3"></textarea>
         <div class="chat-input-buttons">
           <button class="btn-attach"><i class="fa-solid fa-paperclip"></i></button>
-          <button class="btn-send"><i class="fa-solid fa-paper-plane"></i></button>
+          <button id="send-button" class="btn-send"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
       </div>
     </div>
@@ -107,4 +84,6 @@
 
   </body>
     <script src="../assets/js/sidebar.js"></script>
+    <script src="../config/app.js"></script>
+    <script src="../assets/js/chatbox.js"></script>
 </html>

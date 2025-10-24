@@ -14,6 +14,8 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     />
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </head>
   <body>
     <!-- Navbar -->
@@ -44,6 +46,7 @@
         <li>
           <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
         </li>
+        <li><a href="members.html" onclick="setActive(this)">💎 Hội viên</a></li>
         <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
         <li>
           <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
@@ -72,24 +75,52 @@
     <section class="form-section">
       <h2>Thông tin khách hàng và nhân viên</h2>
       <div class="customer-form">
+        <!-- Loại khách hàng -->
         <div style="margin-bottom: 15px;">
-          <label for="customerSelect" style="display: block; margin-bottom: 5px; font-weight: bold;">Khách hàng:</label>
-          <select id="customerSelect">
-            <option value="">-- Chọn khách hàng --</option>
-            <!-- Các option sẽ được render từ JS -->
-          </select>
-          <button class="btn btn-secondary" id="btnAddCustomer">+ Thêm khách hàng mới</button>
+          <label style="display: block; margin-bottom: 5px; font-weight: bold;">Loại khách hàng:</label>
+          <div style="display: flex; gap: 20px;">
+            <label style="cursor: pointer;">
+              <input type="radio" name="customerType" value="vanglai" checked onchange="toggleCustomerType()" />
+              Khách vãng lai
+            </label>
+            <label style="cursor: pointer;">
+              <input type="radio" name="customerType" value="hoivien" onchange="toggleCustomerType()" />
+              Hội viên
+            </label>
+          </div>
         </div>
-        <div id="addCustomerForm" style="display:none; gap: 8px; align-items: center; margin-top: 8px;">
-          <input type="text" id="newCustomerName" placeholder="Tên khách hàng" style="width: 180px;" />
-          <input type="text" id="newCustomerPhone" placeholder="SĐT" style="width: 120px;" />
-          <input type="text" id="newCustomerAllergy" placeholder="Dị ứng (nếu có)" style="width: 180px;" />
-          <button class="btn btn-primary" id="btnSaveCustomer"><i class="fa fa-save"></i> Lưu</button>
-          <button class="btn btn-danger" id="btnCancelAddCustomer"><i class="fa fa-times"></i> Hủy</button>
+
+        <!-- Form khách vãng lai -->
+        <div id="vanglaiForm" style="margin-bottom: 15px;">
+          <input type="text" id="vanglaiName" placeholder="Tên khách hàng (tùy chọn)" style="width: 250px; margin-right: 10px;" />
+          <input type="text" id="vanglaiAllergy" placeholder="Dị ứng (nếu có)" style="width: 250px;" />
+          <p style="color: #666; font-size: 0.9em; margin-top: 5px;">
+            <i class="fa fa-info-circle"></i> Thông tin chỉ lưu cho đơn này, không lưu vào hệ thống
+          </p>
         </div>
-        
-        <div class="customer-info" id="customerInfo">
-          <!-- Tên, sđt, dị ứng sẽ hiển thị tại đây -->
+
+        <!-- Form hội viên -->
+        <div id="hoivienForm" style="display:none; margin-bottom: 15px;">
+          <div style="margin-bottom: 15px;">
+            <label for="customerSelect" style="display: block; margin-bottom: 5px; font-weight: bold;">Chọn hội viên:</label>
+            <select id="customerSelect">
+              <option value="">-- Chọn hội viên --</option>
+              <!-- Các option sẽ được render từ JS -->
+            </select>
+            <button class="btn btn-secondary" id="btnAddCustomer">+ Đăng ký hội viên mới</button>
+          </div>
+          
+          <div id="addCustomerForm" style="display:none; gap: 8px; align-items: center; margin-top: 8px;">
+            <input type="text" id="newCustomerName" placeholder="Tên khách hàng" style="width: 180px;" />
+            <input type="text" id="newCustomerPhone" placeholder="SĐT" style="width: 120px;" />
+            <input type="text" id="newCustomerAllergy" placeholder="Dị ứng (nếu có)" style="width: 180px;" />
+            <button class="btn btn-primary" id="btnSaveCustomer"><i class="fa fa-save"></i> Lưu</button>
+            <button class="btn btn-danger" id="btnCancelAddCustomer"><i class="fa fa-times"></i> Hủy</button>
+          </div>
+          
+          <div class="customer-info" id="customerInfo">
+            <!-- Tên, sđt, dị ứng, cấp thành viên sẽ hiển thị tại đây -->
+          </div>
         </div>
         <div style="margin-bottom: 15px;">
           <label for="employeeSelect" style="display: block; margin-bottom: 5px; font-weight: bold;">Nhân viên thực hiện:</label>
@@ -145,75 +176,80 @@
 
   </body>
     <script src="../assets/js/sidebar.js"></script>
-  <!-- Backend scripts removed for frontend-only version -->
+    <script src="../config/supabase.js"></script>
+    <script src="../config/api.js"></script>
   <script>
-    // Dữ liệu mẫu cho demo
+    // Biến toàn cục
     let selectedMedicines = [];
     let selectedCustomer = null;
     let selectedEmployee = null;
-
-    // Dữ liệu mẫu
-    const sampleCustomers = [
-      { id: 1, name: 'Nguyễn Văn A', phone: '0123456789', allergy: 'Không có' },
-      { id: 2, name: 'Trần Thị B', phone: '0987654321', allergy: 'Penicillin' },
-      { id: 3, name: 'Lê Văn C', phone: '0369852147', allergy: 'Aspirin' }
-    ];
-
-    const sampleEmployees = [
-      { id: 1, name: 'Dược sĩ Minh', position: 'Dược sĩ' },
-      { id: 2, name: 'Nhân viên Lan', position: 'Nhân viên bán hàng' },
-      { id: 3, name: 'Dược sĩ Hùng', position: 'Dược sĩ trưởng' }
-    ];
-
-    const sampleMedicines = [
-      'Paracetamol 500mg',
-      'Amoxicillin 500mg', 
-      'Vitamin C 1000mg',
-      'Efferalgan 500mg',
-      'Omeprazole 20mg',
-      'Ibuprofen 400mg',
-      'Aspirin 100mg',
-      'Cetirizine 10mg'
-    ];
+    let allCustomers = [];
+    let allEmployees = [];
+    let allMedicines = [];
+    let customerType = 'vanglai'; // 'vanglai' hoặc 'hoivien'
 
     // Khởi tạo khi trang load
-    document.addEventListener('DOMContentLoaded', function() {
-      initializeAwesomplete();
-      populateSelects();
-      setupEventListeners();
+    document.addEventListener('DOMContentLoaded', async function() {
+      try {
+        UI.showLoading();
+        await loadData();
+        initializeAwesomplete();
+        setupEventListeners();
+      } catch (error) {
+        console.error('Lỗi khi khởi tạo:', error);
+        UI.showMessage('Lỗi khi tải dữ liệu: ' + error.message, 'error');
+      } finally {
+        UI.hideLoading();
+      }
     });
+
+    // Load dữ liệu từ database
+    async function loadData() {
+      try {
+        // Load khách hàng
+        const customersResponse = await API.getKhachHang();
+        allCustomers = customersResponse.records || [];
+        
+        // Load nhân viên
+        const employeesResponse = await API.getNhanVien();
+        allEmployees = employeesResponse.records || [];
+        
+        // Load thuốc
+        const medicinesResponse = await API.getThuoc();
+        allMedicines = medicinesResponse.records || [];
+        
+        // Populate selects
+        populateSelects();
+      } catch (error) {
+        console.error('Lỗi khi load dữ liệu:', error);
+        throw error;
+      }
+    }
 
     // Khởi tạo Awesomplete
     function initializeAwesomplete() {
       const input = document.getElementById("medicineSearch");
+      
+      // Tạo danh sách tên thuốc từ database
+      const medicineNames = allMedicines.map(m => m.ten_thuoc);
+      
       const awesomplete = new Awesomplete(input, {
         minChars: 1,
         maxItems: 10,
         autoFirst: true,
+        list: medicineNames,
         filter: function(text, input) {
-          return Awesomplete.FILTER_STARTSWITH(text, input);
+          return Awesomplete.FILTER_CONTAINS(text, input);
         }
       });
-      
-      awesomplete.list = sampleMedicines;
 
       input.addEventListener('awesomplete-selectcomplete', function(evt) {
-        const selectedName = input.value.trim().toLowerCase();
-        const medicineData = {
-          'paracetamol 500mg': { id: 1, price: 3000 },
-          'amoxicillin 500mg': { id: 2, price: 4000 },
-          'vitamin c 1000mg': { id: 3, price: 2500 },
-          'efferalgan 500mg': { id: 4, price: 3500 },
-          'omeprazole 20mg': { id: 5, price: 5000 },
-          'ibuprofen 400mg': { id: 6, price: 4500 },
-          'aspirin 100mg': { id: 7, price: 2000 },
-          'cetirizine 10mg': { id: 8, price: 3000 }
-        };
+        const selectedName = input.value.trim();
+        const medicine = allMedicines.find(m => m.ten_thuoc === selectedName);
         
-        const medicine = medicineData[selectedName];
         if (medicine) {
-          input.dataset.selectedId = medicine.id;
-          input.dataset.selectedPrice = medicine.price;
+          input.dataset.selectedId = medicine.ma_thuoc;
+          input.dataset.selectedPrice = medicine.gia_ban;
         } else {
           delete input.dataset.selectedId;
           delete input.dataset.selectedPrice;
@@ -221,25 +257,49 @@
       });
     }
 
-    // Populate selects với dữ liệu mẫu
+    // Toggle loại khách hàng
+    function toggleCustomerType() {
+      const type = document.querySelector('input[name="customerType"]:checked').value;
+      customerType = type;
+      
+      const vanglaiForm = document.getElementById('vanglaiForm');
+      const hoivienForm = document.getElementById('hoivienForm');
+      
+      if (type === 'vanglai') {
+        vanglaiForm.style.display = 'block';
+        hoivienForm.style.display = 'none';
+        selectedCustomer = null;
+      } else {
+        vanglaiForm.style.display = 'none';
+        hoivienForm.style.display = 'block';
+      }
+    }
+
+    // Populate selects với dữ liệu từ database
     function populateSelects() {
-      // Populate customer select
+      // Populate customer select (chỉ hội viên)
       const customerSelect = document.getElementById('customerSelect');
-      customerSelect.innerHTML = '<option value="">-- Chọn khách hàng --</option>';
-      sampleCustomers.forEach(customer => {
+      customerSelect.innerHTML = '<option value="">-- Chọn hội viên --</option>';
+      
+      // Filter chỉ lấy hội viên
+      const hoivienList = allCustomers.filter(c => c.loai_kh === 'Hội viên');
+      
+      hoivienList.forEach(customer => {
         const option = document.createElement('option');
-        option.value = customer.id;
-        option.textContent = `${customer.name} - ${customer.phone}`;
+        option.value = customer.ma_kh;
+        const cap = customer.cap_thanh_vien || 'Bronze';
+        const capIcon = cap === 'VIP' ? '👑' : cap === 'Gold' ? '🥇' : cap === 'Silver' ? '🥈' : '🥉';
+        option.textContent = `${capIcon} ${customer.ten_kh} - ${customer.sdt} [${cap}]`;
         customerSelect.appendChild(option);
       });
 
       // Populate employee select
       const employeeSelect = document.getElementById('employeeSelect');
       employeeSelect.innerHTML = '<option value="">-- Chọn nhân viên --</option>';
-      sampleEmployees.forEach(employee => {
+      allEmployees.forEach(employee => {
         const option = document.createElement('option');
-        option.value = employee.id;
-        option.textContent = `${employee.name} - ${employee.position}`;
+        option.value = employee.ma_nv;
+        option.textContent = `${employee.ten_nv} - ${employee.chuc_vu}`;
         employeeSelect.appendChild(option);
       });
     }
@@ -250,7 +310,7 @@
       document.getElementById('customerSelect').addEventListener('change', function() {
         const customerId = this.value;
         if (customerId) {
-          selectedCustomer = sampleCustomers.find(c => c.id == customerId);
+          selectedCustomer = allCustomers.find(c => c.ma_kh == customerId);
           displayCustomerInfo(selectedCustomer);
         } else {
           selectedCustomer = null;
@@ -262,7 +322,7 @@
       document.getElementById('employeeSelect').addEventListener('change', function() {
         const employeeId = this.value;
         if (employeeId) {
-          selectedEmployee = sampleEmployees.find(e => e.id == employeeId);
+          selectedEmployee = allEmployees.find(e => e.ma_nv == employeeId);
         } else {
           selectedEmployee = null;
         }
@@ -282,35 +342,47 @@
       });
 
       // Save customer
-      document.getElementById('btnSaveCustomer').addEventListener('click', function() {
+      document.getElementById('btnSaveCustomer').addEventListener('click', async function() {
         const name = document.getElementById('newCustomerName').value.trim();
         const phone = document.getElementById('newCustomerPhone').value.trim();
         const allergy = document.getElementById('newCustomerAllergy').value.trim();
         
         if (!name || !phone) {
-          alert('Vui lòng nhập tên và số điện thoại khách hàng!');
+          UI.showMessage('Vui lòng nhập tên và số điện thoại khách hàng!', 'error');
           return;
         }
 
-        // Simulate adding customer
-        const newCustomer = {
-          id: sampleCustomers.length + 1,
-          name: name,
-          phone: phone,
-          allergy: allergy || 'Không có'
-        };
-        
-        sampleCustomers.push(newCustomer);
-        populateSelects();
-        document.getElementById('customerSelect').value = newCustomer.id;
-        selectedCustomer = newCustomer;
-        displayCustomerInfo(selectedCustomer);
-        
-        document.getElementById('addCustomerForm').style.display = 'none';
-        document.getElementById('btnAddCustomer').style.display = 'inline-block';
-        clearAddCustomerForm();
-        
-        alert('Đã thêm khách hàng mới!');
+        try {
+          UI.showLoading();
+          
+          // Thêm khách hàng vào database
+          const newCustomer = await API.createKhachHang({
+            ten_kh: name,
+            sdt: phone,
+            di_ung: allergy || 'Không có'
+          });
+          
+          // Reload danh sách khách hàng
+          const customersResponse = await API.getKhachHang();
+          allCustomers = customersResponse.records || [];
+          populateSelects();
+          
+          // Chọn khách hàng vừa tạo
+          document.getElementById('customerSelect').value = newCustomer.ma_kh;
+          selectedCustomer = newCustomer;
+          displayCustomerInfo(selectedCustomer);
+          
+          document.getElementById('addCustomerForm').style.display = 'none';
+          document.getElementById('btnAddCustomer').style.display = 'inline-block';
+          clearAddCustomerForm();
+          
+          UI.showMessage('Đã thêm khách hàng mới thành công!', 'success');
+        } catch (error) {
+          console.error('Lỗi:', error);
+          UI.showMessage('Lỗi khi thêm khách hàng: ' + error.message, 'error');
+        } finally {
+          UI.hideLoading();
+        }
       });
     }
 
@@ -324,13 +396,28 @@
     // Display customer info
     function displayCustomerInfo(customer) {
       const infoDiv = document.getElementById('customerInfo');
+      const cap = customer.cap_thanh_vien || 'Bronze';
+      const capIcon = cap === 'VIP' ? '👑' : cap === 'Gold' ? '🥇' : cap === 'Silver' ? '🥈' : '🥉';
+      const discount = cap === 'VIP' ? '20%' : cap === 'Gold' ? '15%' : cap === 'Silver' ? '10%' : '0%';
+      const tongTien = customer.tong_tien_da_mua || 0;
+      
       infoDiv.innerHTML = `
-        <div class="customer-details">
-          <p><strong>Tên:</strong> ${customer.name}</p>
-          <p><strong>SĐT:</strong> ${customer.phone}</p>
-          <p><strong>Dị ứng:</strong> ${customer.allergy}</p>
+        <div class="customer-details" style="background: #f0f9ff; padding: 15px; border-radius: 8px; margin-top: 10px;">
+          <p><strong>Tên:</strong> ${customer.ten_kh}</p>
+          <p><strong>SĐT:</strong> ${customer.sdt}</p>
+          <p><strong>Dị ứng:</strong> ${customer.di_ung || 'Không có'}</p>
+          <p><strong>Cấp:</strong> ${capIcon} ${cap} <span style="color: #10b981; font-weight: bold;">(Giảm ${discount})</span></p>
+          <p><strong>Tổng đã mua:</strong> ${formatCurrency(tongTien)}</p>
         </div>
       `;
+    }
+    
+    // Format currency
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+      }).format(amount);
     }
 
     // Add medicine to prescription
@@ -342,26 +429,34 @@
 
       const medicineId = searchInput.dataset.selectedId;
       const medicineName = searchInput.value;
-      const dose = doseInput.value;
+      const dose = doseInput.value.trim();
       const days = parseInt(daysInput.value);
       const quantity = parseInt(quantityInput.value);
 
       if (!medicineId || !dose || !days || !quantity) {
-        alert('Vui lòng điền đầy đủ thông tin thuốc');
+        UI.showMessage('Vui lòng điền đầy đủ thông tin thuốc', 'error');
+        return;
+      }
+
+      // Kiểm tra xem thuốc đã có trong đơn chưa
+      const existingMedicine = selectedMedicines.find(m => m.ma_thuoc == medicineId);
+      if (existingMedicine) {
+        UI.showMessage('Thuốc này đã có trong đơn!', 'error');
         return;
       }
 
       const medicine = {
-        id: medicineId,
-        name: medicineName,
-        dose: dose,
-        days: days,
-        quantity: quantity
+        ma_thuoc: parseInt(medicineId),
+        ten_thuoc: medicineName,
+        lieu_dung: dose,
+        so_ngay: days,
+        so_luong: quantity
       };
 
       selectedMedicines.push(medicine);
       displayMedicineList();
       clearMedicineForm();
+      UI.showMessage('Đã thêm thuốc vào đơn', 'success');
     }
 
     // Display medicine list
@@ -373,10 +468,10 @@
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${index + 1}</td>
-          <td>${medicine.name}</td>
-          <td>${medicine.dose}</td>
-          <td>${medicine.days}</td>
-          <td>${medicine.quantity}</td>
+          <td>${medicine.ten_thuoc}</td>
+          <td>${medicine.lieu_dung}</td>
+          <td>${medicine.so_ngay}</td>
+          <td>${medicine.so_luong}</td>
           <td><button onclick="removeMedicine(${index})" class="btn btn-danger btn-sm">Xóa</button></td>
         `;
         tbody.appendChild(row);
@@ -385,8 +480,12 @@
 
     // Remove medicine
     function removeMedicine(index) {
-      selectedMedicines.splice(index, 1);
-      displayMedicineList();
+      const medicine = selectedMedicines[index];
+      if (confirm(`Bạn có chắc chắn muốn xóa "${medicine.ten_thuoc}" khỏi đơn?`)) {
+        selectedMedicines.splice(index, 1);
+        displayMedicineList();
+        UI.showMessage('Đã xóa thuốc khỏi đơn', 'success');
+      }
     }
 
     // Clear medicine form
@@ -400,47 +499,96 @@
     }
 
     // Submit prescription
-    function submitPrescription() {
-      if (!selectedCustomer) {
-        alert('Vui lòng chọn khách hàng');
-        return;
-      }
-
+    async function submitPrescription() {
+      // Kiểm tra nhân viên
       if (!selectedEmployee) {
-        alert('Vui lòng chọn nhân viên thực hiện');
+        UI.showMessage('Vui lòng chọn nhân viên thực hiện', 'error');
         return;
       }
 
+      // Kiểm tra thuốc
       if (selectedMedicines.length === 0) {
-        alert('Vui lòng thêm thuốc vào đơn');
+        UI.showMessage('Vui lòng thêm thuốc vào đơn', 'error');
         return;
       }
 
-      // Simulate saving prescription
-      setTimeout(() => {
-        alert('Đơn thuốc đã được lưu thành công!');
-        resetForm();
-      }, 500);
+      try {
+        UI.showLoading();
+        
+        let donThuocData = {
+          ma_nv: selectedEmployee.ma_nv,
+          ngay_lap: new Date().toISOString().split('T')[0],
+          trang_thai: 'Đã lưu',
+          ghi_chu: ''
+        };
+
+        // Xử lý theo loại khách hàng
+        if (customerType === 'hoivien') {
+          // Hội viên: Phải chọn khách hàng
+          if (!selectedCustomer) {
+            UI.showMessage('Vui lòng chọn hội viên', 'error');
+            return;
+          }
+          donThuocData.ma_kh = selectedCustomer.ma_kh;
+          donThuocData.di_ung_khach = null; // Không cần, lấy từ bảng khach_hang
+        } else {
+          // Khách vãng lai: Không lưu ma_kh, lưu dị ứng vào đơn
+          const vanglaiAllergy = document.getElementById('vanglaiAllergy').value.trim();
+          donThuocData.ma_kh = null;
+          donThuocData.di_ung_khach = vanglaiAllergy || null;
+        }
+        
+        // Lưu đơn thuốc vào database
+        await API.createDonThuoc(donThuocData, selectedMedicines);
+        
+        UI.showMessage('Đơn thuốc đã được lưu thành công!', 'success');
+        
+        // Reset form sau 1 giây
+        setTimeout(() => {
+          resetForm();
+        }, 1000);
+      } catch (error) {
+        console.error('Lỗi:', error);
+        UI.showMessage('Lỗi khi lưu đơn thuốc: ' + error.message, 'error');
+      } finally {
+        UI.hideLoading();
+      }
     }
 
     // Cancel prescription
     function cancelPrescription() {
-      if (confirm('Bạn có chắc chắn muốn hủy đơn thuốc này?')) {
-        resetForm();
+      if (selectedMedicines.length > 0 || selectedCustomer || selectedEmployee) {
+        if (confirm('Bạn có chắc chắn muốn hủy đơn thuốc này?')) {
+          resetForm();
+          UI.showMessage('Đã hủy đơn thuốc', 'success');
+        }
+      } else {
+        UI.showMessage('Chưa có dữ liệu để hủy', 'error');
       }
     }
 
     // Reset form
     function resetForm() {
+      // Reset loại khách hàng về vãng lai
+      document.querySelector('input[name="customerType"][value="vanglai"]').checked = true;
+      toggleCustomerType();
+      
+      // Reset form vãng lai
+      document.getElementById('vanglaiName').value = '';
+      document.getElementById('vanglaiAllergy').value = '';
+      
+      // Reset form hội viên
       document.getElementById('customerSelect').value = '';
+      document.getElementById('customerInfo').innerHTML = '';
+      document.getElementById('addCustomerForm').style.display = 'none';
+      document.getElementById('btnAddCustomer').style.display = 'inline-block';
+      
+      // Reset chung
       document.getElementById('employeeSelect').value = '';
       document.getElementById('medicineList').innerHTML = '';
       selectedMedicines = [];
       selectedCustomer = null;
       selectedEmployee = null;
-      document.getElementById('customerInfo').innerHTML = '';
-      document.getElementById('addCustomerForm').style.display = 'none';
-      document.getElementById('btnAddCustomer').style.display = 'inline-block';
       clearMedicineForm();
     }
   </script>

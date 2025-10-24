@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="../assets/css/checkout.css" />
     <link rel="stylesheet" href="../assets/css/api-styles.css" />
     <link rel="stylesheet" href="../assets/css/common-responsive.css" />
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </head>
   <body>
     <!-- Navbar -->
@@ -41,6 +43,7 @@
         <li>
           <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
         </li>
+        <li><a href="members.html" onclick="setActive(this)">💎 Hội viên</a></li>
         <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
         <li>
           <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
@@ -117,8 +120,7 @@
         </div>
         <div class="qr-amount" id="qrAmount">0đ</div>
         <div class="qr-instructions">
-          Quét mã QR bằng ứng dụng ngân hàng để thanh toán<br>
-          Hoặc chuyển khoản đến số tài khoản: <strong>1234567890</strong>
+          Quét mã QR bằng ứng dụng ngân hàng để thanh toán
         </div>
         <div class="qr-modal-buttons">
           <button class="qr-btn qr-btn-primary" onclick="confirmQRPayment()">Đã thanh toán</button>
@@ -128,7 +130,8 @@
     </div>
   </body>
     <script src="../assets/js/sidebar.js"></script>
-  <!-- Backend scripts removed for frontend-only version -->
+    <script src="../config/supabase.js"></script>
+    <script src="../config/api.js"></script>
   <script>
     let donThuocList = [];
     let selectedDonThuoc = null;
@@ -146,7 +149,8 @@
       try {
         UI.showLoading();
         const data = await API.getDonThuoc();
-        donThuocList = data.records.filter(don => don.da_thanh_toan === 'Chưa thanh toán');
+        // Filter đơn thuốc đã lưu (chưa thanh toán)
+        donThuocList = data.records.filter(don => don.trang_thai === 'Đã lưu');
         updateDonThuocSelect();
       } catch (error) {
         UI.showMessage('Lỗi khi tải danh sách đơn thuốc: ' + error.message, 'error');
@@ -185,7 +189,9 @@
         donThuocList.forEach(don => {
           const option = document.createElement('option');
           option.value = don.ma_don;
-          option.textContent = `Đơn #${don.ma_don} - ${don.ten_kh}`;
+          // Hiển thị thông tin khách hàng từ relation
+          const tenKH = don.khach_hang ? don.khach_hang.ten_kh : 'N/A';
+          option.textContent = `Đơn #${don.ma_don} - ${tenKH}`;
           select.appendChild(option);
         });
       } else {
@@ -226,13 +232,49 @@
     function updateInvoiceDetails() {
       const detailsDiv = document.querySelector('.invoice-details');
       
+      // Lấy thông tin từ relations
+      const khachHang = selectedDonThuoc.khach_hang;
+      const tenKH = khachHang ? khachHang.ten_kh : 'Khách vãng lai';
+      const tenNV = selectedDonThuoc.nhan_vien ? selectedDonThuoc.nhan_vien.ten_nv : 'N/A';
+      const ngayLap = selectedDonThuoc.ngay_lap || new Date().toISOString().split('T')[0];
+      
+      // Thông tin hội viên
+      let memberInfo = '';
+      if (khachHang && khachHang.loai_kh === 'Hội viên') {
+        const cap = khachHang.cap_thanh_vien || 'Bronze';
+        const capIcon = cap === 'VIP' ? '👑' : cap === 'Gold' ? '🥇' : cap === 'Silver' ? '🥈' : '🥉';
+        const discount = cap === 'VIP' ? '20%' : cap === 'Gold' ? '15%' : cap === 'Silver' ? '10%' : '0%';
+        const discountColor = cap === 'Bronze' ? '#6b7280' : '#10b981';
+        memberInfo = `
+          <p><strong>Cấp hội viên:</strong> ${capIcon} ${cap} <span style="color: ${discountColor}; font-weight: bold;">(${cap === 'Bronze' ? 'Chưa được' : 'Giảm'} ${discount})</span></p>
+        `;
+      }
+      
+      // Thông tin dị ứng cho khách vãng lai
+      let allergyInfo = '';
+      if (selectedDonThuoc.di_ung_khach) {
+        allergyInfo = `
+          <p style="background: #fef3c7; padding: 8px; border-radius: 4px; margin-top: 5px;">
+            <strong>⚠️ Dị ứng:</strong> ${selectedDonThuoc.di_ung_khach}
+          </p>
+        `;
+      } else if (khachHang && khachHang.di_ung) {
+        allergyInfo = `
+          <p style="background: #fef3c7; padding: 8px; border-radius: 4px; margin-top: 5px;">
+            <strong>⚠️ Dị ứng:</strong> ${khachHang.di_ung}
+          </p>
+        `;
+      }
+      
       // Giữ lại dropdown, chỉ cập nhật thông tin chi tiết
       const dropdownHtml = detailsDiv.querySelector('.don-thuoc-select').outerHTML;
       detailsDiv.innerHTML = dropdownHtml + `
         <p>Mã đơn: #${selectedDonThuoc.ma_don}</p>
-        <p>Khách hàng: ${selectedDonThuoc.ten_kh}</p>
-        <p>Nhân viên: ${selectedDonThuoc.ten_nv}</p>
-        <p>Ngày tạo: ${UI.formatDate(selectedDonThuoc.ngay_tao)}</p>
+        <p>Khách hàng: ${tenKH}</p>
+        ${memberInfo}
+        <p>Nhân viên: ${tenNV}</p>
+        <p>Ngày tạo: ${formatDate(ngayLap)}</p>
+        ${allergyInfo}
       `;
 
       // Cần gán lại event listener cho dropdown sau khi cập nhật HTML
@@ -260,21 +302,48 @@
       tbody.innerHTML = '';
 
       selectedDonThuoc.chi_tiet.forEach(chiTiet => {
-        const thanhTien = chiTiet.so_luong * chiTiet.gia_ban;
+        // Lấy giá bán từ relation thuoc
+        const giaBan = chiTiet.thuoc ? chiTiet.thuoc.gia_ban : 0;
+        const tenThuoc = chiTiet.thuoc ? chiTiet.thuoc.ten_thuoc : 'N/A';
+        const donVi = chiTiet.thuoc ? chiTiet.thuoc.don_vi : '';
+        const thanhTien = chiTiet.so_luong * giaBan;
         totalAmount += thanhTien;
         
         const row = document.createElement('tr');
         row.innerHTML = `
-          <td>${chiTiet.ten_thuoc}</td>
-          <td>${chiTiet.so_luong} ${chiTiet.don_vi}</td>
-          <td>${UI.formatCurrency(chiTiet.gia_ban)}</td>
-          <td>${UI.formatCurrency(thanhTien)}</td>
+          <td>${tenThuoc}</td>
+          <td>${chiTiet.so_luong} ${donVi}</td>
+          <td>${formatCurrency(giaBan)}</td>
+          <td>${formatCurrency(thanhTien)}</td>
         `;
         tbody.appendChild(row);
       });
 
+      // Tính giảm giá cho hội viên
+      let discount = 0;
+      let discountText = '';
+      const khachHang = selectedDonThuoc.khach_hang;
+      
+      if (khachHang && khachHang.loai_kh === 'Hội viên') {
+        const cap = khachHang.cap_thanh_vien || 'Bronze';
+        const discountPercent = cap === 'VIP' ? 0.2 : cap === 'Gold' ? 0.15 : cap === 'Silver' ? 0.1 : 0;
+        discount = totalAmount * discountPercent;
+        if (discount > 0) {
+          discountText = `
+            <div style="text-align: right; color: #10b981; font-size: 1.1em; margin-top: 10px;">
+              Giảm giá (${cap}): -${formatCurrency(discount)}
+            </div>
+          `;
+        }
+      }
+
+      const finalAmount = totalAmount - discount;
+
       // Cập nhật tổng tiền
-      document.querySelector('.total-amount').textContent = `TỔNG CỘNG: ${UI.formatCurrency(totalAmount)}`;
+      document.querySelector('.total-amount').innerHTML = `
+        ${discountText}
+        <div style="font-size: 1.3em; margin-top: 10px;">TỔNG CỘNG: ${formatCurrency(finalAmount)}</div>
+      `;
     }
 
     // Xóa thông tin hóa đơn
@@ -327,20 +396,32 @@
         }
       }
 
-      // Tính tổng tiền
+      // Tính tổng tiền gốc
       let totalAmount = 0;
       selectedDonThuoc.chi_tiet.forEach(chiTiet => {
-        totalAmount += chiTiet.so_luong * chiTiet.gia_ban;
+        const giaBan = chiTiet.thuoc ? chiTiet.thuoc.gia_ban : 0;
+        totalAmount += chiTiet.so_luong * giaBan;
       });
+
+      // Tính giảm giá cho hội viên
+      let discount = 0;
+      const khachHang = selectedDonThuoc.khach_hang;
+      if (khachHang && khachHang.loai_kh === 'Hội viên') {
+        const cap = khachHang.cap_thanh_vien || 'Bronze';
+        const discountPercent = cap === 'VIP' ? 0.2 : cap === 'Gold' ? 0.15 : cap === 'Silver' ? 0.1 : 0;
+        discount = totalAmount * discountPercent;
+      }
+
+      const finalAmount = totalAmount - discount;
 
       // Nếu là chuyển khoản, hiển thị QR modal
       if (paymentMethod === 'Chuyển khoản') {
-        showQRModal(totalAmount);
+        showQRModal(finalAmount);
         return;
       }
 
       // Nếu là tiền mặt, xử lý thanh toán trực tiếp
-      await processPayment(totalAmount, paymentMethod);
+      await processPayment(finalAmount, paymentMethod);
     }
 
     // Hiển thị QR modal
@@ -370,15 +451,27 @@
         return;
       }
 
-      // Tính tổng tiền
+      // Tính tổng tiền gốc
       let totalAmount = 0;
       selectedDonThuoc.chi_tiet.forEach(chiTiet => {
-        totalAmount += chiTiet.so_luong * chiTiet.gia_ban;
+        const giaBan = chiTiet.thuoc ? chiTiet.thuoc.gia_ban : 0;
+        totalAmount += chiTiet.so_luong * giaBan;
       });
+
+      // Tính giảm giá cho hội viên
+      let discount = 0;
+      const khachHang = selectedDonThuoc.khach_hang;
+      if (khachHang && khachHang.loai_kh === 'Hội viên') {
+        const cap = khachHang.cap_thanh_vien || 'Bronze';
+        const discountPercent = cap === 'VIP' ? 0.2 : cap === 'Gold' ? 0.15 : cap === 'Silver' ? 0.1 : 0;
+        discount = totalAmount * discountPercent;
+      }
+
+      const finalAmount = totalAmount - discount;
 
       // Đóng modal và xử lý thanh toán
       closeQRModal();
-      await processPayment(totalAmount, 'Chuyển khoản');
+      await processPayment(finalAmount, 'Chuyển khoản');
     }
 
     // Xử lý thanh toán
@@ -386,15 +479,29 @@
       try {
         UI.showLoading();
         
-        // Tạo hóa đơn
+        // Lấy thông tin cần thiết
+        const maKH = selectedDonThuoc.khach_hang ? selectedDonThuoc.khach_hang.ma_kh : null;
+        const maNV = selectedDonThuoc.nhan_vien ? selectedDonThuoc.nhan_vien.ma_nv : null;
+        
+        // Tạo dữ liệu hóa đơn
         const hoaDonData = {
-          don_thuoc_id: selectedDonThuoc.ma_don,
-          ma_nv: selectedDonThuoc.ma_nv,
+          ma_kh: maKH,
+          ma_nv: maNV,
+          ma_don: selectedDonThuoc.ma_don,
           tong_tien: totalAmount,
-          phuong_thuc: paymentMethod
+          phuong_thuc_thanh_toan: paymentMethod,
+          trang_thai: 'Đã thanh toán',
+          ghi_chu: ''
         };
+        
+        // Tạo chi tiết hóa đơn
+        const chiTietList = selectedDonThuoc.chi_tiet.map(chiTiet => ({
+          ma_thuoc: chiTiet.thuoc ? chiTiet.thuoc.ma_thuoc : chiTiet.ma_thuoc,
+          so_luong: chiTiet.so_luong,
+          don_gia: chiTiet.thuoc ? chiTiet.thuoc.gia_ban : 0
+        }));
 
-        await API.createHoaDon(hoaDonData);
+        await API.createHoaDon(hoaDonData, chiTietList);
 
         UI.showMessage('Thanh toán thành công!', 'success');
         
@@ -409,6 +516,7 @@
         }
         
       } catch (error) {
+        console.error('Lỗi thanh toán:', error);
         UI.showMessage('Lỗi khi thanh toán: ' + error.message, 'error');
       } finally {
         UI.hideLoading();
@@ -421,6 +529,12 @@
         style: 'currency',
         currency: 'VND'
       }).format(amount);
+    }
+
+    // Format date helper
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('vi-VN');
     }
 
     // Thêm event listener cho button xác nhận
