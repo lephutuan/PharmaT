@@ -21,7 +21,13 @@
         <i class="fa-solid fa-bars"></i>
       </div>
       <div class="logo">
-        <img src="../assets/images/logo.png" alt="PharmaT Logo" class="logo-img" onclick="window.location.href='../../../index.html'">
+        <a href="../../../index.html">
+          <img
+            src="../assets/images/logo.png"
+            alt="PharmaT Logo"
+            class="logo-img"
+          />
+        </a>
       </div>
       <div class="page-title">
         <h1>Quản lý hội viên</h1>
@@ -31,16 +37,40 @@
     <!-- Sidebar -->
     <aside class="sidebar">
       <ul>
-        <li><a href="../../../index.html" onclick="setActive(this)">🏠 Trang chủ</a></li>
-        <li><a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a></li>
-        <li><a href="prescriptions.html" onclick="setActive(this)">📝 Đơn thuốc</a></li>
-        <li><a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a></li>
-        <li><a href="members.html" onclick="setActive(this)">💎 Hội viên</a></li>
-        <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
-        <li><a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a></li>
-        <li><a href="chatbox.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a></li>
+        <li>
+          <a href="../../../index.html" onclick="setActive(this)"
+            >🏠 Trang chủ</a
+          >
+        </li>
+        <li>
+          <a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a>
+        </li>
+        <li>
+          <a href="prescriptions.html" onclick="setActive(this)"
+            >📝 Đơn thuốc</a
+          >
+        </li>
+        <li>
+          <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
+        </li>
+        <li>
+          <a href="members.html" onclick="setActive(this)">💎 Hội viên</a>
+        </li>
+        <li>
+          <a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a>
+        </li>
+        <li>
+          <a href="reports.html" onclick="setActive(this)"
+            >📈 Báo cáo & Thống kê</a
+          >
+        </li>
+        <li>
+          <a href="chatbox.html" onclick="setActive(this)"
+            >🤖 Chatbox cảnh báo</a
+          >
+        </li>
       </ul>
-      
+
       <!-- Logout Button -->
       <div class="sidebar-footer">
         <a href="login.html" class="logout-btn" onclick="logout()">
@@ -56,43 +86,115 @@
     <!-- Main Content -->
     <main>
       <!-- Statistics Cards -->
-      <div class="stats-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px;">
-        <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-          <div style="font-size: 2em; margin-bottom: 10px;">👑</div>
-          <div style="font-size: 0.9em; opacity: 0.9;">VIP (20%)</div>
-          <div id="vipCount" style="font-size: 2em; font-weight: bold;">0</div>
+      <div
+        class="stats-container"
+        style="
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 15px;
+          margin-bottom: 30px;
+        "
+      >
+        <div
+          class="stat-card"
+          style="
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          "
+        >
+          <div style="font-size: 2em; margin-bottom: 10px">👑</div>
+          <div style="font-size: 0.9em; opacity: 0.9">VIP (20%)</div>
+          <div id="vipCount" style="font-size: 2em; font-weight: bold">0</div>
         </div>
-        
-        <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-          <div style="font-size: 2em; margin-bottom: 10px;">🥇</div>
-          <div style="font-size: 0.9em; opacity: 0.9;">Gold (15%)</div>
-          <div id="goldCount" style="font-size: 2em; font-weight: bold;">0</div>
+
+        <div
+          class="stat-card"
+          style="
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          "
+        >
+          <div style="font-size: 2em; margin-bottom: 10px">🥇</div>
+          <div style="font-size: 0.9em; opacity: 0.9">Gold (15%)</div>
+          <div id="goldCount" style="font-size: 2em; font-weight: bold">0</div>
         </div>
-        
-        <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-          <div style="font-size: 2em; margin-bottom: 10px;">🥈</div>
-          <div style="font-size: 0.9em; opacity: 0.9;">Silver (10%)</div>
-          <div id="silverCount" style="font-size: 2em; font-weight: bold;">0</div>
+
+        <div
+          class="stat-card"
+          style="
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          "
+        >
+          <div style="font-size: 2em; margin-bottom: 10px">🥈</div>
+          <div style="font-size: 0.9em; opacity: 0.9">Silver (10%)</div>
+          <div id="silverCount" style="font-size: 2em; font-weight: bold">
+            0
+          </div>
         </div>
-        
-        <div class="stat-card" style="background: linear-gradient(135deg, #fb923c 0%, #f97316 100%); color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-          <div style="font-size: 2em; margin-bottom: 10px;">🥉</div>
-          <div style="font-size: 0.9em; opacity: 0.9;">Bronze (0%)</div>
-          <div id="bronzeCount" style="font-size: 2em; font-weight: bold;">0</div>
+
+        <div
+          class="stat-card"
+          style="
+            background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          "
+        >
+          <div style="font-size: 2em; margin-bottom: 10px">🥉</div>
+          <div style="font-size: 0.9em; opacity: 0.9">Bronze (0%)</div>
+          <div id="bronzeCount" style="font-size: 2em; font-weight: bold">
+            0
+          </div>
         </div>
-        
-        <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-          <div style="font-size: 2em; margin-bottom: 10px;">💎</div>
-          <div style="font-size: 0.9em; opacity: 0.9;">Tổng hội viên</div>
-          <div id="totalMembers" style="font-size: 2em; font-weight: bold;">0</div>
+
+        <div
+          class="stat-card"
+          style="
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          "
+        >
+          <div style="font-size: 2em; margin-bottom: 10px">💎</div>
+          <div style="font-size: 0.9em; opacity: 0.9">Tổng hội viên</div>
+          <div id="totalMembers" style="font-size: 2em; font-weight: bold">
+            0
+          </div>
         </div>
       </div>
 
       <!-- Members Table -->
       <div class="container">
         <div class="header-actions">
-          <input type="text" id="searchInput" placeholder="🔍 Tìm kiếm theo tên hoặc SĐT..." style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
-          <select id="filterTier" style="padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="🔍 Tìm kiếm theo tên hoặc SĐT..."
+            style="
+              flex: 1;
+              padding: 10px;
+              border: 1px solid #ddd;
+              border-radius: 8px;
+            "
+          />
+          <select
+            id="filterTier"
+            style="padding: 10px; border: 1px solid #ddd; border-radius: 8px"
+          >
             <option value="">Tất cả cấp</option>
             <option value="VIP">👑 VIP</option>
             <option value="Gold">🥇 Gold</option>
@@ -130,7 +232,7 @@
       let allMembers = [];
 
       // Load data on page load
-      document.addEventListener('DOMContentLoaded', async function() {
+      document.addEventListener("DOMContentLoaded", async function () {
         await loadMembers();
         setupEventListeners();
       });
@@ -141,11 +243,16 @@
           UI.showLoading();
           const response = await API.getKhachHang();
           // Filter only members
-          allMembers = response.records.filter(kh => kh.loai_kh === 'Hội viên');
+          allMembers = response.records.filter(
+            (kh) => kh.loai_kh === "Hội viên"
+          );
           updateStatistics();
           displayMembers(allMembers);
         } catch (error) {
-          UI.showMessage('Lỗi khi tải danh sách hội viên: ' + error.message, 'error');
+          UI.showMessage(
+            "Lỗi khi tải danh sách hội viên: " + error.message,
+            "error"
+          );
         } finally {
           UI.hideLoading();
         }
@@ -153,42 +260,67 @@
 
       // Update statistics
       function updateStatistics() {
-        const vipCount = allMembers.filter(m => m.cap_thanh_vien === 'VIP').length;
-        const goldCount = allMembers.filter(m => m.cap_thanh_vien === 'Gold').length;
-        const silverCount = allMembers.filter(m => m.cap_thanh_vien === 'Silver').length;
-        const bronzeCount = allMembers.filter(m => m.cap_thanh_vien === 'Bronze').length;
-        
-        document.getElementById('vipCount').textContent = vipCount;
-        document.getElementById('goldCount').textContent = goldCount;
-        document.getElementById('silverCount').textContent = silverCount;
-        document.getElementById('bronzeCount').textContent = bronzeCount;
-        document.getElementById('totalMembers').textContent = allMembers.length;
+        const vipCount = allMembers.filter(
+          (m) => m.cap_thanh_vien === "VIP"
+        ).length;
+        const goldCount = allMembers.filter(
+          (m) => m.cap_thanh_vien === "Gold"
+        ).length;
+        const silverCount = allMembers.filter(
+          (m) => m.cap_thanh_vien === "Silver"
+        ).length;
+        const bronzeCount = allMembers.filter(
+          (m) => m.cap_thanh_vien === "Bronze"
+        ).length;
+
+        document.getElementById("vipCount").textContent = vipCount;
+        document.getElementById("goldCount").textContent = goldCount;
+        document.getElementById("silverCount").textContent = silverCount;
+        document.getElementById("bronzeCount").textContent = bronzeCount;
+        document.getElementById("totalMembers").textContent = allMembers.length;
       }
 
       // Display members
       function displayMembers(members) {
-        const tbody = document.getElementById('membersTableBody');
-        tbody.innerHTML = '';
+        const tbody = document.getElementById("membersTableBody");
+        tbody.innerHTML = "";
 
         if (members.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Không có hội viên nào</td></tr>';
+          tbody.innerHTML =
+            '<tr><td colspan="8" style="text-align: center;">Không có hội viên nào</td></tr>';
           return;
         }
 
-        members.forEach(member => {
-          const cap = member.cap_thanh_vien || 'Bronze';
-          const capIcon = cap === 'VIP' ? '👑' : cap === 'Gold' ? '🥇' : cap === 'Silver' ? '🥈' : '🥉';
-          const discount = cap === 'VIP' ? '20%' : cap === 'Gold' ? '15%' : cap === 'Silver' ? '10%' : '0%';
+        members.forEach((member) => {
+          const cap = member.cap_thanh_vien || "Bronze";
+          const capIcon =
+            cap === "VIP"
+              ? "👑"
+              : cap === "Gold"
+              ? "🥇"
+              : cap === "Silver"
+              ? "🥈"
+              : "🥉";
+          const discount =
+            cap === "VIP"
+              ? "20%"
+              : cap === "Gold"
+              ? "15%"
+              : cap === "Silver"
+              ? "10%"
+              : "0%";
           const ngayThamGia = member.ngay_tham_gia || member.created_at;
-          
-          const row = document.createElement('tr');
+
+          const row = document.createElement("tr");
           row.innerHTML = `
             <td>${member.ma_kh}</td>
             <td style="font-size: 1.5em;">${capIcon}</td>
             <td><strong>${member.ten_kh}</strong></td>
             <td>${member.sdt}</td>
-            <td>${member.di_ung || 'Không có'}</td>
-            <td style="color: #10b981; font-weight: bold;">${formatCurrency(member.tong_tien_da_mua || 0)}</td>
+            <td>${member.di_ung || "Không có"}</td>
+            <td style="color: #10b981; font-weight: bold;">${formatCurrency(
+              member.tong_tien_da_mua || 0
+            )}</td>
             <td style="color: #f59e0b; font-weight: bold;">${discount}</td>
             <td>${formatDate(ngayThamGia)}</td>
           `;
@@ -199,30 +331,37 @@
       // Setup event listeners
       function setupEventListeners() {
         // Search
-        document.getElementById('searchInput').addEventListener('input', filterMembers);
-        
+        document
+          .getElementById("searchInput")
+          .addEventListener("input", filterMembers);
+
         // Filter by tier
-        document.getElementById('filterTier').addEventListener('change', filterMembers);
+        document
+          .getElementById("filterTier")
+          .addEventListener("change", filterMembers);
       }
 
       // Filter members
       function filterMembers() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const filterTier = document.getElementById('filterTier').value;
+        const searchTerm = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const filterTier = document.getElementById("filterTier").value;
 
         let filtered = allMembers;
 
         // Filter by search term
         if (searchTerm) {
-          filtered = filtered.filter(m => 
-            m.ten_kh.toLowerCase().includes(searchTerm) ||
-            m.sdt.includes(searchTerm)
+          filtered = filtered.filter(
+            (m) =>
+              m.ten_kh.toLowerCase().includes(searchTerm) ||
+              m.sdt.includes(searchTerm)
           );
         }
 
         // Filter by tier
         if (filterTier) {
-          filtered = filtered.filter(m => m.cap_thanh_vien === filterTier);
+          filtered = filtered.filter((m) => m.cap_thanh_vien === filterTier);
         }
 
         displayMembers(filtered);
@@ -230,19 +369,18 @@
 
       // Format currency
       function formatCurrency(amount) {
-        return new Intl.NumberFormat('vi-VN', {
-          style: 'currency',
-          currency: 'VND'
+        return new Intl.NumberFormat("vi-VN", {
+          style: "currency",
+          currency: "VND",
         }).format(amount);
       }
 
       // Format date
       function formatDate(dateString) {
-        if (!dateString) return 'N/A';
+        if (!dateString) return "N/A";
         const date = new Date(dateString);
-        return date.toLocaleDateString('vi-VN');
+        return date.toLocaleDateString("vi-VN");
       }
     </script>
   </body>
 </html>
-

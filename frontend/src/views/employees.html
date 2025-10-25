@@ -21,7 +21,13 @@
         <i class="fa-solid fa-bars"></i>
       </div>
       <div class="logo">
-        <img src="../assets/images/logo.png" alt="PharmaT Logo" class="logo-img" onclick="window.location.href='../../../index.html'">
+        <a href="../../../index.html">
+          <img
+            src="../assets/images/logo.png"
+            alt="PharmaT Logo"
+            class="logo-img"
+          />
+        </a>
       </div>
       <div class="page-title">
         <h1>Quản lý nhân viên</h1>
@@ -32,27 +38,39 @@
     <aside class="sidebar">
       <ul>
         <li>
-          <a href="../../../index.html" onclick="setActive(this)">🏠 Trang chủ</a>
+          <a href="../../../index.html" onclick="setActive(this)"
+            >🏠 Trang chủ</a
+          >
         </li>
         <li>
           <a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a>
         </li>
         <li>
-          <a href="prescriptions.html" onclick="setActive(this)">📝 Đơn thuốc</a>
+          <a href="prescriptions.html" onclick="setActive(this)"
+            >📝 Đơn thuốc</a
+          >
         </li>
         <li>
           <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
         </li>
-        <li><a href="members.html" onclick="setActive(this)">💎 Hội viên</a></li>
-        <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
         <li>
-          <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
+          <a href="members.html" onclick="setActive(this)">💎 Hội viên</a>
         </li>
         <li>
-          <a href="chatbox.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
+          <a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a>
+        </li>
+        <li>
+          <a href="reports.html" onclick="setActive(this)"
+            >📈 Báo cáo & Thống kê</a
+          >
+        </li>
+        <li>
+          <a href="chatbox.html" onclick="setActive(this)"
+            >🤖 Chatbox cảnh báo</a
+          >
         </li>
       </ul>
-      
+
       <!-- Logout Button -->
       <div class="sidebar-footer">
         <a href="login.html" class="logout-btn" onclick="logout()">
@@ -67,8 +85,7 @@
 
     <!-- Main Content -->
     <main>
-
-    <!-- Form thêm/sửa -->
+      <!-- Form thêm/sửa -->
       <section class="form-section">
         <h2>Thêm nhân viên</h2>
         <div class="employee-form">
@@ -86,9 +103,20 @@
             <option value="Đang làm việc">Đang làm việc</option>
             <option value="Đã nghỉ việc">Đã nghỉ việc</option>
           </select>
-          <button class="btn btn-primary" onclick="saveEmployee()">💾 Lưu</button>
-          <button class="btn btn-secondary" onclick="clearForm()">↩️ Xóa trắng</button>
-          <button class="btn btn-cancel" onclick="cancelEdit()" id="cancelBtn" style="display: none;">❌ Hủy chỉnh sửa</button>
+          <button class="btn btn-primary" onclick="saveEmployee()">
+            💾 Lưu
+          </button>
+          <button class="btn btn-secondary" onclick="clearForm()">
+            ↩️ Xóa trắng
+          </button>
+          <button
+            class="btn btn-cancel"
+            onclick="cancelEdit()"
+            id="cancelBtn"
+            style="display: none"
+          >
+            ❌ Hủy chỉnh sửa
+          </button>
         </div>
       </section>
 
@@ -115,15 +143,15 @@
       </section>
     </main>
   </body>
-    <script src="../assets/js/sidebar.js"></script>
-    <script src="../config/supabase.js"></script>
-    <script src="../config/api.js"></script>
+  <script src="../assets/js/sidebar.js"></script>
+  <script src="../config/supabase.js"></script>
+  <script src="../config/api.js"></script>
   <script>
     let employees = [];
     let editingEmployeeId = null;
 
     // Load dữ liệu khi trang load
-    document.addEventListener('DOMContentLoaded', async function() {
+    document.addEventListener("DOMContentLoaded", async function () {
       await loadEmployees();
     });
 
@@ -135,7 +163,10 @@
         employees = data.records;
         displayEmployees();
       } catch (error) {
-        UI.showMessage('Lỗi khi tải danh sách nhân viên: ' + error.message, 'error');
+        UI.showMessage(
+          "Lỗi khi tải danh sách nhân viên: " + error.message,
+          "error"
+        );
       } finally {
         UI.hideLoading();
       }
@@ -143,22 +174,26 @@
 
     // Hiển thị danh sách nhân viên
     function displayEmployees() {
-      const tbody = document.querySelector('#nhanvien-table tbody');
-      tbody.innerHTML = '';
+      const tbody = document.querySelector("#nhanvien-table tbody");
+      tbody.innerHTML = "";
 
       employees.forEach((employee, index) => {
-        const row = document.createElement('tr');
+        const row = document.createElement("tr");
         row.innerHTML = `
           <td>${index + 1}</td>
           <td>${employee.ten_nv}</td>
           <td>${employee.chuc_vu}</td>
           <td>${employee.sdt}</td>
           <td>${employee.dia_chi}</td>
-          <td>${employee.mat_khau ? '••••••••' : 'Chưa có'}</td>
+          <td>${employee.mat_khau ? "••••••••" : "Chưa có"}</td>
           <td>${employee.trang_thai}</td>
           <td>
-            <button class="btn btn-small btn-edit" onclick="editEmployee(${employee.ma_nv})">✏️</button>
-            <button class="btn btn-small btn-delete" onclick="deleteEmployee(${employee.ma_nv})">🗑️</button>
+            <button class="btn btn-small btn-edit" onclick="editEmployee(${
+              employee.ma_nv
+            })">✏️</button>
+            <button class="btn btn-small btn-delete" onclick="deleteEmployee(${
+              employee.ma_nv
+            })">🗑️</button>
           </td>
         `;
         tbody.appendChild(row);
@@ -167,15 +202,15 @@
 
     // Lưu nhân viên
     async function saveEmployee() {
-      const ten_nv = document.getElementById('ten_nv').value;
-      const chuc_vu = document.getElementById('chuc_vu').value;
-      const sdt = document.getElementById('sdt').value;
-      const dia_chi = document.getElementById('dia_chi').value;
-      const mat_khau = document.getElementById('mat_khau').value;
-      const trang_thai = document.getElementById('trang_thai').value;
+      const ten_nv = document.getElementById("ten_nv").value;
+      const chuc_vu = document.getElementById("chuc_vu").value;
+      const sdt = document.getElementById("sdt").value;
+      const dia_chi = document.getElementById("dia_chi").value;
+      const mat_khau = document.getElementById("mat_khau").value;
+      const trang_thai = document.getElementById("trang_thai").value;
 
       if (!ten_nv || !chuc_vu || !sdt || !dia_chi || !mat_khau || !trang_thai) {
-        UI.showMessage('Vui lòng điền đầy đủ thông tin', 'error');
+        UI.showMessage("Vui lòng điền đầy đủ thông tin", "error");
         return;
       }
 
@@ -185,28 +220,27 @@
         sdt: sdt,
         dia_chi: dia_chi,
         mat_khau: mat_khau,
-        trang_thai: trang_thai
+        trang_thai: trang_thai,
       };
 
       try {
         UI.showLoading();
-        
+
         if (editingEmployeeId) {
           // Cập nhật nhân viên
           employeeData.ma_nv = editingEmployeeId;
           await API.updateNhanVien(editingEmployeeId, employeeData);
-          UI.showMessage('Cập nhật nhân viên thành công!', 'success');
+          UI.showMessage("Cập nhật nhân viên thành công!", "success");
         } else {
           // Thêm nhân viên mới
           await API.createNhanVien(employeeData);
-          UI.showMessage('Thêm nhân viên thành công!', 'success');
+          UI.showMessage("Thêm nhân viên thành công!", "success");
         }
 
         await loadEmployees();
         clearForm();
-        
       } catch (error) {
-        UI.showMessage('Lỗi: ' + error.message, 'error');
+        UI.showMessage("Lỗi: " + error.message, "error");
       } finally {
         UI.hideLoading();
       }
@@ -214,35 +248,35 @@
 
     // Sửa nhân viên
     function editEmployee(ma_nv) {
-      const employee = employees.find(emp => emp.ma_nv == ma_nv);
+      const employee = employees.find((emp) => emp.ma_nv == ma_nv);
       if (employee) {
         editingEmployeeId = ma_nv;
-        document.getElementById('ten_nv').value = employee.ten_nv;
-        document.getElementById('chuc_vu').value = employee.chuc_vu;
-        document.getElementById('sdt').value = employee.sdt;
-        document.getElementById('dia_chi').value = employee.dia_chi;
-        document.getElementById('mat_khau').value = employee.mat_khau || '';
-        document.getElementById('trang_thai').value = employee.trang_thai;
-        
+        document.getElementById("ten_nv").value = employee.ten_nv;
+        document.getElementById("chuc_vu").value = employee.chuc_vu;
+        document.getElementById("sdt").value = employee.sdt;
+        document.getElementById("dia_chi").value = employee.dia_chi;
+        document.getElementById("mat_khau").value = employee.mat_khau || "";
+        document.getElementById("trang_thai").value = employee.trang_thai;
+
         // Đổi text button và hiển thị nút hủy
-        document.querySelector('.btn-primary').textContent = '💾 Cập nhật';
-        document.getElementById('cancelBtn').style.display = 'inline-block';
+        document.querySelector(".btn-primary").textContent = "💾 Cập nhật";
+        document.getElementById("cancelBtn").style.display = "inline-block";
       }
     }
 
     // Xóa nhân viên
     async function deleteEmployee(ma_nv) {
-      if (!UI.confirmDelete('Bạn có chắc chắn muốn xóa nhân viên này?')) {
+      if (!UI.confirmDelete("Bạn có chắc chắn muốn xóa nhân viên này?")) {
         return;
       }
 
       try {
         UI.showLoading();
         await API.deleteNhanVien(ma_nv);
-        UI.showMessage('Xóa nhân viên thành công!', 'success');
+        UI.showMessage("Xóa nhân viên thành công!", "success");
         await loadEmployees();
       } catch (error) {
-        UI.showMessage('Lỗi khi xóa nhân viên: ' + error.message, 'error');
+        UI.showMessage("Lỗi khi xóa nhân viên: " + error.message, "error");
       } finally {
         UI.hideLoading();
       }
@@ -256,14 +290,14 @@
     // Xóa trắng form
     function clearForm() {
       editingEmployeeId = null;
-      document.getElementById('ten_nv').value = '';
-      document.getElementById('chuc_vu').value = '';
-      document.getElementById('sdt').value = '';
-      document.getElementById('dia_chi').value = '';
-      document.getElementById('mat_khau').value = '';
-      document.getElementById('trang_thai').value = '';
-      document.querySelector('.btn-primary').textContent = '💾 Lưu';
-      document.getElementById('cancelBtn').style.display = 'none';
+      document.getElementById("ten_nv").value = "";
+      document.getElementById("chuc_vu").value = "";
+      document.getElementById("sdt").value = "";
+      document.getElementById("dia_chi").value = "";
+      document.getElementById("mat_khau").value = "";
+      document.getElementById("trang_thai").value = "";
+      document.querySelector(".btn-primary").textContent = "💾 Lưu";
+      document.getElementById("cancelBtn").style.display = "none";
     }
   </script>
 </html>

@@ -21,7 +21,13 @@
         <i class="fa-solid fa-bars"></i>
       </div>
       <div class="logo">
-        <img src="../assets/images/logo.png" alt="PharmaT Logo" class="logo-img" onclick="window.location.href='../../../index.html'">
+        <a href="../../../index.html">
+          <img
+            src="../assets/images/logo.png"
+            alt="PharmaT Logo"
+            class="logo-img"
+          />
+        </a>
       </div>
       <div class="page-title">
         <h1>Thanh toán hóa đơn</h1>
@@ -32,27 +38,39 @@
     <aside class="sidebar">
       <ul>
         <li>
-          <a href="../../../index.html" onclick="setActive(this)">🏠 Trang chủ</a>
+          <a href="../../../index.html" onclick="setActive(this)"
+            >🏠 Trang chủ</a
+          >
         </li>
         <li>
           <a href="warehouse.html" onclick="setActive(this)">📦 Kho thuốc</a>
         </li>
         <li>
-          <a href="prescriptions.html" onclick="setActive(this)">📝 Đơn thuốc</a>
+          <a href="prescriptions.html" onclick="setActive(this)"
+            >📝 Đơn thuốc</a
+          >
         </li>
         <li>
           <a href="employees.html" onclick="setActive(this)">👥 Nhân viên</a>
         </li>
-        <li><a href="members.html" onclick="setActive(this)">💎 Hội viên</a></li>
-        <li><a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a></li>
         <li>
-          <a href="reports.html" onclick="setActive(this)">📈 Báo cáo & Thống kê</a>
+          <a href="members.html" onclick="setActive(this)">💎 Hội viên</a>
         </li>
         <li>
-          <a href="chatbox.html" onclick="setActive(this)">🤖 Chatbox cảnh báo</a>
+          <a href="checkout.html" onclick="setActive(this)">💳 Thanh toán</a>
+        </li>
+        <li>
+          <a href="reports.html" onclick="setActive(this)"
+            >📈 Báo cáo & Thống kê</a
+          >
+        </li>
+        <li>
+          <a href="chatbox.html" onclick="setActive(this)"
+            >🤖 Chatbox cảnh báo</a
+          >
         </li>
       </ul>
-      
+
       <!-- Logout Button -->
       <div class="sidebar-footer">
         <a href="login.html" class="logout-btn" onclick="logout()">
@@ -69,9 +87,9 @@
     <main>
       <div class="invoice-container">
         <div class="invoice-details">
-          <p>Mã đơn: </p>
-          <p>Khách hàng: </p>
-          <p>Nhân viên: </p>
+          <p>Mã đơn:</p>
+          <p>Khách hàng:</p>
+          <p>Nhân viên:</p>
         </div>
         <div class="table-container">
           <table class="invoice-table">
@@ -103,7 +121,7 @@
           <label><input type="radio" name="payment" checked /> Tiền mặt</label>
           <label><input type="radio" name="payment" /> Chuyển khoản</label>
         </div>
-        <div class="total-amount">TỔNG CỘNG: </div>
+        <div class="total-amount">TỔNG CỘNG:</div>
         <a href="#" class="btn">Xác nhận và tạo hóa đơn</a>
         <div class="footer-note">
           * Hóa đơn sẽ được lưu và gửi đến ngay sau khi xác nhận
@@ -116,28 +134,32 @@
       <div class="qr-modal-content">
         <h3>💳 Thanh toán chuyển khoản</h3>
         <div class="qr-code-container">
-          <img src="../assets/images/qr.jpg" alt="QR Code" id="qrCodeImage">
+          <img src="../assets/images/qr.jpg" alt="QR Code" id="qrCodeImage" />
         </div>
         <div class="qr-amount" id="qrAmount">0đ</div>
         <div class="qr-instructions">
           Quét mã QR bằng ứng dụng ngân hàng để thanh toán
         </div>
         <div class="qr-modal-buttons">
-          <button class="qr-btn qr-btn-primary" onclick="confirmQRPayment()">Đã thanh toán</button>
-          <button class="qr-btn qr-btn-secondary" onclick="closeQRModal()">Hủy</button>
+          <button class="qr-btn qr-btn-primary" onclick="confirmQRPayment()">
+            Đã thanh toán
+          </button>
+          <button class="qr-btn qr-btn-secondary" onclick="closeQRModal()">
+            Hủy
+          </button>
         </div>
       </div>
     </div>
   </body>
-    <script src="../assets/js/sidebar.js"></script>
-    <script src="../config/supabase.js"></script>
-    <script src="../config/api.js"></script>
+  <script src="../assets/js/sidebar.js"></script>
+  <script src="../config/supabase.js"></script>
+  <script src="../config/api.js"></script>
   <script>
     let donThuocList = [];
     let selectedDonThuoc = null;
 
     // Load dữ liệu khi trang load
-    document.addEventListener('DOMContentLoaded', async function() {
+    document.addEventListener("DOMContentLoaded", async function () {
       // Hiển thị dropdown ngay từ đầu
       displayDonThuocSelect();
       // Sau đó load dữ liệu
@@ -150,10 +172,15 @@
         UI.showLoading();
         const data = await API.getDonThuoc();
         // Filter đơn thuốc đã lưu (chưa thanh toán)
-        donThuocList = data.records.filter(don => don.trang_thai === 'Đã lưu');
+        donThuocList = data.records.filter(
+          (don) => don.trang_thai === "Đã lưu"
+        );
         updateDonThuocSelect();
       } catch (error) {
-        UI.showMessage('Lỗi khi tải danh sách đơn thuốc: ' + error.message, 'error');
+        UI.showMessage(
+          "Lỗi khi tải danh sách đơn thuốc: " + error.message,
+          "error"
+        );
         // Vẫn cập nhật dropdown ngay cả khi có lỗi
         updateDonThuocSelect();
       } finally {
@@ -163,7 +190,7 @@
 
     // Hiển thị select đơn thuốc (luôn xuất hiện)
     function displayDonThuocSelect() {
-      const container = document.querySelector('.invoice-details');
+      const container = document.querySelector(".invoice-details");
       const selectHtml = `
         <div class="don-thuoc-select">
           <label for="donThuocSelect">Chọn đơn thuốc:</label>
@@ -172,31 +199,31 @@
           </select>
         </div>
       `;
-      
+
       container.innerHTML = selectHtml + container.innerHTML;
     }
 
     // Cập nhật nội dung select đơn thuốc
     function updateDonThuocSelect() {
-      const select = document.getElementById('donThuocSelect');
+      const select = document.getElementById("donThuocSelect");
       if (!select) return;
 
       // Giữ lại option đầu tiên
       select.innerHTML = '<option value="">-- Chọn đơn thuốc --</option>';
-      
+
       // Thêm các đơn thuốc nếu có
       if (donThuocList.length > 0) {
-        donThuocList.forEach(don => {
-          const option = document.createElement('option');
+        donThuocList.forEach((don) => {
+          const option = document.createElement("option");
           option.value = don.ma_don;
           // Hiển thị thông tin khách hàng từ relation
-          const tenKH = don.khach_hang ? don.khach_hang.ten_kh : 'N/A';
+          const tenKH = don.khach_hang ? don.khach_hang.ten_kh : "N/A";
           option.textContent = `Đơn #${don.ma_don} - ${tenKH}`;
           select.appendChild(option);
         });
       } else {
         // Thêm thông báo khi không có đơn thuốc
-        const option = document.createElement('option');
+        const option = document.createElement("option");
         option.value = "";
         option.textContent = "-- Không có đơn thuốc chưa thanh toán --";
         option.disabled = true;
@@ -206,13 +233,13 @@
 
     // Load chi tiết đơn thuốc
     async function loadDonThuocDetails() {
-      const maDon = document.getElementById('donThuocSelect').value;
+      const maDon = document.getElementById("donThuocSelect").value;
       if (!maDon) {
         clearInvoiceDetails();
         return;
       }
 
-      selectedDonThuoc = donThuocList.find(don => don.ma_don == maDon);
+      selectedDonThuoc = donThuocList.find((don) => don.ma_don == maDon);
       if (selectedDonThuoc) {
         try {
           UI.showLoading();
@@ -221,7 +248,10 @@
           selectedDonThuoc.chi_tiet = chiTietData.records;
           updateInvoiceDetails();
         } catch (error) {
-          UI.showMessage('Lỗi khi tải chi tiết đơn thuốc: ' + error.message, 'error');
+          UI.showMessage(
+            "Lỗi khi tải chi tiết đơn thuốc: " + error.message,
+            "error"
+          );
         } finally {
           UI.hideLoading();
         }
@@ -230,28 +260,47 @@
 
     // Cập nhật thông tin hóa đơn
     function updateInvoiceDetails() {
-      const detailsDiv = document.querySelector('.invoice-details');
-      
+      const detailsDiv = document.querySelector(".invoice-details");
+
       // Lấy thông tin từ relations
       const khachHang = selectedDonThuoc.khach_hang;
-      const tenKH = khachHang ? khachHang.ten_kh : 'Khách vãng lai';
-      const tenNV = selectedDonThuoc.nhan_vien ? selectedDonThuoc.nhan_vien.ten_nv : 'N/A';
-      const ngayLap = selectedDonThuoc.ngay_lap || new Date().toISOString().split('T')[0];
-      
+      const tenKH = khachHang ? khachHang.ten_kh : "Khách vãng lai";
+      const tenNV = selectedDonThuoc.nhan_vien
+        ? selectedDonThuoc.nhan_vien.ten_nv
+        : "N/A";
+      const ngayLap =
+        selectedDonThuoc.ngay_lap || new Date().toISOString().split("T")[0];
+
       // Thông tin hội viên
-      let memberInfo = '';
-      if (khachHang && khachHang.loai_kh === 'Hội viên') {
-        const cap = khachHang.cap_thanh_vien || 'Bronze';
-        const capIcon = cap === 'VIP' ? '👑' : cap === 'Gold' ? '🥇' : cap === 'Silver' ? '🥈' : '🥉';
-        const discount = cap === 'VIP' ? '20%' : cap === 'Gold' ? '15%' : cap === 'Silver' ? '10%' : '0%';
-        const discountColor = cap === 'Bronze' ? '#6b7280' : '#10b981';
+      let memberInfo = "";
+      if (khachHang && khachHang.loai_kh === "Hội viên") {
+        const cap = khachHang.cap_thanh_vien || "Bronze";
+        const capIcon =
+          cap === "VIP"
+            ? "👑"
+            : cap === "Gold"
+            ? "🥇"
+            : cap === "Silver"
+            ? "🥈"
+            : "🥉";
+        const discount =
+          cap === "VIP"
+            ? "20%"
+            : cap === "Gold"
+            ? "15%"
+            : cap === "Silver"
+            ? "10%"
+            : "0%";
+        const discountColor = cap === "Bronze" ? "#6b7280" : "#10b981";
         memberInfo = `
-          <p><strong>Cấp hội viên:</strong> ${capIcon} ${cap} <span style="color: ${discountColor}; font-weight: bold;">(${cap === 'Bronze' ? 'Chưa được' : 'Giảm'} ${discount})</span></p>
+          <p><strong>Cấp hội viên:</strong> ${capIcon} ${cap} <span style="color: ${discountColor}; font-weight: bold;">(${
+          cap === "Bronze" ? "Chưa được" : "Giảm"
+        } ${discount})</span></p>
         `;
       }
-      
+
       // Thông tin dị ứng cho khách vãng lai
-      let allergyInfo = '';
+      let allergyInfo = "";
       if (selectedDonThuoc.di_ung_khach) {
         allergyInfo = `
           <p style="background: #fef3c7; padding: 8px; border-radius: 4px; margin-top: 5px;">
@@ -265,10 +314,13 @@
           </p>
         `;
       }
-      
+
       // Giữ lại dropdown, chỉ cập nhật thông tin chi tiết
-      const dropdownHtml = detailsDiv.querySelector('.don-thuoc-select').outerHTML;
-      detailsDiv.innerHTML = dropdownHtml + `
+      const dropdownHtml =
+        detailsDiv.querySelector(".don-thuoc-select").outerHTML;
+      detailsDiv.innerHTML =
+        dropdownHtml +
+        `
         <p>Mã đơn: #${selectedDonThuoc.ma_don}</p>
         <p>Khách hàng: ${tenKH}</p>
         ${memberInfo}
@@ -278,7 +330,7 @@
       `;
 
       // Cần gán lại event listener cho dropdown sau khi cập nhật HTML
-      const newSelect = document.getElementById('donThuocSelect');
+      const newSelect = document.getElementById("donThuocSelect");
       if (newSelect) {
         newSelect.value = selectedDonThuoc.ma_don;
         newSelect.onchange = loadDonThuocDetails;
@@ -290,26 +342,30 @@
 
     // Hiển thị danh sách thuốc trong hóa đơn
     function displayInvoiceItems() {
-      const tbody = document.querySelector('.invoice-table tbody');
-      
-      if (!selectedDonThuoc.chi_tiet || selectedDonThuoc.chi_tiet.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Không có thuốc nào</td></tr>';
-        document.querySelector('.total-amount').textContent = 'TỔNG CỘNG: 0đ';
+      const tbody = document.querySelector(".invoice-table tbody");
+
+      if (
+        !selectedDonThuoc.chi_tiet ||
+        selectedDonThuoc.chi_tiet.length === 0
+      ) {
+        tbody.innerHTML =
+          '<tr><td colspan="4" style="text-align: center;">Không có thuốc nào</td></tr>';
+        document.querySelector(".total-amount").textContent = "TỔNG CỘNG: 0đ";
         return;
       }
 
       let totalAmount = 0;
-      tbody.innerHTML = '';
+      tbody.innerHTML = "";
 
-      selectedDonThuoc.chi_tiet.forEach(chiTiet => {
+      selectedDonThuoc.chi_tiet.forEach((chiTiet) => {
         // Lấy giá bán từ relation thuoc
         const giaBan = chiTiet.thuoc ? chiTiet.thuoc.gia_ban : 0;
-        const tenThuoc = chiTiet.thuoc ? chiTiet.thuoc.ten_thuoc : 'N/A';
-        const donVi = chiTiet.thuoc ? chiTiet.thuoc.don_vi : '';
+        const tenThuoc = chiTiet.thuoc ? chiTiet.thuoc.ten_thuoc : "N/A";
+        const donVi = chiTiet.thuoc ? chiTiet.thuoc.don_vi : "";
         const thanhTien = chiTiet.so_luong * giaBan;
         totalAmount += thanhTien;
-        
-        const row = document.createElement('tr');
+
+        const row = document.createElement("tr");
         row.innerHTML = `
           <td>${tenThuoc}</td>
           <td>${chiTiet.so_luong} ${donVi}</td>
@@ -321,12 +377,19 @@
 
       // Tính giảm giá cho hội viên
       let discount = 0;
-      let discountText = '';
+      let discountText = "";
       const khachHang = selectedDonThuoc.khach_hang;
-      
-      if (khachHang && khachHang.loai_kh === 'Hội viên') {
-        const cap = khachHang.cap_thanh_vien || 'Bronze';
-        const discountPercent = cap === 'VIP' ? 0.2 : cap === 'Gold' ? 0.15 : cap === 'Silver' ? 0.1 : 0;
+
+      if (khachHang && khachHang.loai_kh === "Hội viên") {
+        const cap = khachHang.cap_thanh_vien || "Bronze";
+        const discountPercent =
+          cap === "VIP"
+            ? 0.2
+            : cap === "Gold"
+            ? 0.15
+            : cap === "Silver"
+            ? 0.1
+            : 0;
         discount = totalAmount * discountPercent;
         if (discount > 0) {
           discountText = `
@@ -340,57 +403,70 @@
       const finalAmount = totalAmount - discount;
 
       // Cập nhật tổng tiền
-      document.querySelector('.total-amount').innerHTML = `
+      document.querySelector(".total-amount").innerHTML = `
         ${discountText}
-        <div style="font-size: 1.3em; margin-top: 10px;">TỔNG CỘNG: ${formatCurrency(finalAmount)}</div>
+        <div style="font-size: 1.3em; margin-top: 10px;">TỔNG CỘNG: ${formatCurrency(
+          finalAmount
+        )}</div>
       `;
     }
 
     // Xóa thông tin hóa đơn
     function clearInvoiceDetails() {
-      const detailsDiv = document.querySelector('.invoice-details');
-      
+      const detailsDiv = document.querySelector(".invoice-details");
+
       // Giữ lại dropdown, chỉ xóa thông tin chi tiết
-      const dropdownHtml = detailsDiv.querySelector('.don-thuoc-select').outerHTML;
-      detailsDiv.innerHTML = dropdownHtml + `
+      const dropdownHtml =
+        detailsDiv.querySelector(".don-thuoc-select").outerHTML;
+      detailsDiv.innerHTML =
+        dropdownHtml +
+        `
         <p>Mã đơn: --</p>
         <p>Khách hàng: --</p>
         <p>Nhân viên: --</p>
       `;
 
-      const tbody = document.querySelector('.invoice-table tbody');
-      tbody.innerHTML = '';
+      const tbody = document.querySelector(".invoice-table tbody");
+      tbody.innerHTML = "";
 
-      document.querySelector('.total-amount').textContent = 'TỔNG CỘNG: 0đ';
+      document.querySelector(".total-amount").textContent = "TỔNG CỘNG: 0đ";
     }
 
     // Xác nhận thanh toán
     async function confirmPayment() {
-      const selectedValue = document.getElementById('donThuocSelect').value;
-      
-      console.log('Debug - selectedValue:', selectedValue);
-      console.log('Debug - selectedDonThuoc:', selectedDonThuoc);
-      
+      const selectedValue = document.getElementById("donThuocSelect").value;
+
+      console.log("Debug - selectedValue:", selectedValue);
+      console.log("Debug - selectedDonThuoc:", selectedDonThuoc);
+
       if (!selectedValue || selectedValue === "") {
-        UI.showMessage('Vui lòng chọn đơn thuốc cần thanh toán', 'error');
+        UI.showMessage("Vui lòng chọn đơn thuốc cần thanh toán", "error");
         return;
       }
 
       if (!selectedDonThuoc) {
-        UI.showMessage('Không tìm thấy thông tin đơn thuốc', 'error');
+        UI.showMessage("Không tìm thấy thông tin đơn thuốc", "error");
         return;
       }
 
-      if (!selectedDonThuoc.chi_tiet || selectedDonThuoc.chi_tiet.length === 0) {
-        UI.showMessage('Đơn thuốc không có chi tiết thuốc. Vui lòng thử chọn lại đơn thuốc.', 'error');
+      if (
+        !selectedDonThuoc.chi_tiet ||
+        selectedDonThuoc.chi_tiet.length === 0
+      ) {
+        UI.showMessage(
+          "Đơn thuốc không có chi tiết thuốc. Vui lòng thử chọn lại đơn thuốc.",
+          "error"
+        );
         return;
       }
 
       // Lấy phương thức thanh toán
-      const paymentMethodElement = document.querySelector('input[name="payment"]:checked');
-      let paymentMethod = 'Tiền mặt';
+      const paymentMethodElement = document.querySelector(
+        'input[name="payment"]:checked'
+      );
+      let paymentMethod = "Tiền mặt";
       if (paymentMethodElement) {
-        const label = paymentMethodElement.closest('label');
+        const label = paymentMethodElement.closest("label");
         if (label) {
           paymentMethod = label.textContent.trim();
         }
@@ -398,7 +474,7 @@
 
       // Tính tổng tiền gốc
       let totalAmount = 0;
-      selectedDonThuoc.chi_tiet.forEach(chiTiet => {
+      selectedDonThuoc.chi_tiet.forEach((chiTiet) => {
         const giaBan = chiTiet.thuoc ? chiTiet.thuoc.gia_ban : 0;
         totalAmount += chiTiet.so_luong * giaBan;
       });
@@ -406,16 +482,23 @@
       // Tính giảm giá cho hội viên
       let discount = 0;
       const khachHang = selectedDonThuoc.khach_hang;
-      if (khachHang && khachHang.loai_kh === 'Hội viên') {
-        const cap = khachHang.cap_thanh_vien || 'Bronze';
-        const discountPercent = cap === 'VIP' ? 0.2 : cap === 'Gold' ? 0.15 : cap === 'Silver' ? 0.1 : 0;
+      if (khachHang && khachHang.loai_kh === "Hội viên") {
+        const cap = khachHang.cap_thanh_vien || "Bronze";
+        const discountPercent =
+          cap === "VIP"
+            ? 0.2
+            : cap === "Gold"
+            ? 0.15
+            : cap === "Silver"
+            ? 0.1
+            : 0;
         discount = totalAmount * discountPercent;
       }
 
       const finalAmount = totalAmount - discount;
 
       // Nếu là chuyển khoản, hiển thị QR modal
-      if (paymentMethod === 'Chuyển khoản') {
+      if (paymentMethod === "Chuyển khoản") {
         showQRModal(finalAmount);
         return;
       }
@@ -426,34 +509,34 @@
 
     // Hiển thị QR modal
     function showQRModal(totalAmount) {
-      const modal = document.getElementById('qrModal');
-      const amountElement = document.getElementById('qrAmount');
-      
+      const modal = document.getElementById("qrModal");
+      const amountElement = document.getElementById("qrAmount");
+
       // Cập nhật số tiền
       amountElement.textContent = formatCurrency(totalAmount);
-      
+
       // Hiển thị modal
-      modal.style.display = 'block';
+      modal.style.display = "block";
     }
 
     // Đóng QR modal
     function closeQRModal() {
-      const modal = document.getElementById('qrModal');
-      modal.style.display = 'none';
+      const modal = document.getElementById("qrModal");
+      modal.style.display = "none";
     }
 
     // Xác nhận thanh toán QR
     async function confirmQRPayment() {
-      const selectedValue = document.getElementById('donThuocSelect').value;
-      
+      const selectedValue = document.getElementById("donThuocSelect").value;
+
       if (!selectedValue || selectedValue === "") {
-        UI.showMessage('Vui lòng chọn đơn thuốc cần thanh toán', 'error');
+        UI.showMessage("Vui lòng chọn đơn thuốc cần thanh toán", "error");
         return;
       }
 
       // Tính tổng tiền gốc
       let totalAmount = 0;
-      selectedDonThuoc.chi_tiet.forEach(chiTiet => {
+      selectedDonThuoc.chi_tiet.forEach((chiTiet) => {
         const giaBan = chiTiet.thuoc ? chiTiet.thuoc.gia_ban : 0;
         totalAmount += chiTiet.so_luong * giaBan;
       });
@@ -461,9 +544,16 @@
       // Tính giảm giá cho hội viên
       let discount = 0;
       const khachHang = selectedDonThuoc.khach_hang;
-      if (khachHang && khachHang.loai_kh === 'Hội viên') {
-        const cap = khachHang.cap_thanh_vien || 'Bronze';
-        const discountPercent = cap === 'VIP' ? 0.2 : cap === 'Gold' ? 0.15 : cap === 'Silver' ? 0.1 : 0;
+      if (khachHang && khachHang.loai_kh === "Hội viên") {
+        const cap = khachHang.cap_thanh_vien || "Bronze";
+        const discountPercent =
+          cap === "VIP"
+            ? 0.2
+            : cap === "Gold"
+            ? 0.15
+            : cap === "Silver"
+            ? 0.1
+            : 0;
         discount = totalAmount * discountPercent;
       }
 
@@ -471,18 +561,22 @@
 
       // Đóng modal và xử lý thanh toán
       closeQRModal();
-      await processPayment(finalAmount, 'Chuyển khoản');
+      await processPayment(finalAmount, "Chuyển khoản");
     }
 
     // Xử lý thanh toán
     async function processPayment(totalAmount, paymentMethod) {
       try {
         UI.showLoading();
-        
+
         // Lấy thông tin cần thiết
-        const maKH = selectedDonThuoc.khach_hang ? selectedDonThuoc.khach_hang.ma_kh : null;
-        const maNV = selectedDonThuoc.nhan_vien ? selectedDonThuoc.nhan_vien.ma_nv : null;
-        
+        const maKH = selectedDonThuoc.khach_hang
+          ? selectedDonThuoc.khach_hang.ma_kh
+          : null;
+        const maNV = selectedDonThuoc.nhan_vien
+          ? selectedDonThuoc.nhan_vien.ma_nv
+          : null;
+
         // Tạo dữ liệu hóa đơn
         const hoaDonData = {
           ma_kh: maKH,
@@ -490,34 +584,33 @@
           ma_don: selectedDonThuoc.ma_don,
           tong_tien: totalAmount,
           phuong_thuc_thanh_toan: paymentMethod,
-          trang_thai: 'Đã thanh toán',
-          ghi_chu: ''
+          trang_thai: "Đã thanh toán",
+          ghi_chu: "",
         };
-        
+
         // Tạo chi tiết hóa đơn
-        const chiTietList = selectedDonThuoc.chi_tiet.map(chiTiet => ({
+        const chiTietList = selectedDonThuoc.chi_tiet.map((chiTiet) => ({
           ma_thuoc: chiTiet.thuoc ? chiTiet.thuoc.ma_thuoc : chiTiet.ma_thuoc,
           so_luong: chiTiet.so_luong,
-          don_gia: chiTiet.thuoc ? chiTiet.thuoc.gia_ban : 0
+          don_gia: chiTiet.thuoc ? chiTiet.thuoc.gia_ban : 0,
         }));
 
         await API.createHoaDon(hoaDonData, chiTietList);
 
-        UI.showMessage('Thanh toán thành công!', 'success');
-        
+        UI.showMessage("Thanh toán thành công!", "success");
+
         // Reload danh sách đơn thuốc
         await loadDonThuoc();
         clearInvoiceDetails();
-        
+
         // Reset dropdown về trạng thái ban đầu
-        const select = document.getElementById('donThuocSelect');
+        const select = document.getElementById("donThuocSelect");
         if (select) {
-          select.value = '';
+          select.value = "";
         }
-        
       } catch (error) {
-        console.error('Lỗi thanh toán:', error);
-        UI.showMessage('Lỗi khi thanh toán: ' + error.message, 'error');
+        console.error("Lỗi thanh toán:", error);
+        UI.showMessage("Lỗi khi thanh toán: " + error.message, "error");
       } finally {
         UI.hideLoading();
       }
@@ -525,29 +618,29 @@
 
     // Format currency helper
     function formatCurrency(amount) {
-      return new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND'
+      return new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
       }).format(amount);
     }
 
     // Format date helper
     function formatDate(dateString) {
       const date = new Date(dateString);
-      return date.toLocaleDateString('vi-VN');
+      return date.toLocaleDateString("vi-VN");
     }
 
     // Thêm event listener cho button xác nhận
-    document.addEventListener('DOMContentLoaded', function() {
-      const confirmBtn = document.querySelector('.btn');
+    document.addEventListener("DOMContentLoaded", function () {
+      const confirmBtn = document.querySelector(".btn");
       if (confirmBtn) {
         confirmBtn.onclick = confirmPayment;
       }
 
       // Đóng QR modal khi click bên ngoài
-      const qrModal = document.getElementById('qrModal');
+      const qrModal = document.getElementById("qrModal");
       if (qrModal) {
-        qrModal.addEventListener('click', function(event) {
+        qrModal.addEventListener("click", function (event) {
           if (event.target === qrModal) {
             closeQRModal();
           }
