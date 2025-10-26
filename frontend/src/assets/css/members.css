@@ -1,0 +1,98 @@
+/* Members Page Styles */
+
+/* Stats Container */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+/* Stat Card Base Styles */
+.stat-card {
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Stat Card Color Variations */
+.stat-card.vip {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.stat-card.gold {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+}
+
+.stat-card.silver {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+}
+
+.stat-card.bronze {
+  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+  color: white;
+}
+
+.stat-card.total {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: white;
+}
+
+/* Stat Card Icon */
+.stat-card-icon {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+/* Stat Card Subtitle */
+.stat-card-subtitle {
+  font-size: 0.9em;
+  opacity: 0.9;
+}
+
+/* Stat Card Value */
+.stat-card-value {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+/* Search Input */
+#searchInput {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+/* Filter Tier Select */
+#filterTier {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+/* Tier Icon */
+.tier-icon {
+  font-size: 1.5em;
+}
+
+/* Total Amount */
+.total-amount {
+  color: #10b981;
+  font-weight: bold;
+}
+
+/* Discount */
+.discount {
+  color: #f59e0b;
+  font-weight: bold;
+}
+
+/* Text Center */
+.text-center {
+  text-align: center;
+}

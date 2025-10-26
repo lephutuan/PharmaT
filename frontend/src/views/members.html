@@ -8,6 +8,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     />
+    <link rel="stylesheet" href="../assets/css/members.css" />
     <link rel="stylesheet" href="../assets/css/employees.css" />
     <link rel="stylesheet" href="../assets/css/api-styles.css" />
     <link rel="stylesheet" href="../assets/css/common-responsive.css" />
@@ -86,94 +87,35 @@
     <!-- Main Content -->
     <main>
       <!-- Statistics Cards -->
-      <div
-        class="stats-container"
-        style="
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-          gap: 15px;
-          margin-bottom: 30px;
-        "
-      >
-        <div
-          class="stat-card"
-          style="
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          "
-        >
-          <div style="font-size: 2em; margin-bottom: 10px">👑</div>
-          <div style="font-size: 0.9em; opacity: 0.9">VIP (20%)</div>
-          <div id="vipCount" style="font-size: 2em; font-weight: bold">0</div>
+      <div class="stats-container">
+        <div class="stat-card vip">
+          <div class="stat-card-icon">👑</div>
+          <div class="stat-card-subtitle">VIP (20%)</div>
+          <div id="vipCount" class="stat-card-value">0</div>
         </div>
 
-        <div
-          class="stat-card"
-          style="
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          "
-        >
-          <div style="font-size: 2em; margin-bottom: 10px">🥇</div>
-          <div style="font-size: 0.9em; opacity: 0.9">Gold (15%)</div>
-          <div id="goldCount" style="font-size: 2em; font-weight: bold">0</div>
+        <div class="stat-card gold">
+          <div class="stat-card-icon">🥇</div>
+          <div class="stat-card-subtitle">Gold (15%)</div>
+          <div id="goldCount" class="stat-card-value">0</div>
         </div>
 
-        <div
-          class="stat-card"
-          style="
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          "
-        >
-          <div style="font-size: 2em; margin-bottom: 10px">🥈</div>
-          <div style="font-size: 0.9em; opacity: 0.9">Silver (10%)</div>
-          <div id="silverCount" style="font-size: 2em; font-weight: bold">
-            0
-          </div>
+        <div class="stat-card silver">
+          <div class="stat-card-icon">🥈</div>
+          <div class="stat-card-subtitle">Silver (10%)</div>
+          <div id="silverCount" class="stat-card-value">0</div>
         </div>
 
-        <div
-          class="stat-card"
-          style="
-            background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          "
-        >
-          <div style="font-size: 2em; margin-bottom: 10px">🥉</div>
-          <div style="font-size: 0.9em; opacity: 0.9">Bronze (0%)</div>
-          <div id="bronzeCount" style="font-size: 2em; font-weight: bold">
-            0
-          </div>
+        <div class="stat-card bronze">
+          <div class="stat-card-icon">🥉</div>
+          <div class="stat-card-subtitle">Bronze (0%)</div>
+          <div id="bronzeCount" class="stat-card-value">0</div>
         </div>
 
-        <div
-          class="stat-card"
-          style="
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-          "
-        >
-          <div style="font-size: 2em; margin-bottom: 10px">💎</div>
-          <div style="font-size: 0.9em; opacity: 0.9">Tổng hội viên</div>
-          <div id="totalMembers" style="font-size: 2em; font-weight: bold">
-            0
-          </div>
+        <div class="stat-card total">
+          <div class="stat-card-icon">💎</div>
+          <div class="stat-card-subtitle">Tổng hội viên</div>
+          <div id="totalMembers" class="stat-card-value">0</div>
         </div>
       </div>
 
@@ -184,17 +126,8 @@
             type="text"
             id="searchInput"
             placeholder="🔍 Tìm kiếm theo tên hoặc SĐT..."
-            style="
-              flex: 1;
-              padding: 10px;
-              border: 1px solid #ddd;
-              border-radius: 8px;
-            "
           />
-          <select
-            id="filterTier"
-            style="padding: 10px; border: 1px solid #ddd; border-radius: 8px"
-          >
+          <select id="filterTier">
             <option value="">Tất cả cấp</option>
             <option value="VIP">👑 VIP</option>
             <option value="Gold">🥇 Gold</option>
@@ -287,7 +220,7 @@
 
         if (members.length === 0) {
           tbody.innerHTML =
-            '<tr><td colspan="8" style="text-align: center;">Không có hội viên nào</td></tr>';
+            '<tr><td colspan="8" class="text-center">Không có hội viên nào</td></tr>';
           return;
         }
 
@@ -314,14 +247,14 @@
           const row = document.createElement("tr");
           row.innerHTML = `
             <td>${member.ma_kh}</td>
-            <td style="font-size: 1.5em;">${capIcon}</td>
+            <td class="tier-icon">${capIcon}</td>
             <td><strong>${member.ten_kh}</strong></td>
             <td>${member.sdt}</td>
             <td>${member.di_ung || "Không có"}</td>
-            <td style="color: #10b981; font-weight: bold;">${formatCurrency(
+            <td class="total-amount">${formatCurrency(
               member.tong_tien_da_mua || 0
             )}</td>
-            <td style="color: #f59e0b; font-weight: bold;">${discount}</td>
+            <td class="discount">${discount}</td>
             <td>${formatDate(ngayThamGia)}</td>
           `;
           tbody.appendChild(row);
