@@ -41,7 +41,11 @@ body {
   object-fit: contain;
   border-radius: 50%;
   padding: 8px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.8));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(240, 248, 255, 0.8)
+  );
   filter: drop-shadow(0 4px 8px rgba(30, 64, 175, 0.3));
   transition: all 0.3s ease;
   cursor: pointer;
@@ -50,7 +54,11 @@ body {
 .logo-img:hover {
   filter: drop-shadow(0 6px 12px rgba(30, 64, 175, 0.5));
   transform: rotate(5deg);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(240, 248, 255, 0.9));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 1),
+    rgba(240, 248, 255, 0.9)
+  );
 }
 
 @keyframes logoGlow {
@@ -509,6 +517,7 @@ main {
   overflow-y: auto;
   padding-right: 0.5rem; /* Tạo không gian cho scroll bar */
   flex: 1; /* Cho phép legend chiếm không gian còn lại */
+  justify-content: space-around;
 }
 
 /* Custom scrollbar cho chart-legend */
@@ -881,7 +890,7 @@ tr:hover {
   .sidebar {
     transform: translateX(0) !important;
   }
-  
+
   .sidebar-overlay {
     display: none !important;
   }

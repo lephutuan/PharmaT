@@ -92,29 +92,7 @@
               <option value="today">Hôm nay</option>
               <option value="week">Tuần này</option>
               <option value="month" selected>Tháng này</option>
-              <option value="quarter">Quý này</option>
-              <option value="year">Năm này</option>
-              <option value="custom">Tùy chỉnh</option>
             </select>
-          </div>
-          <div class="filter-group">
-            <label for="reportType">Loại báo cáo:</label>
-            <select id="reportType" onchange="updateReports()">
-              <option value="overview" selected>Tổng quan</option>
-              <option value="sales">Bán hàng</option>
-              <option value="inventory">Tồn kho</option>
-              <option value="financial">Tài chính</option>
-            </select>
-          </div>
-          <div
-            class="filter-group custom-date"
-            id="customDateRange"
-            style="display: none"
-          >
-            <input type="date" id="startDate" />
-            <span>đến</span>
-            <input type="date" id="endDate" />
-            <button onclick="applyCustomDate()">Áp dụng</button>
           </div>
         </div>
       </div>
@@ -167,96 +145,10 @@
       <div class="charts-row">
         <div class="chart-container">
           <div class="chart-header">
-            <h3>📊 Doanh thu theo thời gian</h3>
-            <div class="chart-controls">
-              <button
-                class="chart-btn active"
-                onclick="switchRevenueChart('daily')"
-              >
-                Ngày
-              </button>
-              <button class="chart-btn" onclick="switchRevenueChart('weekly')">
-                Tuần
-              </button>
-              <button class="chart-btn" onclick="switchRevenueChart('monthly')">
-                Tháng
-              </button>
-            </div>
+            <h3>📊 Doanh thu tuần này</h3>
           </div>
           <canvas id="revenueChart"></canvas>
         </div>
-        <div class="chart-container">
-          <div class="chart-header">
-            <h3>🏆 Top thuốc bán chạy</h3>
-            <div class="chart-controls">
-              <button
-                class="chart-btn active"
-                onclick="switchTopMeds('quantity')"
-              >
-                Số lượng
-              </button>
-              <button class="chart-btn" onclick="switchTopMeds('revenue')">
-                Doanh thu
-              </button>
-            </div>
-          </div>
-          <div class="top-medicines-list">
-            <div class="medicine-item">
-              <div class="medicine-info">
-                <img src="../assets/images/paracetamol.png" alt="Paracetamol" />
-                <div>
-                  <h4>Paracetamol 500mg</h4>
-                  <p>234 hộp bán</p>
-                </div>
-              </div>
-              <div class="medicine-revenue">2.8M VNĐ</div>
-            </div>
-            <div class="medicine-item">
-              <div class="medicine-info">
-                <img src="../assets/images/amoxicillin.jpg" alt="Amoxicillin" />
-                <div>
-                  <h4>Amoxicillin 250mg</h4>
-                  <p>189 hộp bán</p>
-                </div>
-              </div>
-              <div class="medicine-revenue">1.9M VNĐ</div>
-            </div>
-            <div class="medicine-item">
-              <div class="medicine-info">
-                <img src="../assets/images/omeprazole.jpg" alt="Omeprazole" />
-                <div>
-                  <h4>Omeprazole 20mg</h4>
-                  <p>156 hộp bán</p>
-                </div>
-              </div>
-              <div class="medicine-revenue">1.6M VNĐ</div>
-            </div>
-            <div class="medicine-item">
-              <div class="medicine-info">
-                <img src="../assets/images/vitamin_c.jpg" alt="Vitamin C" />
-                <div>
-                  <h4>Vitamin C 1000mg</h4>
-                  <p>143 hộp bán</p>
-                </div>
-              </div>
-              <div class="medicine-revenue">1.2M VNĐ</div>
-            </div>
-            <div class="medicine-item">
-              <div class="medicine-info">
-                <img src="../assets/images/efferalgan.jpg" alt="Efferalgan" />
-                <div>
-                  <h4>Efferalgan 500mg</h4>
-                  <p>128 hộp bán</p>
-                </div>
-              </div>
-              <div class="medicine-revenue">1.1M VNĐ</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Charts Row 2 -->
-      <div class="charts-row">
         <div class="chart-container">
           <div class="chart-header">
             <h3>🥧 Tỉ lệ nhóm thuốc</h3>
@@ -265,27 +157,17 @@
           <div class="chart-legend">
             <div class="legend-item">
               <span class="legend-color" style="background: #3b82f6"></span>
-              <span>Thuốc kê đơn (45%)</span>
+              <span>Thuốc kê đơn (50%)</span>
             </div>
             <div class="legend-item">
               <span class="legend-color" style="background: #10b981"></span>
-              <span>Thuốc không kê đơn (30%)</span>
+              <span>Thuốc không kê đơn (35%)</span>
             </div>
             <div class="legend-item">
               <span class="legend-color" style="background: #f59e0b"></span>
               <span>Thực phẩm chức năng (15%)</span>
             </div>
-            <div class="legend-item">
-              <span class="legend-color" style="background: #ef4444"></span>
-              <span>Dụng cụ y tế (10%)</span>
-            </div>
           </div>
-        </div>
-        <div class="chart-container">
-          <div class="chart-header">
-            <h3>📦 Nhập hàng theo thời gian</h3>
-          </div>
-          <canvas id="inventoryChart"></canvas>
         </div>
       </div>
 
@@ -323,10 +205,10 @@
                   Số hóa đơn <i class="fas fa-sort"></i>
                 </th>
                 <th onclick="sortTable(3)">
-                  Nhân viên <i class="fas fa-sort"></i>
+                  NV thực hiện nhiều nhất <i class="fas fa-sort"></i>
                 </th>
                 <th onclick="sortTable(4)">
-                  Ghi chú <i class="fas fa-sort"></i>
+                  Thuốc bán chạy nhất <i class="fas fa-sort"></i>
                 </th>
               </tr>
             </thead>
@@ -336,35 +218,35 @@
                 <td>1,250,000 VNĐ</td>
                 <td>23</td>
                 <td>Nguyễn Văn A</td>
-                <td>Ca sáng</td>
+                <td>Paracetamol</td>
               </tr>
               <tr>
                 <td>20/08/2025</td>
                 <td>980,000 VNĐ</td>
                 <td>18</td>
                 <td>Trần Thị B</td>
-                <td>Ca chiều</td>
+                <td>Amoxicillin</td>
               </tr>
               <tr>
                 <td>19/08/2025</td>
                 <td>1,450,000 VNĐ</td>
                 <td>28</td>
                 <td>Lê Văn C</td>
-                <td>Ca tối</td>
+                <td>Omeprazole</td>
               </tr>
               <tr>
                 <td>18/08/2025</td>
                 <td>750,000 VNĐ</td>
                 <td>15</td>
                 <td>Phạm Thị D</td>
-                <td>Ca sáng</td>
+                <td>Vitamin C</td>
               </tr>
               <tr>
                 <td>17/08/2025</td>
                 <td>1,120,000 VNĐ</td>
                 <td>21</td>
                 <td>Hoàng Văn E</td>
-                <td>Ca chiều</td>
+                <td>Efferalgan</td>
               </tr>
             </tbody>
           </table>

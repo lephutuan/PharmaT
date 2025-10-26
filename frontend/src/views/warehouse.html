@@ -92,7 +92,7 @@
             <th>Giá bán <span class="sort-btn" onclick="sortTable(4)" title="Sắp xếp"><i class="fas fa-sort"></i></span></th>
             <th>Ngày thêm <span class="sort-btn" onclick="sortTable(5)" title="Sắp xếp"><i class="fas fa-sort"></i></span></th>
             <th>Số lượng <span class="sort-btn" onclick="sortTable(6)" title="Sắp xếp"><i class="fas fa-sort"></i></span></th>
-            <th>Số lượng tối thiểu <span class="sort-btn" onclick="sortTable(7)" title="Sắp xếp"><i class="fas fa-sort"></i></span></th>
+            <th>Nhóm thuốc <span class="sort-btn" onclick="sortTable(7)" title="Sắp xếp"><i class="fas fa-sort"></i></span></th>
             <th>Hạn sử dụng <span class="sort-btn" onclick="sortTable(8)" title="Sắp xếp"><i class="fas fa-sort"></i></span></th>
             <th>Trạng thái <span class="sort-btn" onclick="sortTable(9)" title="Sắp xếp"><i class="fas fa-sort"></i></span></th>
           </tr>
@@ -360,7 +360,7 @@
             <td>${parseInt(medicine.gia_ban).toLocaleString()} VND</td>
             <td>${medicine.ngay_them}</td>
             <td class="${parseInt(medicine.so_luong || 0) < parseInt(medicine.sl_toi_thieu || 0) ? 'low-stock' : ''}">${medicine.so_luong || 0}</td>
-            <td>${medicine.sl_toi_thieu}</td>
+            <td>${medicine.nhom_thuoc || 'N/A'}</td>
             <td>${hanSuDung}</td>
             <td class="${medicine.trang_thai === 'Hết hạn' ? 'expired' : (medicine.trang_thai === 'Còn hạn' ? 'active' : 'unknown')}">${medicine.trang_thai || 'N/A'}</td>
           `;
@@ -558,9 +558,9 @@
               valueA = parseInt(a.so_luong || 0);
               valueB = parseInt(b.so_luong || 0);
               break;
-            case 7: // Số lượng tối thiểu
-              valueA = parseInt(a.sl_toi_thieu);
-              valueB = parseInt(b.sl_toi_thieu);
+            case 7: // Nhóm thuốc
+              valueA = String(a.nhom_thuoc || '').toLowerCase();
+              valueB = String(b.nhom_thuoc || '').toLowerCase();
               break;
             case 8: // Hạn sử dụng
               valueA = a.han_su_dung ? new Date(a.han_su_dung) : new Date('1900-01-01');
@@ -670,7 +670,7 @@
               { textContent: `${parseInt(selectedMedicine.gia_ban).toLocaleString()} VND` },
               { textContent: selectedMedicine.ngay_them },
               { textContent: selectedMedicine.so_luong || 0 },
-              { textContent: selectedMedicine.sl_toi_thieu },
+              { textContent: selectedMedicine.nhom_thuoc || 'N/A' },
               { textContent: selectedMedicine.han_su_dung || 'N/A' }
             ]
           };
@@ -724,9 +724,9 @@
         const medicineUnit = cells[3].textContent;
         const importPrice = cells[4].textContent.replace(' VND', '').replace(/,/g, '');
         const salePrice = cells[5].textContent.replace(' VND', '').replace(/,/g, '');
-        const quantity = cells[6].textContent === 'N/A' ? '' : cells[6].textContent;
-        const addDate = cells[7].textContent === 'N/A' ? '' : cells[7].textContent;
-        const minQuantity = cells[8].textContent === 'N/A' ? '' : cells[8].textContent;
+        const addDate = cells[6].textContent === 'N/A' ? '' : cells[6].textContent;
+        const quantity = cells[7].textContent === 'N/A' ? '' : cells[7].textContent;
+        const medicineGroup = cells[8].textContent === 'N/A' ? '' : cells[8].textContent;
         const expiryDate = cells[9].textContent === 'N/A' ? '' : cells[9].textContent;
 
         // Điền dữ liệu vào form chỉnh sửa
@@ -737,8 +737,9 @@
         document.getElementById('editSalePrice').value = salePrice;
         document.getElementById('editQuantity').value = quantity;
         document.getElementById('editAddDate').value = addDate;
-        document.getElementById('editMinQuantity').value = minQuantity;
+        document.getElementById('editMinQuantity').value = ''; // Giữ trống vì không còn hiển thị trong bảng
         document.getElementById('editExpiryDate').value = expiryDate;
+        document.getElementById('editMedicineGroup').value = medicineGroup;
 
         // Lưu reference đến dòng đang chỉnh sửa
         window.editingRow = row;
